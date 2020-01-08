@@ -1,20 +1,6 @@
 language: python
 python:
- - 2.7
  - 3.7
- - pandas
- - mesa
- - ipynb
- - axelrod
- - ipython==6.2.1
- - jupyter_console==5.2.0
- - statsmodels
- - SALib
- - matplotlib
- - numpy
- - scipy
- - math
- - autopep8
 
 before_install:
     - sudo apt-get update
@@ -23,7 +9,19 @@ before_install:
     - pip install --upgrade pip
     - pip install pep8
     - pip install autopep8
-
+    - pip install pandas
+    - pip install mesa
+    - pip install ipynb
+    - pip install axelrod
+    - pip install ipython==6.2.1
+    - pip install jupyter_console==5.2.0
+    - pip install statsmodels
+    - pip install SALib
+    - pip install matplotlib
+    - pip install numpy
+    - pip install scipy
+    - pip install math
+    
 script:
     # Run pep8 on all .py files in all subfolders
     # We must ignore E402 module level import not at top of file
