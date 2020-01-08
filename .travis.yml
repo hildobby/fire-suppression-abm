@@ -4,7 +4,7 @@ rvm:
  - pandas
  - mesa
  - ipynb
- - axelrod=3.11.0
+ - axelrod
  - ipython==6.2.1
  - jupyter_console==5.2.0
  - statsmodels
