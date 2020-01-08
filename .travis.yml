@@ -21,7 +21,10 @@ before_install:
     - pip install numpy
     - pip install scipy
     - pip install math
-    
+
+notifications:
+  slack: asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0
+   
 script:
     # Run pep8 on all .py files in all subfolders
     # We must ignore E402 module level import not at top of file
