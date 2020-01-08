@@ -23,7 +23,7 @@ git pull
 
 If you want to add a file for a commit 
 ```bash
-git add file_name_here
+git add [filename]
 ```
 
 If you want to create a commit
@@ -34,4 +34,15 @@ git commit -m 'description of what you are commiting and why'
 To push it to github
 ```bash
 git push
+```
+# Auto Linting
+
+To install
+```bash
+pip install --upgrade autopep8
+```
+
+To run auto lining locally
+```bash
+autopep8 [filename]
 ```
