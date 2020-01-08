@@ -30,7 +30,7 @@ script:
     - echo $num_errors_before
 
     - cd "$TRAVIS_BUILD_DIR"
-    - git config --global user.email "mcurrie@bruceforceresearch.com"
+    - git config --global user.email "h.moulie@gmail.com"
     # From https://help.github.com/articles/setting-your-username-in-git/:
     # "Tip: You don't have to use your real name--any name works. Git 
     # actually associates commits by email address; the username is only 
