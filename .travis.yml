@@ -13,3 +13,4 @@ rvm:
  - numpy
  - scipy
  - math
+ - autopep8
