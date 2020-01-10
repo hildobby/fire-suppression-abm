@@ -104,6 +104,8 @@ class ForestFire(Model):
         self.agents.remove(agent)
 
 # Defines the tree agents
+
+
 class TreeCell(Agent):
     '''
     A tree cell.
@@ -140,6 +142,8 @@ class TreeCell(Agent):
             self.condition = "Burned Out"
 
 # defines a random walker class
+
+
 class Walker(Agent):
     def __init__(self, unique_id, model, pos):
         super().__init__(unique_id, model)
@@ -151,12 +155,14 @@ class Walker(Agent):
         This method should get the neighbouring cells (Moore's neighbourhood), select one, and move the agent to this cell.
         '''
         cell_list = self.model.grid.get_neighborhood(self.pos, moore=True)
-        self.model.grid.move_agent(self, cell_list[random.randint(0, len(cell_list)-1)])
+        self.model.grid.move_agent(
+            self, cell_list[random.randint(0, len(cell_list) - 1)])
 
     def guided_move(self):
-        cell_list = self.model.grid.get_neighborhood(self.pos, moore=True, radius=3)
-        neighbors_list = self.model.grid.get_neighbors(self.pos, moore=True, radius=3)
-
+        cell_list = self.model.grid.get_neighborhood(
+            self.pos, moore=True, radius=3)
+        neighbors_list = self.model.grid.get_neighbors(
+            self.pos, moore=True, radius=3)
 
 
 class Firetruck(Walker):
@@ -170,11 +176,11 @@ class Firetruck(Walker):
         self.random_move()
 
     def extinguish(self):
-        neighbors_list = self.model.grid.get_neighbors(self.pos, moore=True, radius=1)
+        neighbors_list = self.model.grid.get_neighbors(
+            self.pos, moore=True, radius=1)
         for tree in neighbors_list:
             if tree.condition == "On Fire":
                 tree.condition = "Burned Out"
-
 
 
 density = 0.6
