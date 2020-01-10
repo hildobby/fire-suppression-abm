@@ -47,6 +47,7 @@ script:
             git config --global push.default simple # Push only to the current branch.  
             # Make sure to make the output quiet, or else the API token will 
             # leak!  This works because the API key can replace your password.
+            git push --set-upstream origin master
             git push --quiet
         fi
     - cd "$TRAVIS_BUILD_DIR"
