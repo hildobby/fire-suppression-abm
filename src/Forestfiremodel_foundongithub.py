@@ -18,6 +18,7 @@ class ForestFire(Model):
     '''
 
     def __init__(self, height, width, density):
+        super().__init__()
         '''
         Create a new forest fire model.
 
@@ -32,36 +33,44 @@ class ForestFire(Model):
 
         self.n_agents = 0
         self.agents = []
+        self.initial_tree = height * width * density
 
         # Set up model objects
-        self.schedule = RandomActivation(self)
+        self.schedule_TreeCell = RandomActivation(self)
+        print(self.schedule_TreeCell)
         self.grid = MultiGrid(height, width, torus=False)
         self.dc = DataCollector({"Fine": lambda m: self.count_type(m, "Fine"),
                                  "On Fire": lambda m: self.count_type(m, "On Fire"),
                                  "Burned Out": lambda m: self.count_type(m, "Burned Out")})
 
-        # Place a tree in each cell with Prob = density
-        for x in range(self.width):
-            for y in range(self.height):
-                if random.random() < self.density:
-                    # Create a tree
-                    new_tree = TreeCell(self, (x, y))
-                    # Set all trees in the first column on fire.
-                    if x == 0:
-                        new_tree.condition = "On Fire"
-                    self.grid[y][x] = new_tree
-                    self.schedule.add(new_tree)
+        self.init_population(TreeCell, self.initial_tree)
+        for i in range(len(self.agents)):
+            self.schedule_TreeCell.add(self.agents[i])
+        self.agents[10].condition = "On Fire"
         self.running = True
+        self.dc.collect(self)
+
+    def init_population(self, agent_type, n):
+        '''
+        Method that provides an easy way of making a bunch of agents at once.
+        '''
+        for i in range(int(n)):
+            x = random.randrange(self.width)
+            y = random.randrange(self.height)
+            self.new_agent(agent_type, (x, y))
+
 
     def step(self):
         '''
         Advance the model by one step.
         '''
-        self.schedule.step()
+        print("Another step")
+        self.schedule_TreeCell.step()
         for agent in list(self.agents):
             agent.step()
         self.dc.collect(self)
         # Halt if no more fire
+        print("If this is zero, no trees are on fire", self.count_type(self, "On Fire"))
         if self.count_type(self, "On Fire") == 0:
             self.running = False
 
@@ -71,7 +80,8 @@ class ForestFire(Model):
         Helper method to count trees in a given condition in a given model.
         '''
         count = 0
-        for tree in model.schedule.agents:
+        for tree in model.schedule_TreeCell.agents:
+            print(tree)
             if tree.condition == tree_condition:
                 count += 1
         return count
@@ -83,7 +93,7 @@ class ForestFire(Model):
         self.n_agents += 1
 
         # Create a new agent of the given type
-        new_agent = agent_type(self.n_agents, self, pos)
+        new_agent = agent_type(self, self.n_agents, pos)
 
         # Place the agent on the grid
         self.grid.place_agent(new_agent, pos)
@@ -103,6 +113,7 @@ class ForestFire(Model):
         # Remove agent from model
         self.agents.remove(agent)
 
+
 # Defines the tree agents
 class TreeCell(Agent):
     '''
@@ -117,15 +128,15 @@ class TreeCell(Agent):
     agent anyway.
     '''
 
-    def __init__(self, model, pos):
+    def __init__(self, model, unique_id, pos):
         '''
         Create a new tree.
         Args:
             pos: The tree's coordinates on the grid. Used as the unique_id
         '''
-        super().__init__(pos, model)
+        super().__init__(unique_id, model)
         self.pos = pos
-        self.unique_id = pos
+        self.unique_id = unique_id
         self.condition = "Fine"
 
     def step(self):
@@ -133,7 +144,7 @@ class TreeCell(Agent):
         If the tree is on fire, spread it to fine trees nearby.
         '''
         if self.condition == "On Fire":
-            neighbors = self.model.grid.get_neighbors(self.pos, moore=False)
+            neighbors = self.model.grid.get_neighbors(self.pos, moore=True)
             for neighbor in neighbors:
                 if neighbor.condition == "Fine":
                     neighbor.condition = "On Fire"
@@ -183,6 +194,6 @@ height = 100
 fire = ForestFire(width, height, density)
 fire.run_model()
 results = fire.dc.get_model_vars_dataframe()
-
+print(results)
 results.plot()
 plt.show()
