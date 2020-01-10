@@ -11,7 +11,7 @@ from mesa.datacollection import DataCollector
 from mesa.batchrunner import BatchRunner
 
 #import agents
-import agent
+from agent import *
 
 # defines the model
 class ForestFire(Model):
