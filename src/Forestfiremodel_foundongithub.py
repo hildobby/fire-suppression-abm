@@ -10,6 +10,8 @@ from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 from mesa.batchrunner import BatchRunner
 
+#import agents
+import agent
 
 # defines the model
 class ForestFire(Model):
@@ -37,7 +39,7 @@ class ForestFire(Model):
 
         # Set up model objects
         self.schedule_TreeCell = RandomActivation(self)
-        print(self.schedule_TreeCell)
+      
         self.grid = MultiGrid(height, width, torus=False)
         self.dc = DataCollector({"Fine": lambda m: self.count_type(m, "Fine"),
                                  "On Fire": lambda m: self.count_type(m, "On Fire"),
@@ -64,13 +66,13 @@ class ForestFire(Model):
         '''
         Advance the model by one step.
         '''
-        print("Another step")
+        
         self.schedule_TreeCell.step()
         for agent in list(self.agents):
             agent.step()
         self.dc.collect(self)
         # Halt if no more fire
-        print("If this is zero, no trees are on fire", self.count_type(self, "On Fire"))
+       
         if self.count_type(self, "On Fire") == 0:
             self.running = False
 
@@ -81,7 +83,7 @@ class ForestFire(Model):
         '''
         count = 0
         for tree in model.schedule_TreeCell.agents:
-            print(tree)
+           
             if tree.condition == tree_condition:
                 count += 1
         return count
