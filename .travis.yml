@@ -3,11 +3,6 @@ python:
  - 3.7
 
 before_install:
-    - sudo apt-get update
-    - sudo apt-get -y install python-pip
-    - sudo pip install --upgrade pip
-    - pip install --upgrade pip
-    - pip install pep8
     - pip install autopep8
     - pip install pandas
     - pip install mesa
@@ -17,14 +12,11 @@ before_install:
     - pip install jupyter_console==5.2.0
     - pip install statsmodels
     - pip install SALib
-    - pip install matplotlib
-    - pip install numpy
-    - pip install scipy
 
 notifications:
   email: false
   slack: asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0
-   
+
 script:
     # Run pep8 on all .py files in all subfolders
     # We must ignore E402 module level import not at top of file
