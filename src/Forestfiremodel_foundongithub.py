@@ -13,6 +13,8 @@ from mesa.batchrunner import BatchRunner
 from src.agent import *
 
 # defines the model
+
+
 class ForestFire(Model):
     '''
     Simple Forest Fire model.
@@ -40,9 +42,12 @@ class ForestFire(Model):
         self.schedule_TreeCell = RandomActivation(self)
 
         self.grid = MultiGrid(height, width, torus=False)
-        self.dc = DataCollector({"Fine": lambda m: self.count_type(m, "Fine"),
-                                 "On Fire": lambda m: self.count_type(m, "On Fire"),
-                                 "Burned Out": lambda m: self.count_type(m, "Burned Out")})
+        self.dc = DataCollector(
+            {
+                "Fine": lambda m: self.count_type(
+                    m, "Fine"), "On Fire": lambda m: self.count_type(
+                    m, "On Fire"), "Burned Out": lambda m: self.count_type(
+                    m, "Burned Out")})
 
         self.init_population(TreeCell, self.initial_tree)
         for i in range(len(self.agents)):
@@ -59,7 +64,6 @@ class ForestFire(Model):
             x = random.randrange(self.width)
             y = random.randrange(self.height)
             self.new_agent(agent_type, (x, y))
-
 
     def step(self):
         '''
@@ -113,10 +117,6 @@ class ForestFire(Model):
 
         # Remove agent from model
         self.agents.remove(agent)
-
-
-
-
 
 
 density = 0.6
