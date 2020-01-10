@@ -10,7 +10,7 @@ before_install:
     - pip install jupyter_console==5.2.0
     - pip install statsmodels
     - pip install SALib
-    - pip install pep8
+    - pip install pycodestyle
     - pip install autopep8
     
 notifications:
