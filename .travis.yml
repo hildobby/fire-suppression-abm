@@ -21,7 +21,7 @@ script:
     # Run pep8 on all .py files in all subfolders
     # We must ignore E402 module level import not at top of file
     # because of use case sys.path.append('..'); import <module>
-    - num_errors_before=`find . -name \*.py -exec pep8 --ignore=E402 {} + | wc -l`
+    - num_errors_before=`find . -name \*.py -exec pycodestyle --ignore=E402 {} + | wc -l`
     - echo $num_errors_before
 
     - cd "$TRAVIS_BUILD_DIR"
@@ -36,7 +36,7 @@ script:
     - git checkout $TRAVIS_BRANCH
 
     - find . -name \*.py -exec autopep8 --recursive --aggressive --aggressive --in-place {} +
-    - num_errors_after=`find . -name \*.py -exec pep8 --ignore=E402 {} + | wc -l`
+    - num_errors_after=`find . -name \*.py -exec pycodestyle --ignore=E402 {} + | wc -l`
     - echo $num_errors_after
 
     - |
@@ -50,4 +50,4 @@ script:
     - cd "$TRAVIS_BUILD_DIR"
 
     # List the remaining errors - these will have to be fixed manually
-    - find . -name \*.py -exec pep8 --ignore=E402 {} +
+    - find . -name \*.py -exec pycodestyle --ignore=E402 {} +
