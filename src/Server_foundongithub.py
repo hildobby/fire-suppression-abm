@@ -1,7 +1,8 @@
 from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 
-from Forestfiremodel_foundongithub import ForestFire
+from src.Forestfiremodel_foundongithub import ForestFire
+from src.agent import *
 
 
 def forest_fire_portrayal(tree):
@@ -20,7 +21,8 @@ def forest_fire_portrayal(tree):
 canvas_element = CanvasGrid(forest_fire_portrayal, 100, 100, 500, 500)
 tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
                           {"Label": "On Fire", "Color": "red"},
-                          {"Label": "Burned Out", "Color": "black"}])
+                          {"Label": "Burned Out", "Color": "black"}],
+                         data_collector_name='dc')
 
 server = ModularServer(ForestFire, [canvas_element, tree_chart], "Forest Fire",
                        {'height':100, 'width':100,'density': 0.65})

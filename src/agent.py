@@ -43,6 +43,10 @@ class TreeCell(Agent):
                 if neighbor.condition == "Fine":
                     neighbor.condition = "On Fire"
             self.condition = "Burned Out"
+
+    def get_pos(self):
+        return self.pos
+
 # defines a random walker class
 class Walker(Agent):
     def __init__(self, unique_id, model, pos):

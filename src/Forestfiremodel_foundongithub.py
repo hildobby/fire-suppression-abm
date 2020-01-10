@@ -10,8 +10,7 @@ from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 from mesa.batchrunner import BatchRunner
 
-#import agents
-from agent import *
+from src.agent import *
 
 # defines the model
 class ForestFire(Model):
