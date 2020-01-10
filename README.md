@@ -44,5 +44,5 @@ pip install --upgrade autopep8
 
 To run auto lining locally
 ```bash
-autopep8 [filename]
+autopep8 --in-place --aggressive [filename]
 ```
