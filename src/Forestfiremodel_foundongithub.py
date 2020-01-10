@@ -26,8 +26,8 @@ class ForestFire(Model):
             density: What fraction of grid cells have a tree in them.
         '''
         # Initialize model parameters
-        self.height = height
-        self.width = width
+        self.heigh=height
+        self.width=width
         self.density = density
 
         self.n_agents = 0
@@ -52,7 +52,6 @@ class ForestFire(Model):
                     self.grid[y][x] = new_tree
                     self.schedule.add(new_tree)
         self.running = True
-
     def step(self):
         '''
         Advance the model by one step.
@@ -62,9 +61,8 @@ class ForestFire(Model):
             agent.step()
         self.dc.collect(self)
         # Halt if no more fire
-        if self.count_type(self, "On Fire") == 0:
+        if self.count_type(self, "On Fire")==0:
             self.running = False
-
     @staticmethod
     def count_type(model, tree_condition):
         '''
@@ -75,12 +73,11 @@ class ForestFire(Model):
             if tree.condition == tree_condition:
                 count += 1
         return count
-
     def new_agent(self, agent_type, pos):
         '''
         Method that enables us to add agents of a given type.
         '''
-        self.n_agents += 1
+        self.n_agents +=1
 
         # Create a new agent of the given type
         new_agent = agent_type(self.n_agents, self, pos)
@@ -174,7 +171,6 @@ class Firetruck(Walker):
         This method should move the Sheep using the `random_move()` method implemented earlier, then conditionally reproduce.
         '''
         self.random_move()
-
     def extinguish(self):
         neighbors_list = self.model.grid.get_neighbors(
             self.pos, moore=True, radius=1)
@@ -182,13 +178,11 @@ class Firetruck(Walker):
             if tree.condition == "On Fire":
                 tree.condition = "Burned Out"
 
-
 density = 0.6
 width = 100
 height = 100
 fire = ForestFire(width, height, density)
 fire.run_model()
 results = fire.dc.get_model_vars_dataframe()
-
 results.plot()
 plt.show()
