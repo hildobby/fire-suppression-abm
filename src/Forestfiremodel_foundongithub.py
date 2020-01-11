@@ -18,7 +18,7 @@ class ForestFire(Model):
     Simple Forest Fire model.
     '''
 
-    def __init__(self, height, width, density):
+    def __init__(self, height, width, density, num_firetruck):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -38,6 +38,7 @@ class ForestFire(Model):
 
         # Set up model objects
         self.schedule_TreeCell = RandomActivation(self)
+        self.schedule_FireTruck = RandomActivation(self)
 
         self.grid = MultiGrid(height, width, torus=False)
         self.dc = DataCollector({"Fine": lambda m: self.count_type(m, "Fine"),
@@ -47,6 +48,10 @@ class ForestFire(Model):
         self.init_population(TreeCell, self.initial_tree)
         for i in range(len(self.agents)):
             self.schedule_TreeCell.add(self.agents[i])
+
+        self.init_firefighters(Firetruck, num_firetruck)
+
+
         self.agents[10].condition = "On Fire"
         self.running = True
         self.dc.collect(self)
@@ -60,6 +65,13 @@ class ForestFire(Model):
             y = random.randrange(self.height)
             self.new_agent(agent_type, (x, y))
 
+    def init_firefighters(self, agent_type, num_firetruck):
+        for i in range(num_firetruck):
+            self.n_agents += 1
+            x = random.randrange(self.width)
+            y = random.randrange(self.height)
+            firetruck = self.new_agent(Firetruck, (x, y))
+            self.schedule_FireTruck.add(firetruck)
 
     def step(self):
         '''
@@ -67,8 +79,11 @@ class ForestFire(Model):
         '''
 
         self.schedule_TreeCell.step()
+        self.schedule_FireTruck.step()
+
         for agent in list(self.agents):
             agent.step()
+
         self.dc.collect(self)
         # Halt if no more fire
 
@@ -102,6 +117,8 @@ class ForestFire(Model):
         # And add the agent to the model so we can track it
         self.agents.append(new_agent)
 
+        return new_agent
+
     def remove_agent(self, agent):
         '''
         Method that enables us to remove passed agents.
@@ -122,7 +139,8 @@ class ForestFire(Model):
 density = 0.6
 width = 100
 height = 100
-fire = ForestFire(width, height, density)
+num_firetruck = 30
+fire = ForestFire(width, height, density, num_firetruck)
 fire.run_model()
 results = fire.dc.get_model_vars_dataframe()
 print(results)

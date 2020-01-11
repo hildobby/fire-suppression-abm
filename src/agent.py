@@ -7,6 +7,8 @@ Created on Wed Jan  8 15:30:03 2020
 This code was implemented by Louis Weyland & Robin van den Berg, Hildebert Mouilé & Wiebe Jelsma
 
 """
+import random
+
 from mesa import Agent
 # Defines the tree agents
 class TreeCell(Agent):
@@ -40,8 +42,9 @@ class TreeCell(Agent):
         if self.condition == "On Fire":
             neighbors = self.model.grid.get_neighbors(self.pos, moore=True)
             for neighbor in neighbors:
-                if neighbor.condition == "Fine":
-                    neighbor.condition = "On Fire"
+                if type(neighbor) == TreeCell:
+                    if neighbor.condition == "Fine":
+                        neighbor.condition = "On Fire"
             self.condition = "Burned Out"
 
     def get_pos(self):
@@ -53,13 +56,16 @@ class Walker(Agent):
         super().__init__(unique_id, model)
 
         self.pos = pos
+        self.unique_id = unique_id
 
     def random_move(self):
         '''
         This method should get the neighbouring cells (Moore's neighbourhood), select one, and move the agent to this cell.
         '''
+
         cell_list = self.model.grid.get_neighborhood(self.pos, moore=True)
-        self.model.grid.move_agent(self, cell_list[random.randint(0, len(cell_list)-1)])
+        new_pos = cell_list[random.randint(0, len(cell_list) - 1)]
+        self.model.grid.move_agent(self, new_pos)
 
     def guided_move(self):
         cell_list = self.model.grid.get_neighborhood(self.pos, moore=True, radius=3)
@@ -68,9 +74,13 @@ class Walker(Agent):
 
 
 class Firetruck(Walker):
-    def __init__(self, unique_id, model, pos):
+    def __init__(self, model, unique_id, pos):
+        print(model)
         super().__init__(unique_id, model, pos)
-
+        self.unique_id = unique_id
+        self.condition = "Full"
+    def get_pos(self):
+        return self.pos
     def step(self):
         '''
         This method should move the Sheep using the `random_move()` method implemented earlier, then conditionally reproduce.
