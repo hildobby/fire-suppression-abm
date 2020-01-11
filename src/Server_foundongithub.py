@@ -40,10 +40,10 @@ tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
                           {"Label": "Burned Out", "Color": "black"}],
                          data_collector_name='dc')
 extinguished_chart = ChartModule([{"Label": "Extinguished", "Color": "blue"}],
-                         data_collector_name='dc')
+                                 data_collector_name='dc')
 
 server = ModularServer(ForestFire, [canvas_element, tree_chart, extinguished_chart],
-                       "Forest Fire", {'height':100, 'width':100,'density': 0.65,
+                       "Forest Fire", {'height': 100, 'width': 100, 'density': 0.65,
                                        'num_firetruck': 30})
 
 

@@ -90,7 +90,6 @@ class Firetruck(Walker):
         self.condition = "Full"
         self.extinguished = 0
 
-
     def get_pos(self):
         return self.pos
 
