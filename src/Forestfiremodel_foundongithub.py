@@ -39,18 +39,21 @@ class ForestFire(Model):
         # Set up model objects
         self.schedule_TreeCell = RandomActivation(self)
         self.schedule_FireTruck = RandomActivation(self)
+        self.schedule = RandomActivation(self)
 
         self.grid = MultiGrid(height, width, torus=False)
         self.dc = DataCollector(
             {
-                "Fine": lambda m: self.count_type(
-                    m, "Fine"), "On Fire": lambda m: self.count_type(
-                    m, "On Fire"), "Burned Out": lambda m: self.count_type(
-                    m, "Burned Out")})
+                "Fine": lambda m: self.count_type(m, "Fine"),
+                "On Fire": lambda m: self.count_type(m, "On Fire"),
+                "Burned Out": lambda m: self.count_type(m, "Burned Out"),
+                "Extinguished": lambda m: self.count_extinguished_fires(m)
+            })
 
         self.init_population(TreeCell, self.initial_tree)
         for i in range(len(self.agents)):
             self.schedule_TreeCell.add(self.agents[i])
+            self.schedule.add(self.agents[i])
 
         self.init_firefighters(Firetruck, num_firetruck)
 
@@ -75,6 +78,7 @@ class ForestFire(Model):
             y = random.randrange(self.height)
             firetruck = self.new_agent(Firetruck, (x, y))
             self.schedule_FireTruck.add(firetruck)
+            self.schedule.add(firetruck)
 
     def step(self):
         '''
@@ -103,6 +107,18 @@ class ForestFire(Model):
 
             if tree.condition == tree_condition:
                 count += 1
+        return count
+
+    @staticmethod
+    def count_extinguished_fires(model):
+        '''
+        Helper method to count extinguished fires in a given condition in a given model.
+        '''
+
+        count = 0
+        for firetruck in model.schedule_FireTruck.agents:
+            count += firetruck.extinguished
+
         return count
 
     def new_agent(self, agent_type, pos):
@@ -142,6 +158,9 @@ num_firetruck = 30
 fire = ForestFire(width, height, density, num_firetruck)
 fire.run_model()
 results = fire.dc.get_model_vars_dataframe()
-print(results)
-results.plot()
+results_firetrucks = fire.dc.get_model_vars_dataframe()
+
+print(results_firetrucks)
+results[['Fine', 'On Fire', 'Burned Out']].plot()
+results[['Extinguished']].plot()
 plt.show()

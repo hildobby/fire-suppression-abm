@@ -86,14 +86,18 @@ class Firetruck(Walker):
         super().__init__(unique_id, model, pos)
         self.unique_id = unique_id
         self.condition = "Full"
+        self.extinguished = 0
+
     def get_pos(self):
         return self.pos
+
     def step(self):
         '''
         This method should move the Sheep using the `random_move()`
         method implemented earlier, then conditionally reproduce.
         '''
         self.random_move()
+        self.extinguish()
 
     def extinguish(self):
         neighbors_list = self.model.grid.get_neighbors(
@@ -101,3 +105,4 @@ class Firetruck(Walker):
         for tree in neighbors_list:
             if tree.condition == "On Fire":
                 tree.condition = "Burned Out"
+                self.extinguished += 1
