@@ -13,6 +13,8 @@ from mesa.batchrunner import BatchRunner
 from src.agent import *
 
 # defines the model
+
+
 class ForestFire(Model):
     '''
     Simple Forest Fire model.
@@ -56,7 +58,6 @@ class ForestFire(Model):
             self.schedule.add(self.agents[i])
 
         self.init_firefighters(Firetruck, num_firetruck)
-
 
         self.agents[10].condition = "On Fire"
         self.running = True

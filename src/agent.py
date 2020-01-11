@@ -47,7 +47,7 @@ class TreeCell(Agent):
         if self.condition == "On Fire":
             neighbors = self.model.grid.get_neighbors(self.pos, moore=True)
             for neighbor in neighbors:
-                if type(neighbor) == TreeCell:
+                if isinstance(neighbor, TreeCell):
                     if neighbor.condition == "Fine":
                         neighbor.condition = "On Fire"
             self.condition = "Burned Out"
@@ -56,6 +56,8 @@ class TreeCell(Agent):
         return self.pos
 
 # defines a random walker class
+
+
 class Walker(Agent):
     def __init__(self, unique_id, model, pos):
         super().__init__(unique_id, model)
@@ -87,6 +89,7 @@ class Firetruck(Walker):
         self.unique_id = unique_id
         self.condition = "Full"
         self.extinguished = 0
+
 
     def get_pos(self):
         return self.pos
