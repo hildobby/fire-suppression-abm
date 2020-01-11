@@ -4,13 +4,17 @@
 
 """
 Created on Wed Jan  8 15:30:03 2020
-This code was implemented by Louis Weyland & Robin van den Berg, Hildebert Mouilé & Wiebe Jelsma
+
+This code was implemented by
+Louis Weyland & Robin van den Berg, Hildebert Mouilé & Wiebe Jelsma
 
 """
 import random
 
 from mesa import Agent
 # Defines the tree agents
+
+
 class TreeCell(Agent):
     '''
     A tree cell.
@@ -20,7 +24,8 @@ class TreeCell(Agent):
         condition: Can be "Fine", "On Fire", or "Burned Out"
         unique_id: (x,y) tuple.
 
-    unique_id isn't strictly necessary here, but it's good practice to give one to each
+    unique_id isn't strictly necessary here,
+    but it's good practice to give one to each
     agent anyway.
     '''
 
@@ -60,7 +65,8 @@ class Walker(Agent):
 
     def random_move(self):
         '''
-        This method should get the neighbouring cells (Moore's neighbourhood), select one, and move the agent to this cell.
+        This method should get the neighbouring cells (Moore's neighbourhood)
+        select one, and move the agent to this cell.
         '''
 
         cell_list = self.model.grid.get_neighborhood(self.pos, moore=True)
@@ -68,9 +74,10 @@ class Walker(Agent):
         self.model.grid.move_agent(self, new_pos)
 
     def guided_move(self):
-        cell_list = self.model.grid.get_neighborhood(self.pos, moore=True, radius=3)
-        neighbors_list = self.model.grid.get_neighbors(self.pos, moore=True, radius=3)
-
+        cell_list = self.model.grid.get_neighborhood(
+            self.pos, moore=True, radius=3)
+        neighbors_list = self.model.grid.get_neighbors(
+            self.pos, moore=True, radius=3)
 
 
 class Firetruck(Walker):
@@ -83,12 +90,14 @@ class Firetruck(Walker):
         return self.pos
     def step(self):
         '''
-        This method should move the Sheep using the `random_move()` method implemented earlier, then conditionally reproduce.
+        This method should move the Sheep using the `random_move()`
+        method implemented earlier, then conditionally reproduce.
         '''
         self.random_move()
 
     def extinguish(self):
-        neighbors_list = self.model.grid.get_neighbors(self.pos, moore=True, radius=1)
+        neighbors_list = self.model.grid.get_neighbors(
+            self.pos, moore=True, radius=1)
         for tree in neighbors_list:
             if tree.condition == "On Fire":
                 tree.condition = "Burned Out"

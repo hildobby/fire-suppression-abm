@@ -41,9 +41,12 @@ class ForestFire(Model):
         self.schedule_FireTruck = RandomActivation(self)
 
         self.grid = MultiGrid(height, width, torus=False)
-        self.dc = DataCollector({"Fine": lambda m: self.count_type(m, "Fine"),
-                                 "On Fire": lambda m: self.count_type(m, "On Fire"),
-                                 "Burned Out": lambda m: self.count_type(m, "Burned Out")})
+        self.dc = DataCollector(
+            {
+                "Fine": lambda m: self.count_type(
+                    m, "Fine"), "On Fire": lambda m: self.count_type(
+                    m, "On Fire"), "Burned Out": lambda m: self.count_type(
+                    m, "Burned Out")})
 
         self.init_population(TreeCell, self.initial_tree)
         for i in range(len(self.agents)):
@@ -130,10 +133,6 @@ class ForestFire(Model):
 
         # Remove agent from model
         self.agents.remove(agent)
-
-
-
-
 
 
 density = 0.6

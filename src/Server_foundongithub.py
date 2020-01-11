@@ -32,6 +32,7 @@ def forest_fire_portrayal(tree):
 #     return portrayal
 
 
+
 canvas_element = CanvasGrid(forest_fire_portrayal, 100, 100, 500, 500)
 
 # create line graph

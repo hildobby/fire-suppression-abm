@@ -2,7 +2,6 @@ language: python
 python:
  - 3.7
 
-
 before_install:
     - pip install mesa
     - pip install ipynb
@@ -19,6 +18,8 @@ notifications:
   slack: asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0
 
 script:
+    - git remote rm origin
+    - git remote add origin https://hildobby:${GITHUB_API_KEY}@github.com/hildobby/Asian-paced_Yodeling.git
     # Run pep8 on all .py files in all subfolders
     # We must ignore E402 module level import not at top of file
     # because of use case sys.path.append('..'); import <module>
@@ -46,6 +47,7 @@ script:
             git config --global push.default simple # Push only to the current branch.  
             # Make sure to make the output quiet, or else the API token will 
             # leak!  This works because the API key can replace your password.
+            git push --set-upstream origin master
             git push --quiet
         fi
     - cd "$TRAVIS_BUILD_DIR"
