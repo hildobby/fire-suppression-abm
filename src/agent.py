@@ -44,7 +44,6 @@ class TreeCell(Agent):
         self.life_bar = 100        # give the tree a life bar
         self.burning_rate = 20
 
-
     def step(self):
         '''
         If the tree is on fire, spread it to fine trees nearby.
@@ -154,9 +153,8 @@ class Firetruck(Walker):
         self.extinguished = 0
         self.vision = vision
         self.max_speed = max_speed
-        self.life_bar=-5
+        self.life_bar = -5
         self.burning_rate = 20  # needs to be deleted somehow
-
 
     def get_pos(self):
         return self.pos
