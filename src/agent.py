@@ -51,7 +51,7 @@ class TreeCell(Agent):
         if self.condition == "On Fire":
             neighbors = self.model.grid.get_neighbors(self.pos, moore=True)
             for neighbor in neighbors:
-                if isinstance(neighbor, TreeCell):
+                if type(neighbor) == TreeCell:
                     if neighbor.condition == "Fine":
                         neighbor.condition = "On Fire"
 
@@ -89,8 +89,6 @@ class Walker(Agent):
     def closestfire_move(self):
 
         # find hot trees in neighborhood
-        cell_list = self.model.grid.get_neighborhood(
-            self.pos, moore=True, radius=self.vision)
         neighbors_list = self.model.grid.get_neighbors(
             self.pos, moore=True, radius=self.vision)
 
