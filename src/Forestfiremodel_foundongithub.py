@@ -52,7 +52,7 @@ class ForestFire(Model):
                 "Burned Out": lambda m: self.count_type(m, "Burned Out"),
                 "Extinguished": lambda m: self.count_extinguished_fires(m)
             },
-            tables={"Lifespan": ["live_bar"]})
+            agent_reporters={"Life bar":"life_bar","Burning rate":"burning_rate"})
 
         self.init_population(TreeCell, self.initial_tree)
 

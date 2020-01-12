@@ -41,7 +41,9 @@ class TreeCell(Agent):
         self.pos = pos
         self.unique_id = unique_id
         self.condition = "Fine"
-        self.live_bar = 100        # give the tree a life bar
+        self.life_bar = 100        # give the tree a life bar
+        self.burning_rate = 20
+
 
     def step(self):
         '''
@@ -55,8 +57,8 @@ class TreeCell(Agent):
                         neighbor.condition = "On Fire"
 
             # if on fire reduce life_bar
-            if self.live_bar != 0:
-                self.live_bar -= 20
+            if self.life_bar != 0:
+                self.life_bar -= 20
             else:
                 self.condition = "Burned Out"
 
@@ -152,6 +154,9 @@ class Firetruck(Walker):
         self.extinguished = 0
         self.vision = vision
         self.max_speed = max_speed
+        self.life_bar=-5
+        self.burning_rate = 20  # needs to be deleted somehow
+
 
     def get_pos(self):
         return self.pos
@@ -171,3 +176,4 @@ class Firetruck(Walker):
             if tree.condition == "On Fire":
                 tree.condition = "Burned Out"
                 self.extinguished += 1
+                self.life_bar -= 5
