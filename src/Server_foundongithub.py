@@ -8,21 +8,21 @@ from agent import *
 
 def forest_fire_portrayal(Agent):
     portrayal = {"w": 1,
-                "h": 1,
-                "Filled": "true",
-                "scale": 2.5,
-                "heading_x": 1,
-                "heading_y": 0,
-                "Shape": "rect",
-                "Layer": 0}
+                 "h": 1,
+                 "Filled": "true",
+                 "scale": 2.5,
+                 "heading_x": 1,
+                 "heading_y": 0,
+                 "Shape": "rect",
+                 "Layer": 0}
     (x, y) = agent.get_pos()
     portrayal["x"] = x
     portrayal["y"] = y
 
     colors = {"Fine": "#00AA00",
-            "On Fire": "#880000",
-            "Burned Out": "#000000",
-            "Full": "#ffa500"}
+              "On Fire": "#880000",
+              "Burned Out": "#000000",
+              "Full": "#ffa500"}
     if isinstance(agent, Firetruck):
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "arrowHead"
