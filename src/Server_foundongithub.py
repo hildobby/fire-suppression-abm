@@ -10,21 +10,21 @@ from agent import *
 
 def forest_fire_portrayal(agent):
     portrayal = {"w": 1,
-                "h": 1,
-                "Filled": "true",
-                "scale": 2.5,
-                "heading_x": 1,
-                "heading_y": 0,
-                "Shape": "rect",
-                "Layer": 0}
+                 "h": 1,
+                 "Filled": "true",
+                 "scale": 2.5,
+                 "heading_x": 1,
+                 "heading_y": 0,
+                 "Shape": "rect",
+                 "Layer": 0}
     (x, y) = agent.get_pos()
     portrayal["x"] = x
     portrayal["y"] = y
 
     colors = {"Fine": "#00AA00",
-            "On Fire": "#880000",
-            "Burned Out": "#000000",
-            "Full": "#ffa500"}
+              "On Fire": "#880000",
+              "Burned Out": "#000000",
+              "Full": "#ffa500"}
     if isinstance(agent, Firetruck):
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "arrowHead"
@@ -58,22 +58,20 @@ def forest_fire_portrayal(agent):
 canvas_element = CanvasGrid(forest_fire_portrayal, 100, 100, 500, 500)
 # create line graph
 tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
-                        {"Label": "On Fire", "Color": "red"},
-                        {"Label": "Burned Out", "Color": "black"}],
-                        data_collector_name='dc')
+                          {"Label": "On Fire", "Color": "red"},
+                          {"Label": "Burned Out", "Color": "black"}],
+                         data_collector_name='dc')
 extinguished_chart = ChartModule([{"Label": "Extinguished", "Color": "blue"}],
-                                data_collector_name='dc')
+                                 data_collector_name='dc')
 
-model_parameters = {'height': 100,
-                    'width': 100,
-                    'density': UserSettableParameter('slider', 'Tree density', 0.65, 0.01, 1.0, 0.01),
-                    'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 100, 1),
-                    'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 30, 0, 100, 1),
-                    'truck_strategy': UserSettableParameter('choice', 'Firetrucks go to the closest fire', value='Goes to the closest fire', choices=['Goes to the closest fire', 'Random movements']),
-                    'wind': (3, 4),
-                    'vision': 100,
-                    'max_speed': 2,
-                    }
+model_parameters = {
+    'height': 100, 'width': 100, 'density': UserSettableParameter(
+        'slider', 'Tree density', 0.65, 0.01, 1.0, 0.01), 'temperature': UserSettableParameter(
+            'slider', 'Temperature (°C)', 20, 0, 100, 1), 'num_firetruck': UserSettableParameter(
+                'slider', 'Number of Firetrucks', 30, 0, 100, 1), 'truck_strategy': UserSettableParameter(
+                    'choice', 'Firetrucks go to the closest fire', value='Goes to the closest fire', choices=[
+                        'Goes to the closest fire', 'Random movements']), 'wind': (
+                            3, 4), 'vision': 100, 'max_speed': 2, }
 
 server = ModularServer(ForestFire, [canvas_element, tree_chart, extinguished_chart], "Forest Fire", model_parameters)
 
