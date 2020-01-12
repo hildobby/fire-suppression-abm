@@ -10,7 +10,7 @@ from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 from mesa.batchrunner import BatchRunner
 
-from src.agent import *
+from agent import *
 
 # defines the model
 

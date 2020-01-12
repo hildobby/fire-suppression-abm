@@ -1,8 +1,8 @@
 from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 
-from src.Forestfiremodel_foundongithub import ForestFire
-from src.agent import *
+from Forestfiremodel_foundongithub import ForestFire
+from agent import *
 
 
 def forest_fire_portrayal(agent):
