@@ -103,6 +103,8 @@ class Walker(Agent):
                     min_distance = distance
                     closest_neighbor = neighbor
                     fire_intheneighborhood = True
+        if fire_intheneighborhood:
+            print(closest_neighbor.pos)
 
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:

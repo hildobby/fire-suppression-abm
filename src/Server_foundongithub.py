@@ -17,7 +17,7 @@ def forest_fire_portrayal(agent):
               "On Fire": "#880000",
               "Burned Out": "#000000",
               "Full": "#ffa500"}
-    if agent.condition is "Full":
+    if type(agent) is Firetruck:
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "arrowHead"
     portrayal["Color"] = colors[agent.condition]
@@ -52,13 +52,11 @@ model_sliders = {'density': UserSettableParameter('slider', 'Tree density', 0.65
 
 model_parameters = {'height': 100,
                     'width': 100,
-                    'density': 0.65,
-                    'temperature': 20,
+                    'density': UserSettableParameter('slider', 'Tree density', 0.65, 0.01, 1.0, 0.01),
+                    'temperature': UserSettableParameter('slider', 'Temperature', 0.65, 0.01, 1.0, 0.01),
                     'num_firetruck': 30,
                     'vision': 100,
                     'max_speed': 2,
-                    'density': UserSettableParameter('slider', 'Tree density', 0.65, 0.01, 1.0, 0.01),
-                    # 'temperature_slider': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 100, 1),
                     }
 
 server = ModularServer(ForestFire, [canvas_element, tree_chart, extinguished_chart], "Forest Fire", model_parameters)
