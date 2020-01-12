@@ -60,7 +60,6 @@ class TreeCell(Agent):
             else:
                 self.condition = "Burned Out"
 
-
     def get_pos(self):
         return self.pos
 

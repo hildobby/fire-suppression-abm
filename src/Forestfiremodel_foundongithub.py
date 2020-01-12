@@ -43,7 +43,6 @@ class ForestFire(Model):
         self.schedule_FireTruck = RandomActivation(self)
         self.schedule = RandomActivation(self)
 
-
         self.grid = MultiGrid(height, width, torus=False)
 
         self.dc = DataCollector(
@@ -55,7 +54,7 @@ class ForestFire(Model):
                 "Extinguished": lambda m: self.count_extinguished_fires(m)
             })
             },
-            tables={"Lifespan": ["live_bar"]})
+            tables = {"Lifespan": ["live_bar"]})
 
         print(self.initial_tree)
         self.init_population(TreeCell, self.initial_tree)
@@ -66,9 +65,9 @@ class ForestFire(Model):
 
         self.init_firefighters(Firetruck, num_firetruck, vision)
 
-        self.temperature = temperature
-        self.agents[10].condition = "On Fire"
-        self.running = True
+        self.temperature=temperature
+        self.agents[10].condition="On Fire"
+        self.running=True
         self.dc.collect(self)
 
     def init_population(self, agent_type, n):
@@ -76,16 +75,16 @@ class ForestFire(Model):
         Method that provides an easy way of making a bunch of agents at once.
         '''
         for i in range(int(n)):
-            x = random.randrange(self.width)
-            y = random.randrange(self.height)
+            x=random.randrange(self.width)
+            y=random.randrange(self.height)
             self.new_agent(agent_type, (x, y))
 
     def init_firefighters(self, agent_type, num_firetruck, vision):
         for i in range(num_firetruck):
             self.n_agents += 1
-            x = random.randrange(self.width)
-            y = random.randrange(self.height)
-            firetruck = self.new_firetruck(Firetruck, (x, y), vision)
+            x=random.randrange(self.width)
+            y=random.randrange(self.height)
+            firetruck=self.new_firetruck(Firetruck, (x, y), vision)
             self.schedule_FireTruck.add(firetruck)
             self.schedule.add(firetruck)
 
@@ -95,28 +94,28 @@ class ForestFire(Model):
         '''
 
         self.schedule_TreeCell.step()
-        self.schedule_FireTruck.step()       
+        self.schedule_FireTruck.step()
 
         self.dc.collect(self)
         # Halt if no more fire
 
         if self.count_type(self, "On Fire") == 0:
             print(" \n \n Fire is gone ! \n \n")
-            self.running = False
-        
+            self.running=False
+
     def randomfire(temperature, num_firetruck):
-        if (random.random() < (self.temperature/1000.0)):
-            concerned_tree = random.randint(0,len(self.agents)-num_firetruck)
+        if (random.random() < (self.temperature / 1000.0)):
+            concerned_tree=random.randint(0, len(self.agents) - num_firetruck)
             if (self.agents[concerned_tree].condition == "Fine"):
-                self.agents[concerned_tree].condition = "On Fire"
-        
+                self.agents[concerned_tree].condition="On Fire"
+
 
     @staticmethod
     def count_type(model, tree_condition):
         '''
         Helper method to count trees in a given condition in a given model.
         '''
-        count = 0
+        count=0
         for tree in model.schedule_TreeCell.agents:
 
             if tree.condition == tree_condition:
@@ -129,7 +128,7 @@ class ForestFire(Model):
         Helper method to count extinguished fires in a given condition in a given model.
         '''
 
-        count = 0
+        count=0
         for firetruck in model.schedule_FireTruck.agents:
             count += firetruck.extinguished
 
@@ -142,7 +141,7 @@ class ForestFire(Model):
         self.n_agents += 1
 
         # Create a new agent of the given type
-        new_agent = agent_type(self, self.n_agents, pos)
+        new_agent=agent_type(self, self.n_agents, pos)
 
         # Place the agent on the grid
         self.grid.place_agent(new_agent, pos)
@@ -159,7 +158,7 @@ class ForestFire(Model):
         self.n_agents += 1
 
         # Create a new agent of the given type
-        new_agent = agent_type(self, self.n_agents, pos, vision)
+        new_agent=agent_type(self, self.n_agents, pos, vision)
 
         # Place the agent on the grid
         self.grid.place_agent(new_agent, pos)
@@ -182,17 +181,17 @@ class ForestFire(Model):
         self.agents.remove(agent)
 
 
-temperature = 20
-density = 0.6
-width = 100
-height = 100
-num_firetruck = 30
-vision = 3
-fire = ForestFire(width, height, density, temperature, num_firetruck)
+temperature=20
+density=0.6
+width=100
+height=100
+num_firetruck=30
+vision=3
+fire=ForestFire(width, height, density, temperature, num_firetruck)
 fire.run_model()
-results = fire.dc.get_model_vars_dataframe()
-agent_variable = fire.dc.get_agent_vars_dataframe()
-results_firetrucks = fire.dc.get_model_vars_dataframe()
+results=fire.dc.get_model_vars_dataframe()
+agent_variable=fire.dc.get_agent_vars_dataframe()
+results_firetrucks=fire.dc.get_model_vars_dataframe()
 
 print(results_firetrucks)
 results[['Fine', 'On Fire', 'Burned Out']].plot()
