@@ -111,15 +111,32 @@ class Walker(Agent):
             places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
             places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
 
+
+            if self.pos[0] == 1 or self.pos[0] == self.model.width or self.pos[1] == 1 or \
+                self.pos[1] == self.model.height:
+                speed = 1
+            else:
+                speed = self.max_speed
+
             # choose step
-            if places_to_move_x > 0:
-                self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
-            elif places_to_move_x < 0:
-                self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
-            elif places_to_move_y > 0:
-                self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
-            elif places_to_move_y < 0:
-                self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
+            if places_to_move_x > 0 and places_to_move_y > 0:
+                self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1] + speed));
+            elif places_to_move_x < 0 and places_to_move_y < 0:
+                self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1] - speed))
+            elif places_to_move_y > 0 and places_to_move_x < 0:
+                self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1] + speed))
+            elif places_to_move_y < 0 and places_to_move_x > 0:
+                self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1] - speed))
+            elif places_to_move_x == 0:
+                if places_to_move_y > 0:
+                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + speed))
+                elif places_to_move_y < 0:
+                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - speed))
+            elif places_to_move_y == 0:
+                if places_to_move_x > 0:
+                    self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1]))
+                elif places_to_move_x < 0:
+                    self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1]))
 
         # if fire not in the neighboorhood, do random move
         else:
@@ -127,12 +144,13 @@ class Walker(Agent):
 
 
 class Firetruck(Walker):
-    def __init__(self, model, unique_id, pos, vision):
+    def __init__(self, model, unique_id, pos, vision, max_speed):
         super().__init__(unique_id, model, pos)
         self.unique_id = unique_id
         self.condition = "Full"
         self.extinguished = 0
         self.vision = vision
+        self.max_speed = max_speed
 
     def get_pos(self):
         return self.pos

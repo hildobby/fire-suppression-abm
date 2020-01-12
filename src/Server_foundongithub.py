@@ -55,6 +55,8 @@ model_parameters = {'height': 100,
                     'density': 0.65,
                     'temperature': 20,
                     'num_firetruck': 30,
+                    'vision': 100,
+                    'max_speed': 2,
                     'density': UserSettableParameter('slider', 'Tree density', 0.65, 0.01, 1.0, 0.01),
                     # 'temperature_slider': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 100, 1),
                     }
