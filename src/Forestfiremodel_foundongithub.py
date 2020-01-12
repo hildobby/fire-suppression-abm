@@ -22,7 +22,7 @@ class ForestFire(Model):
     Simple Forest Fire model.
     '''
 
-    def __init__(self, height, width, density, temperature, num_firetruck, wind, vision, max_speed):
+    def __init__(self, height, width, density, temperature, truck_strategy, num_firetruck, wind, vision, max_speed):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -65,6 +65,7 @@ class ForestFire(Model):
         self.init_firefighters(Firetruck, num_firetruck, vision, max_speed)
 
         self.temperature = temperature
+        self.truck_strategy = truck_strategy
         self.agents[10].condition = "On Fire"
         self.running = True
         self.dc.collect(self)
@@ -105,7 +106,7 @@ class ForestFire(Model):
             print(" \n \n Fire is gone ! \n \n")
             self.running = False
 
-    def randomfire(temperature, num_firetruck):
+    def randomfire(self, temperature, num_firetruck):
         if (random.random() < (self.temperature / 1000.0)):
             concerned_tree = random.randint(0, len(self.agents) - num_firetruck)
             if (self.agents[concerned_tree].condition == "Fine"):
@@ -183,6 +184,7 @@ class ForestFire(Model):
 
 
 temperature = 20
+truck_strategy = 'Goes to the closest fire'
 density = 0.6
 width = 100
 height = 100
@@ -191,7 +193,7 @@ vision = 100
 max_speed = 2
 # wind[0],wind[1]=[direction,speed]
 wind = [1, 2]
-fire = ForestFire(width, height, density, temperature, num_firetruck, wind, vision, max_speed)
+fire = ForestFire(width, height, density, temperature, truck_strategy, num_firetruck, wind, vision, max_speed)
 fire.run_model()
 results = fire.dc.get_model_vars_dataframe()
 agent_variable = fire.dc.get_agent_vars_dataframe()
