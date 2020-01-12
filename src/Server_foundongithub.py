@@ -33,7 +33,6 @@ def forest_fire_portrayal(agent):
 
 
 canvas_element = CanvasGrid(forest_fire_portrayal, 100, 100, 500, 500)
-
 # create line graph
 tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
                           {"Label": "On Fire", "Color": "red"},
@@ -42,11 +41,11 @@ tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
 extinguished_chart = ChartModule([{"Label": "Extinguished", "Color": "blue"}],
                                  data_collector_name='dc')
 
+
 server = ModularServer(ForestFire, [canvas_element, tree_chart, extinguished_chart],
                        "Forest Fire", {'height': 100, 'width': 100, 'density': 0.65,
-                                       'num_firetruck': 30})
-
+                                       'num_firetruck': 30, 'vision': 100})
+print("is it going wrong here?")
 
 server.port = 8521
-
 server.launch()

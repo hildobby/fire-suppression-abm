@@ -20,7 +20,7 @@ class ForestFire(Model):
     Simple Forest Fire model.
     '''
 
-    def __init__(self, height, width, density, num_firetruck):
+    def __init__(self, height, width, density, num_firetruck, vision):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -38,12 +38,15 @@ class ForestFire(Model):
         self.agents = []
         self.initial_tree = height * width * density
 
+
         # Set up model objects
         self.schedule_TreeCell = RandomActivation(self)
         self.schedule_FireTruck = RandomActivation(self)
         self.schedule = RandomActivation(self)
 
+
         self.grid = MultiGrid(height, width, torus=False)
+
         self.dc = DataCollector(
             {
                 "Fine": lambda m: self.count_type(m, "Fine"),
@@ -52,12 +55,15 @@ class ForestFire(Model):
                 "Extinguished": lambda m: self.count_extinguished_fires(m)
             })
 
+        print(self.initial_tree)
         self.init_population(TreeCell, self.initial_tree)
+
         for i in range(len(self.agents)):
             self.schedule_TreeCell.add(self.agents[i])
-            self.schedule.add(self.agents[i])
+            #self.schedule.add(self.agents[i])
 
-        self.init_firefighters(Firetruck, num_firetruck)
+        self.init_firefighters(Firetruck, num_firetruck, vision)
+
 
         self.agents[10].condition = "On Fire"
         self.running = True
@@ -72,12 +78,12 @@ class ForestFire(Model):
             y = random.randrange(self.height)
             self.new_agent(agent_type, (x, y))
 
-    def init_firefighters(self, agent_type, num_firetruck):
+    def init_firefighters(self, agent_type, num_firetruck, vision):
         for i in range(num_firetruck):
             self.n_agents += 1
             x = random.randrange(self.width)
             y = random.randrange(self.height)
-            firetruck = self.new_agent(Firetruck, (x, y))
+            firetruck = self.new_firetruck(Firetruck, (x, y), vision)
             self.schedule_FireTruck.add(firetruck)
             self.schedule.add(firetruck)
 
@@ -139,6 +145,23 @@ class ForestFire(Model):
 
         return new_agent
 
+    def new_firetruck(self, agent_type, pos, vision):
+        '''
+        Method that enables us to add agents of a given type.
+        '''
+        self.n_agents += 1
+
+        # Create a new agent of the given type
+        new_agent = agent_type(self, self.n_agents, pos, vision)
+
+        # Place the agent on the grid
+        self.grid.place_agent(new_agent, pos)
+
+        # And add the agent to the model so we can track it
+        self.agents.append(new_agent)
+
+        return new_agent
+
     def remove_agent(self, agent):
         '''
         Method that enables us to remove passed agents.
@@ -156,7 +179,8 @@ density = 0.6
 width = 100
 height = 100
 num_firetruck = 30
-fire = ForestFire(width, height, density, num_firetruck)
+vision = 3
+fire = ForestFire(width, height, density, num_firetruck, vision)
 fire.run_model()
 results = fire.dc.get_model_vars_dataframe()
 results_firetrucks = fire.dc.get_model_vars_dataframe()
