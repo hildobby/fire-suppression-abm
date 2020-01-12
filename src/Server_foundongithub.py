@@ -26,7 +26,7 @@ def forest_fire_portrayal(agent):
               "On Fire": "#880000",
               "Burned Out": "#000000",
               "Full": "#ffa500"}
-    if type(agent) == Firetruck:
+    if isinstance(agent, Firetruck):
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "arrowHead"
     portrayal["Color"] = colors[agent.condition]
@@ -65,16 +65,14 @@ tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
 extinguished_chart = ChartModule([{"Label": "Extinguished", "Color": "blue"}],
                                  data_collector_name='dc')
 
-model_parameters = {'height': 100,
-                    'width': 100,
-                    'density': UserSettableParameter('slider', 'Tree density', 0.65, 0.01, 1.0, 0.01),
-                    'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 100, 1),
-                    'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 30, 0, 100, 1),
-                    'truck_strategy': UserSettableParameter('choice', 'Firetrucks go to the closest fire', value='Goes to the closest fire', choices=['Goes to the closest fire', 'Random movements']),
-                    'wind': (3, 4),
-                    'vision': 100,
-                    'max_speed': 2,
-                    }
+model_parameters = {
+    'height': 100, 'width': 100, 'density': UserSettableParameter(
+        'slider', 'Tree density', 0.65, 0.01, 1.0, 0.01), 'temperature': UserSettableParameter(
+            'slider', 'Temperature (°C)', 20, 0, 100, 1), 'num_firetruck': UserSettableParameter(
+                'slider', 'Number of Firetrucks', 30, 0, 100, 1), 'truck_strategy': UserSettableParameter(
+                    'choice', 'Firetrucks go to the closest fire', value='Goes to the closest fire', choices=[
+                        'Goes to the closest fire', 'Random movements']), 'wind': (
+                            3, 4), 'vision': 100, 'max_speed': 2, }
 
 server = ModularServer(ForestFire, [canvas_element, tree_chart, extinguished_chart], "Forest Fire", model_parameters)
 
