@@ -99,13 +99,11 @@ class Walker(Agent):
         fire_intheneighborhood = False
         for neighbor in neighbors_list:
             if neighbor.condition == "On Fire":
-                distance = (neighbor.pos[0]**2 + neighbor.pos[1]**2) - (self.pos[0]**2 + self.pos[1]**2)
+                distance = abs(neighbor.pos[0]**2 - self.pos[0]**2) + abs(neighbor.pos[1]**2 - self.pos[1]**2)
                 if distance < min_distance:
                     min_distance = distance
                     closest_neighbor = neighbor
                     fire_intheneighborhood = True
-        if fire_intheneighborhood:
-            print(closest_neighbor.pos)
 
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
@@ -114,8 +112,8 @@ class Walker(Agent):
             places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
             places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
 
-            if self.pos[0] == 1 or self.pos[0] == self.model.width or self.pos[1] == 1 or \
-                    self.pos[1] == self.model.height:
+            if self.pos[0] == 1 or self.pos[0] == self.model.width - 1 or self.pos[1] == 1 or \
+                    self.pos[1] == self.model.height - 1:
                 speed = 1
             else:
                 speed = self.max_speed
