@@ -45,12 +45,14 @@ class ForestFire(Model):
 
         self.grid = MultiGrid(height, width, torus=False)
         self.dc = DataCollector(
-            {
+            model_reporters={
                 "Fine": lambda m: self.count_type(m, "Fine"),
                 "On Fire": lambda m: self.count_type(m, "On Fire"),
                 "Burned Out": lambda m: self.count_type(m, "Burned Out"),
                 "Extinguished": lambda m: self.count_extinguished_fires(m)
-            })
+            },
+            tables={"Lifespan": ["live_bar"]})
+
 
         self.init_population(TreeCell, self.initial_tree)
         for i in range(len(self.agents)):
@@ -96,6 +98,7 @@ class ForestFire(Model):
         # Halt if no more fire
 
         if self.count_type(self, "On Fire") == 0:
+            print(" \n \n Fire is gone ! \n \n")
             self.running = False
 
     @staticmethod
@@ -159,6 +162,7 @@ num_firetruck = 30
 fire = ForestFire(width, height, density, num_firetruck)
 fire.run_model()
 results = fire.dc.get_model_vars_dataframe()
+agent_variable=fire.dc.get_agent_vars_dataframe()
 results_firetrucks = fire.dc.get_model_vars_dataframe()
 
 print(results_firetrucks)

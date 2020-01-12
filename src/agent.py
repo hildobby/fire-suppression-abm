@@ -13,6 +13,7 @@ import random
 
 from mesa import Agent
 # Defines the tree agents
+from pprint import pprint
 
 
 class TreeCell(Agent):
@@ -23,13 +24,14 @@ class TreeCell(Agent):
         x, y: Grid coordinates
         condition: Can be "Fine", "On Fire", or "Burned Out"
         unique_id: (x,y) tuple.
+        live_bar : looks at the live bar of the tree
 
     unique_id isn't strictly necessary here,
     but it's good practice to give one to each
     agent anyway.
     '''
 
-    def __init__(self, model, unique_id, pos):
+    def __init__(self, model, unique_id, pos,):
         '''
         Create a new tree.
         Args:
@@ -39,7 +41,8 @@ class TreeCell(Agent):
         self.pos = pos
         self.unique_id = unique_id
         self.condition = "Fine"
-
+        self.live_bar = 100        # give the tree a life bar 
+        
     def step(self):
         '''
         If the tree is on fire, spread it to fine trees nearby.
@@ -50,10 +53,18 @@ class TreeCell(Agent):
                 if isinstance(neighbor, TreeCell):
                     if neighbor.condition == "Fine":
                         neighbor.condition = "On Fire"
-            self.condition = "Burned Out"
+    
+            # if on fire reduce life_bar
+            if self.live_bar !=0:
+                self.live_bar -= 20
+            else :
+                self.condition = "Burned Out"
 
+        
     def get_pos(self):
         return self.pos
+
+
 
 # defines a random walker class
 
@@ -108,3 +119,6 @@ class Firetruck(Walker):
             if tree.condition == "On Fire":
                 tree.condition = "Burned Out"
                 self.extinguished += 1
+
+
+
