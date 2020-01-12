@@ -59,11 +59,11 @@ def forest_fire_portrayal(agent):
 canvas_element = CanvasGrid(forest_fire_portrayal, 100, 100, 500, 500)
 # create line graph
 tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
-                        {"Label": "On Fire", "Color": "red"},
-                        {"Label": "Burned Out", "Color": "black"}],
-                        data_collector_name='dc')
+                          {"Label": "On Fire", "Color": "red"},
+                          {"Label": "Burned Out", "Color": "black"}],
+                         data_collector_name='dc')
 extinguished_chart = ChartModule([{"Label": "Extinguished", "Color": "blue"}],
-                                data_collector_name='dc')
+                                 data_collector_name='dc')
 
 model_parameters = {'height': 100,
                     'width': 100,
