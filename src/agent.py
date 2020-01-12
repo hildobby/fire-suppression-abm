@@ -94,16 +94,17 @@ class Walker(Agent):
         neighbors_list = self.model.grid.get_neighbors(
             self.pos, moore=True, radius=self.vision)
 
+        neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
+
         # find closest fire
         min_distance = self.vision**2
         fire_intheneighborhood = False
         for neighbor in neighbors_list:
-            if neighbor.condition == "On Fire":
-                distance = abs(neighbor.pos[0]**2 - self.pos[0]**2) + abs(neighbor.pos[1]**2 - self.pos[1]**2)
-                if distance < min_distance:
-                    min_distance = distance
-                    closest_neighbor = neighbor
-                    fire_intheneighborhood = True
+            distance = abs(neighbor.pos[0]**2 - self.pos[0]**2) + abs(neighbor.pos[1]**2 - self.pos[1]**2)
+            if distance < min_distance:
+                min_distance = distance
+                closest_neighbor = neighbor
+                fire_intheneighborhood = True
 
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:

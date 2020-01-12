@@ -74,7 +74,7 @@ model_parameters = {'height': 100,
                     'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 100, 1),
                     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 30, 0, 100, 1),
                     'wind': (3, 4),
-                    'vision': 5,
+                    'vision': 100,
                     'max_speed': 2,
                     }
 
