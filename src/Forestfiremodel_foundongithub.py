@@ -181,6 +181,7 @@ class ForestFire(Model):
         # Remove agent from model
         self.agents.remove(agent)
 
+
 '''
 temperature = 20
 truck_strategy = 'Goes to the closest fire'
