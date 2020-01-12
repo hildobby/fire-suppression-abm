@@ -38,12 +38,10 @@ class ForestFire(Model):
         self.agents = []
         self.initial_tree = height * width * density
 
-
         # Set up model objects
         self.schedule_TreeCell = RandomActivation(self)
         self.schedule_FireTruck = RandomActivation(self)
         self.schedule = RandomActivation(self)
-
 
         self.grid = MultiGrid(height, width, torus=False)
 
@@ -61,10 +59,9 @@ class ForestFire(Model):
 
         for i in range(len(self.agents)):
             self.schedule_TreeCell.add(self.agents[i])
-            #self.schedule.add(self.agents[i])
+            # self.schedule.add(self.agents[i])
 
         self.init_firefighters(Firetruck, num_firetruck, vision)
-
 
         self.agents[10].condition = "On Fire"
         self.running = True
