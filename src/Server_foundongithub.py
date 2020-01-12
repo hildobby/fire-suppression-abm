@@ -21,6 +21,7 @@ def forest_fire_portrayal(agent):
     portrayal["x"] = x
     portrayal["y"] = y
 
+    # define colour of the components
     colors = {"Fine": "#00AA00",
               "On Fire": "#880000",
               "Burned Out": "#000000",
