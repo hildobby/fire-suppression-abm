@@ -31,8 +31,8 @@ class TreeCell(Agent):
     agent anyway.
     '''
 
-    def __init__(self, model, unique_id, pos): is x
-    '''
+    def __init__(self, model, unique_id, pos):
+        '''
         Create a new tree.
         Args:
             pos: The tree's coordinates on the grid. Used as the unique_id
