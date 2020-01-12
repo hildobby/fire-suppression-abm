@@ -93,8 +93,8 @@ class ForestFire(Model):
         self.schedule_TreeCell.step()
         self.schedule_FireTruck.step()
 
-        for agent in list(self.agents):
-            agent.step()
+        # for agent in list(self.agents):
+        #     agent.step()
 
         self.dc.collect(self)
         # Halt if no more fire
