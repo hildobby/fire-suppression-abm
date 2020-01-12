@@ -17,10 +17,20 @@ def forest_fire_portrayal(Agent):
               "On Fire": "#880000",
               "Burned Out": "#000000",
               "Full": "#ffa500"}
-    if type(agent) is Firetruck:
+    if isinstance(agent, Firetruck):
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "arrowHead"
     portrayal["Color"] = colors[agent.condition]
+
+    assert(agent.burning_rate == 20), "Burning rate needs to be 20  for the moment ! It is hardcoded"
+    cmap = {100: "#f50202",
+            80: "#8c0f0f",
+            60: "#570a0a",
+            40: "#3d0808",
+            20: "#290d0d"}
+
+    if agent.condition == "On Fire" and agent.life_bar > 0:
+        portrayal["Color"] = cmap[agent.life_bar]
 
     return portrayal
 
