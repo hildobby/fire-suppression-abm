@@ -51,7 +51,7 @@ class TreeCell(Agent):
         if self.condition == "On Fire":
             neighbors = self.model.grid.get_neighbors(self.pos, moore=True)
             for neighbor in neighbors:
-                if type(neighbor) == TreeCell:
+                if isinstance(neighbor, TreeCell):
                     if neighbor.condition == "Fine":
                         neighbor.condition = "On Fire"
 

@@ -88,7 +88,7 @@ class ForestFire(Model):
             y = random.randrange(self.height)
             firetruck = self.new_firetruck(Firetruck, (x, y), vision, max_speed)
             self.schedule_FireTruck.add(firetruck)
-            #self.schedule.add(firetruck)
+            # self.schedule.add(firetruck)
 
     def step(self):
         '''
