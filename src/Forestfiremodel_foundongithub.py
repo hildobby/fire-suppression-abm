@@ -53,7 +53,6 @@ class ForestFire(Model):
             },
             tables={"Lifespan": ["live_bar"]})
 
-
         self.init_population(TreeCell, self.initial_tree)
         for i in range(len(self.agents)):
             self.schedule_TreeCell.add(self.agents[i])
@@ -162,7 +161,7 @@ num_firetruck = 30
 fire = ForestFire(width, height, density, num_firetruck)
 fire.run_model()
 results = fire.dc.get_model_vars_dataframe()
-agent_variable=fire.dc.get_agent_vars_dataframe()
+agent_variable = fire.dc.get_agent_vars_dataframe()
 results_firetrucks = fire.dc.get_model_vars_dataframe()
 
 print(results_firetrucks)
