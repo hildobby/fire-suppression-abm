@@ -20,7 +20,7 @@ class ForestFire(Model):
     Simple Forest Fire model.
     '''
 
-    def __init__(self, height, width, density, temperature, num_firetruck):
+    def __init__(self, height, width, density, temperature, wind, num_firetruck):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -69,7 +69,9 @@ class ForestFire(Model):
         self.agents[10].condition="On Fire"
         self.running=True
         self.dc.collect(self)
-
+        self.wind_direction=wind[0]
+        self.wind_speed=wind[1]
+        
     def init_population(self, agent_type, n):
         '''
         Method that provides an easy way of making a bunch of agents at once.
@@ -187,7 +189,10 @@ width=100
 height=100
 num_firetruck=30
 vision=3
-fire=ForestFire(width, height, density, temperature, num_firetruck)
+#wind[0],wind[1]=[direction,speed]
+wind=[1,2]
+
+fire=ForestFire(width, height, density, temperature, wind, num_firetruck)
 fire.run_model()
 results=fire.dc.get_model_vars_dataframe()
 agent_variable=fire.dc.get_agent_vars_dataframe()
