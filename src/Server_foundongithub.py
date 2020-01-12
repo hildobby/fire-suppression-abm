@@ -6,7 +6,7 @@ from Forestfiremodel_foundongithub import ForestFire
 from agent import *
 
 
-def forest_fire_portrayal(agent):
+def forest_fire_portrayal(Agent):
     portrayal = {"w": 1, "h": 1, "Filled": "true", "scale": 2.5,
                  "heading_x": 1, "heading_y": 0, "Shape": "rect", "Layer": 0}
     (x, y) = agent.get_pos()

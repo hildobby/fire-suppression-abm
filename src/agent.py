@@ -31,7 +31,7 @@ class TreeCell(Agent):
     agent anyway.
     '''
 
-    def __init__(self, model, unique_id, pos,):
+    def __init__(self, model, unique_id, pos):is  x
         '''
         Create a new tree.
         Args:
