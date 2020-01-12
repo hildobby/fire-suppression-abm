@@ -25,6 +25,7 @@ def forest_fire_portrayal(agent):
     colors = {"Fine": "#00AA00",
               "On Fire": "#880000",
               "Burned Out": "#000000",
+              "Is Extinguished": "#0000ff",
               "Full": "#ffa500"}
     if type(agent) == Firetruck:
         portrayal["Layer"] = "1"
