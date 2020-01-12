@@ -1,5 +1,6 @@
 from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
+from mesa.visualization.UserParam import UserSettableParameter
 
 from Forestfiremodel_foundongithub import ForestFire
 from agent import *
@@ -31,7 +32,6 @@ def forest_fire_portrayal(agent):
 #     portrayal["Color"] = colors[firetruck.haswater]
 #     return portrayal
 
-
 canvas_element = CanvasGrid(forest_fire_portrayal, 100, 100, 500, 500)
 
 # create line graph
@@ -42,10 +42,20 @@ tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
 extinguished_chart = ChartModule([{"Label": "Extinguished", "Color": "blue"}],
                                  data_collector_name='dc')
 
-server = ModularServer(ForestFire, [canvas_element, tree_chart, extinguished_chart],
-                       "Forest Fire", {'height': 100, 'width': 100, 'density': 0.65,
-                                       'num_firetruck': 30})
+model_sliders = {'density': UserSettableParameter('slider', 'Tree density', 0.65, 0.01, 1.0, 0.01),
+                'temperature_slider': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 100, 1)
+                }
 
+model_parameters = {'height': 100,
+                    'width': 100,
+                    'density': 0.65,
+                    'temperature': 20,
+                    'num_firetruck': 30,
+                    'density': UserSettableParameter('slider', 'Tree density', 0.65, 0.01, 1.0, 0.01),
+                    #'temperature_slider': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 100, 1),
+                    }
+
+server = ModularServer(ForestFire, [canvas_element, tree_chart, extinguished_chart], "Forest Fire", model_parameters)
 
 server.port = 8521
 

@@ -20,7 +20,7 @@ class ForestFire(Model):
     Simple Forest Fire model.
     '''
 
-    def __init__(self, height, width, density, num_firetruck):
+    def __init__(self, height, width, density, temperature, num_firetruck):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -43,6 +43,7 @@ class ForestFire(Model):
         self.schedule_FireTruck = RandomActivation(self)
         self.schedule = RandomActivation(self)
 
+
         self.grid = MultiGrid(height, width, torus=False)
         self.dc = DataCollector(
             {
@@ -59,6 +60,7 @@ class ForestFire(Model):
 
         self.init_firefighters(Firetruck, num_firetruck)
 
+        self.temperature = temperature
         self.agents[10].condition = "On Fire"
         self.running = True
         self.dc.collect(self)
@@ -87,16 +89,20 @@ class ForestFire(Model):
         '''
 
         self.schedule_TreeCell.step()
-        self.schedule_FireTruck.step()
-
-        for agent in list(self.agents):
-            agent.step()
+        self.schedule_FireTruck.step()       
 
         self.dc.collect(self)
         # Halt if no more fire
 
         if self.count_type(self, "On Fire") == 0:
             self.running = False
+        
+    def randomfire(temperature, num_firetruck):
+        if (random.random() < (self.temperature/1000.0)):
+            concerned_tree = random.randint(0,len(self.agents)-num_firetruck)
+            if (self.agents[concerned_tree].condition == "Fine"):
+                self.agents[concerned_tree].condition = "On Fire"
+        
 
     @staticmethod
     def count_type(model, tree_condition):
@@ -152,11 +158,12 @@ class ForestFire(Model):
         self.agents.remove(agent)
 
 
+temperature = 20
 density = 0.6
 width = 100
 height = 100
 num_firetruck = 30
-fire = ForestFire(width, height, density, num_firetruck)
+fire = ForestFire(width, height, density, temperature, num_firetruck)
 fire.run_model()
 results = fire.dc.get_model_vars_dataframe()
 results_firetrucks = fire.dc.get_model_vars_dataframe()
