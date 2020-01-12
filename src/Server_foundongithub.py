@@ -71,7 +71,7 @@ model_parameters = {'height': 100,
                     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 30, 0, 100, 1),
                     'truck_strategy': UserSettableParameter('choice', 'Firetrucks go to the closest fire', value='Goes to the closest fire', choices=['Goes to the closest fire', 'Random movements']),
                     'wind': (3, 4),
-                    'vision': 5,
+                    'vision': 100,
                     'max_speed': 2,
                     }
 
