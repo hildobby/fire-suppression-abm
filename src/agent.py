@@ -13,6 +13,7 @@ import random
 
 from mesa import Agent
 # Defines the tree agents
+from pprint import pprint
 
 
 class TreeCell(Agent):
@@ -23,13 +24,14 @@ class TreeCell(Agent):
         x, y: Grid coordinates
         condition: Can be "Fine", "On Fire", or "Burned Out"
         unique_id: (x,y) tuple.
+        live_bar : looks at the live bar of the tree
 
     unique_id isn't strictly necessary here,
     but it's good practice to give one to each
     agent anyway.
     '''
 
-    def __init__(self, model, unique_id, pos):
+    def __init__(self, model, unique_id, pos,):
         '''
         Create a new tree.
         Args:
@@ -39,6 +41,7 @@ class TreeCell(Agent):
         self.pos = pos
         self.unique_id = unique_id
         self.condition = "Fine"
+        self.live_bar = 100        # give the tree a life bar
 
     def step(self):
         '''
@@ -50,11 +53,17 @@ class TreeCell(Agent):
                 if isinstance(neighbor, TreeCell):
                     if neighbor.condition == "Fine":
                         neighbor.condition = "On Fire"
-            self.condition = "Burned Out"
+
+            # if on fire reduce life_bar
+            if self.live_bar != 0:
+                self.live_bar -= 20
+            else:
+                self.condition = "Burned Out"
 
 
     def get_pos(self):
         return self.pos
+
 
 # defines a random walker class
 
@@ -76,20 +85,55 @@ class Walker(Agent):
         new_pos = cell_list[random.randint(0, len(cell_list) - 1)]
         self.model.grid.move_agent(self, new_pos)
 
-    def guided_move(self):
+    # Makes the firetruck move towards the fire
+    def closestfire_move(self):
+
+        # find hot trees in neighborhood
         cell_list = self.model.grid.get_neighborhood(
-            self.pos, moore=True, radius=3)
+            self.pos, moore=True, radius=self.vision)
         neighbors_list = self.model.grid.get_neighbors(
-            self.pos, moore=True, radius=3)
+            self.pos, moore=True, radius=self.vision)
+
+        # find closest fire
+        min_distance = self.vision**2
+        fire_intheneighborhood = False
+        for neighbor in neighbors_list:
+            if neighbor.condition == "On Fire":
+                distance = (neighbor.pos[0]**2 + neighbor.pos[1]**2) - (self.pos[0]**2 + self.pos[1]**2)
+                if distance < min_distance:
+                    min_distance = distance
+                    closest_neighbor = neighbor
+                    fire_intheneighborhood = True
+
+        # move toward fire if it is actually in the neighborhood
+        if fire_intheneighborhood:
+
+            # find how many places to move to reach the closest fire
+            places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
+            places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
+
+            # choose step
+            if places_to_move_x > 0:
+                self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
+            elif places_to_move_x < 0:
+                self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
+            elif places_to_move_y > 0:
+                self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
+            elif places_to_move_y < 0:
+                self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
+
+        # if fire not in the neighboorhood, do random move
+        else:
+            self.random_move()
 
 
 class Firetruck(Walker):
-    def __init__(self, model, unique_id, pos):
-        print(model)
+    def __init__(self, model, unique_id, pos, vision):
         super().__init__(unique_id, model, pos)
         self.unique_id = unique_id
         self.condition = "Full"
         self.extinguished = 0
+        self.vision = vision
 
     def get_pos(self):
         return self.pos
@@ -99,7 +143,7 @@ class Firetruck(Walker):
         This method should move the Sheep using the `random_move()`
         method implemented earlier, then conditionally reproduce.
         '''
-        self.random_move()
+        self.closestfire_move()
         self.extinguish()
 
     def extinguish(self):

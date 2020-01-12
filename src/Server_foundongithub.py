@@ -7,17 +7,21 @@ from agent import *
 
 
 def forest_fire_portrayal(agent):
-    if agent is None:
-        return
-    portrayal = {"Shape": "rect", "w": 1, "h": 1, "Filled": "true", "Layer": 0}
+    portrayal = {"w": 1, "h": 1, "Filled": "true", "scale": 2.5,
+                 "heading_x": 1, "heading_y": 0, "Shape": "rect", "Layer": 0}
     (x, y) = agent.get_pos()
     portrayal["x"] = x
     portrayal["y"] = y
+
     colors = {"Fine": "#00AA00",
               "On Fire": "#880000",
               "Burned Out": "#000000",
               "Full": "#ffa500"}
+    if agent.condition is "Full":
+        portrayal["Layer"] = "1"
+        portrayal["Shape"] = "arrowHead"
     portrayal["Color"] = colors[agent.condition]
+
     return portrayal
 
 # def firetruck_portrayal(firetruck):
@@ -33,7 +37,6 @@ def forest_fire_portrayal(agent):
 #     return portrayal
 
 canvas_element = CanvasGrid(forest_fire_portrayal, 100, 100, 500, 500)
-
 # create line graph
 tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
                           {"Label": "On Fire", "Color": "red"},
@@ -58,5 +61,4 @@ model_parameters = {'height': 100,
 server = ModularServer(ForestFire, [canvas_element, tree_chart, extinguished_chart], "Forest Fire", model_parameters)
 
 server.port = 8521
-
 server.launch()
