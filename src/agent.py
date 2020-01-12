@@ -31,18 +31,18 @@ class TreeCell(Agent):
     agent anyway.
     '''
 
-    def __init__(self, model, unique_id, pos): is x
-    '''
-        Create a new tree.
-        Args:
-            pos: The tree's coordinates on the grid. Used as the unique_id
+    def __init__(self, model, unique_id, pos):
         '''
-    super().__init__(unique_id, model)
-    self.pos = pos
-    self.unique_id = unique_id
-    self.condition = "Fine"
-    self.life_bar = 100        # give the tree a life bar
-    self.burning_rate = 20
+            Create a new tree.
+            Args:
+                pos: The tree's coordinates on the grid. Used as the unique_id
+        '''
+        super().__init__(unique_id, model)
+        self.pos = pos
+        self.unique_id = unique_id
+        self.condition = "Fine"
+        self.life_bar = 100        # give the tree a life bar
+        self.burning_rate = 20
 
     def step(self):
         '''

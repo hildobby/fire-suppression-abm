@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
@@ -6,7 +8,7 @@ from Forestfiremodel_foundongithub import ForestFire
 from agent import *
 
 
-def forest_fire_portrayal(Agent):
+def forest_fire_portrayal(agent):
     portrayal = {"w": 1, "h": 1, "Filled": "true", "scale": 2.5,
                  "heading_x": 1, "heading_y": 0, "Shape": "rect", "Layer": 0}
     (x, y) = agent.get_pos()
@@ -63,8 +65,9 @@ model_sliders = {'density': UserSettableParameter('slider', 'Tree density', 0.65
 model_parameters = {'height': 100,
                     'width': 100,
                     'density': UserSettableParameter('slider', 'Tree density', 0.65, 0.01, 1.0, 0.01),
-                    'temperature': UserSettableParameter('slider', 'Temperature', 0.65, 0.01, 1.0, 0.01),
+                    'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 100, 1),
                     'num_firetruck': 30,
+                    'wind': (3,4),
                     'vision': 100,
                     'max_speed': 2,
                     }

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import random
 
 import numpy as np
@@ -79,6 +81,7 @@ class ForestFire(Model):
             self.new_agent(agent_type, (x, y))
 
     def init_firefighters(self, agent_type, num_firetruck, vision, max_speed):
+        print(num_firetruck)
         for i in range(num_firetruck):
             self.n_agents += 1
             x = random.randrange(self.width)
@@ -188,7 +191,7 @@ vision = 3
 max_speed = 2
 # wind[0],wind[1]=[direction,speed]
 wind = [1, 2]
-fire = ForestFire(width, height, density, temperature, wind, num_firetruck, vision, max_speed)
+fire = ForestFire(width, height, density, temperature, num_firetruck, wind, vision, max_speed)
 fire.run_model()
 results = fire.dc.get_model_vars_dataframe()
 agent_variable = fire.dc.get_agent_vars_dataframe()
