@@ -8,6 +8,8 @@ from Forestfiremodel_foundongithub import ForestFire
 from agent import *
 
 
+""
+
 def forest_fire_portrayal(agent):
     portrayal = {"w": 1,
                  "h": 1,
