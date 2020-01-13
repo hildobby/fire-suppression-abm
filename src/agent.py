@@ -14,7 +14,6 @@ import random
 from mesa import Agent
 
 
-
 class TreeCell(Agent):
     '''
     A tree cell.

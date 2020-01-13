@@ -8,8 +8,6 @@ from Forestfiremodel_foundongithub import ForestFire
 from agent import *
 
 
-
-
 def forest_fire_portrayal(agent):
     portrayal = {"w": 1,
                  "h": 1,
@@ -36,7 +34,7 @@ def forest_fire_portrayal(agent):
 
     # give a color to the fire depending on the life_bar
     if agent.condition == "On Fire" and agent.life_bar > 0:
-        portrayal["Color"] = "rgba(%d,14,14)"%(agent.life_bar+166)
+        portrayal["Color"] = "rgba(%d,14,14)" % (agent.life_bar + 166)
 
     return portrayal
 
