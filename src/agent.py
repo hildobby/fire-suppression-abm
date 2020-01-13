@@ -12,8 +12,7 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 import random
 
 from mesa import Agent
-# Defines the tree agents
-from pprint import pprint
+
 
 
 class TreeCell(Agent):
