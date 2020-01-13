@@ -41,7 +41,7 @@ class TreeCell(Agent):
         self.condition = "Fine"
         self.life_bar = 100       # give the tree a life bar
         self.burning_rate = 5
-        self.probability= 0.7
+        self.probability = 0.7
 
     def step(self):
         '''
@@ -51,12 +51,12 @@ class TreeCell(Agent):
             neighbors = self.model.grid.get_neighbors(self.pos, moore=True)
             for neighbor in neighbors:
                 if isinstance(neighbor, TreeCell):
-                    if neighbor.condition == "Fine" and random.uniform(0,1)<self.probability:
+                    if neighbor.condition == "Fine" and random.uniform(0, 1) < self.probability:
                         neighbor.condition = "On Fire"
 
             # if on fire reduce life_bar
             if self.life_bar != 0:
-                self.life_bar -=  self.burning_rate
+                self.life_bar -= self.burning_rate
             else:
                 self.condition = "Burned Out"
 
