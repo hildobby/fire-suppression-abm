@@ -39,7 +39,7 @@ class TreeCell(Agent):
         self.pos = pos
         self.unique_id = unique_id
         self.condition = "Fine"
-        self.life_bar = 100        # give the tree a life bar
+        self.life_bar = 100       # give the tree a life bar
         self.burning_rate = 5
         self.probability= 0.7
 
