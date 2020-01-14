@@ -38,19 +38,6 @@ def forest_fire_portrayal(agent):
 
     return portrayal
 
-# def firetruck_portrayal(firetruck):
-#     if firetruck is None:
-#         return
-#     portrayal = {"Shape": "circle", "w": 1, "h": 1, "Filled": "true", "Layer": 1}
-#     (x, y) = firetruck.get_pos()
-#     portrayal["x"] = x
-#     portrayal["y"] = y
-#     colors = {"Full": "#00BB00",
-#               "Empty": "#880000"}
-#     portrayal["Color"] = colors[firetruck.haswater]
-#     return portrayal
-
-
 canvas_element = CanvasGrid(forest_fire_portrayal, 100, 100, 500, 500)
 # create line graph
 tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
