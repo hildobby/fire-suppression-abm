@@ -142,11 +142,12 @@ class Walker(Agent):
 
 
 class Firetruck(Walker):
-    def __init__(self, model, unique_id, pos, vision, max_speed):
+    def __init__(self, model, unique_id, pos, truck_strategy, vision, max_speed):
         super().__init__(unique_id, model, pos)
         self.unique_id = unique_id
         self.condition = "Full"
         self.extinguished = 0
+        self.truck_strategy = truck_strategy
         self.vision = vision
         self.max_speed = max_speed
         self.life_bar = -5
@@ -159,7 +160,10 @@ class Firetruck(Walker):
         This method should move the Sheep using the `random_move()`
         method implemented earlier, then conditionally reproduce.
         '''
-        self.closestfire_move()
+        if(self.truck_strategy == 'Goes to the closest fire'):
+            self.closestfire_move()
+        else:
+            self.random_move()
         self.extinguish()
 
     def extinguish(self):
