@@ -59,6 +59,8 @@ model_parameters = {
     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 30, 0, 100, 1),
     'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Goes to the closest fire',
                                             choices=['Goes to the closest fire', 'Random movements']),
+    'river_number': UserSettableParameter('slider', 'Number of rivers', 2, 0, 10, 1),                                        
+    'river_width': UserSettableParameter('slider', 'River width', 3, 1, 5, 1),
 }
 
 server = ModularServer(ForestFire, [canvas_element, tree_chart, extinguished_chart], "Forest Fire", model_parameters)
