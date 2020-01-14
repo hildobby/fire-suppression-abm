@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
-
 """
 Created on Wed Jan  8 15:30:03 2020
 
@@ -10,9 +8,7 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 
 """
 import random
-
 from mesa import Agent
-
 
 class TreeCell(Agent):
 
@@ -23,7 +19,7 @@ class TreeCell(Agent):
         x, y: Grid coordinates
         condition: Can be "Fine", "On Fire", or "Burned Out"
         unique_id: (x,y) tuple.
-        live_bar : looks at the live bar of the tree
+        life_bar : looks at the life bar of the tree
 
     unique_id isn't strictly necessary here,
     but it's good practice to give one to each
@@ -34,7 +30,7 @@ class TreeCell(Agent):
         '''
         Create a new tree.
         Args:
-            pos: The tree's coordinates on the grid. Used as the unique_id
+        pos: The tree's coordinates on the grid. Used as the unique_id
         '''
         super().__init__(unique_id, model)
         self.pos = pos
@@ -66,7 +62,6 @@ class TreeCell(Agent):
 
 # defines a random walker class
 
-
 class Walker(Agent):
     def __init__(self, unique_id, model, pos):
         super().__init__(unique_id, model)
@@ -91,23 +86,28 @@ class Walker(Agent):
         It also checks if the position is closeby, otherwise it does not go there
         '''
         # find hot trees in neighborhood
-        neighbors_list = self.model.grid.get_neighbors(
-            self.pos, moore=True, radius=self.vision)
-
-        neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
-
-        # find closest fire
-        min_life_bar = 0
-        min_distance = self.vision**2
         fire_intheneighborhood = False
-        for neighbor in neighbors_list:
-            current_life_bar = neighbor.life_bar
-            distance = abs(neighbor.pos[0]**2 - self.pos[0]**2) + abs(neighbor.pos[1]**2 - self.pos[1]**2)
-            if current_life_bar >= min_life_bar and distance <= min_distance:
-                min_distance = distance
-                min_life_bar = current_life_bar
-                closest_neighbor = neighbor
-                fire_intheneighborhood = True
+        for i in [5, 15, 25, 50, 100]:
+            limited_vision = int(self.vision * i / 100.)
+            # find hot trees in neighborhood
+            neighbors_list = self.model.grid.get_neighbors(
+                self.pos, moore=True, radius=limited_vision)
+
+            neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
+
+            # find closest fire
+            min_distance = limited_vision**2
+            min_life_bar = 0
+            for neighbor in neighbors_list:
+                current_life_bar = neighbor.life_bar
+                distance = abs(neighbor.pos[0]**2 - self.pos[0]**2) + abs(neighbor.pos[1]**2 - self.pos[1]**2)
+                if current_life_bar >= min_life_bar and distance <= min_distance:
+                    min_distance = distance
+                    min_life_bar = current_life_bar
+                    closest_neighbor = neighbor
+                    fire_intheneighborhood = True
+            if fire_intheneighborhood:
+                break
 
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
@@ -255,7 +255,7 @@ class Firetruck(Walker):
 
     def extinguish(self):
         neighbors_list = self.model.grid.get_neighbors(
-            self.pos, moore=True, radius=1)
+            self.pos, moore=True, radius=1, include_center=True)
         for tree in neighbors_list:
             if tree.condition == "On Fire":
                 tree.condition = "Is Extinguished"
