@@ -8,7 +8,7 @@ from mesa import Model, Agent
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
-#from Datacollector_v2 import DataCollector
+# from Datacollector_v2 import DataCollector
 from mesa.batchrunner import BatchRunner
 
 from agent import *
