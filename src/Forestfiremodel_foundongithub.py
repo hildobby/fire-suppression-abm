@@ -74,10 +74,10 @@ class ForestFire(Model):
         '''
         Method that provides an easy way of making a bunch of agents at once.
         '''
-        for i in range(int(n)): 
+        for i in range(int(n)):
             x = random.randrange(self.width)
             y = random.randrange(self.height)
-            while not self.grid.is_cell_empty((x,y)):
+            while not self.grid.is_cell_empty((x, y)):
                 x = random.randrange(self.width)
                 y = random.randrange(self.height)
             self.new_agent(agent_type, (x, y))
