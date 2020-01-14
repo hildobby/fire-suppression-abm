@@ -14,7 +14,6 @@ from agent import *
 
 # defines the model
 
-
 class ForestFire(Model):
     '''
     Simple Forest Fire model.
@@ -181,24 +180,26 @@ class ForestFire(Model):
 
 
 '''
-temperature = 20
-truck_strategy = 'Goes to the closest fire'
-density = 0.6
-width = 100
-height = 100
-num_firetruck = 30
-vision = 100
-max_speed = 2
-# wind[0],wind[1]=[direction,speed]
-wind = [1, 2]
-fire = ForestFire(width, height, density, temperature, truck_strategy, num_firetruck, wind, vision, max_speed)
-fire.run_model()
-results = fire.dc.get_model_vars_dataframe()
-agent_variable = fire.dc.get_agent_vars_dataframe()
-results_firetrucks = fire.dc.get_model_vars_dataframe()
+To be used if you want to run the model without the visualiser:
 
-print(results_firetrucks)
-results[['Fine', 'On Fire', 'Burned Out']].plot()
-results[['Extinguished']].plot()
-# plt.show()
+    temperature = 20
+    truck_strategy = 'Goes to the closest fire'
+    density = 0.6
+    width = 100
+    height = 100
+    num_firetruck = 30
+    vision = 100
+    max_speed = 2
+    # wind[0],wind[1]=[direction,speed]
+    wind = [1, 2]
+    fire = ForestFire(width, height, density, temperature, truck_strategy, num_firetruck, wind, vision, max_speed)
+    fire.run_model()
+    results = fire.dc.get_model_vars_dataframe()
+    agent_variable = fire.dc.get_agent_vars_dataframe()
+    results_firetrucks = fire.dc.get_model_vars_dataframe()
+
+    print(results_firetrucks)
+    results[['Fine', 'On Fire', 'Burned Out']].plot()
+    results[['Extinguished']].plot()
+    # plt.show()
 '''

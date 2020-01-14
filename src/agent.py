@@ -15,25 +15,25 @@ from mesa import Agent
 
 
 class TreeCell(Agent):
-    '''
-    A tree cell.
+'''
+A tree cell.
 
-    Attributes:
-        x, y: Grid coordinates
-        condition: Can be "Fine", "On Fire", or "Burned Out"
-        unique_id: (x,y) tuple.
-        live_bar : looks at the live bar of the tree
+Attributes:
+    x, y: Grid coordinates
+    condition: Can be "Fine", "On Fire", or "Burned Out"
+    unique_id: (x,y) tuple.
+    live_bar : looks at the live bar of the tree
 
-    unique_id isn't strictly necessary here,
-    but it's good practice to give one to each
-    agent anyway.
-    '''
+unique_id isn't strictly necessary here,
+but it's good practice to give one to each
+agent anyway.
+'''
 
     def __init__(self, model, unique_id, pos):
         '''
-            Create a new tree.
-            Args:
-                pos: The tree's coordinates on the grid. Used as the unique_id
+        Create a new tree.
+        Args:
+            pos: The tree's coordinates on the grid. Used as the unique_id
         '''
         super().__init__(unique_id, model)
         self.pos = pos
@@ -63,9 +63,7 @@ class TreeCell(Agent):
     def get_pos(self):
         return self.pos
 
-
 # defines a random walker class
-
 
 class Walker(Agent):
     def __init__(self, unique_id, model, pos):
@@ -140,7 +138,6 @@ class Walker(Agent):
         else:
             self.random_move()
 
-
 class Firetruck(Walker):
     def __init__(self, model, unique_id, pos, truck_strategy, vision, max_speed):
         super().__init__(unique_id, model, pos)
@@ -156,10 +153,10 @@ class Firetruck(Walker):
         return self.pos
 
     def step(self):
-        '''
-        This method should move the Sheep using the `random_move()`
-        method implemented earlier, then conditionally reproduce.
-        '''
+    '''
+    This method should move the Sheep using the `random_move()`
+    method implemented earlier, then conditionally reproduce.
+    '''
         if(self.truck_strategy == 'Goes to the closest fire'):
             self.closestfire_move()
         else:

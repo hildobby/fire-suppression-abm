@@ -7,7 +7,6 @@ from mesa.visualization.UserParam import UserSettableParameter
 from Forestfiremodel_foundongithub import ForestFire
 from agent import *
 
-
 def forest_fire_portrayal(agent):
     portrayal = {"w": 1,
                  "h": 1,
@@ -43,7 +42,7 @@ canvas_element = CanvasGrid(forest_fire_portrayal, 100, 100, 500, 500)
 tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
                           {"Label": "On Fire", "Color": "red"},
                           {"Label": "Burned Out", "Color": "black"}],
-                         data_collector_name='dc')
+                          data_collector_name='dc')
 extinguished_chart = ChartModule([{"Label": "Extinguished", "Color": "blue"}],
                                  data_collector_name='dc')
 
