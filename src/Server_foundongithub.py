@@ -52,14 +52,14 @@ model_parameters = {
     'height': 100,
     'width': 100,
     'wind': (3, 4),
-    'vision': 100, 
+    'vision': 100,
     'max_speed': 2,
     'density': UserSettableParameter('slider', 'Tree density', 0.65, 0.01, 1.0, 0.01),
     'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 100, 1),
     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 30, 0, 100, 1),
     'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Goes to the closest fire',
-    choices=['Goes to the closest fire', 'Random movements']),
-    }
+                                            choices=['Goes to the closest fire', 'Random movements']),
+}
 
 server = ModularServer(ForestFire, [canvas_element, tree_chart, extinguished_chart], "Forest Fire", model_parameters)
 
