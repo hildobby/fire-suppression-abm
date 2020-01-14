@@ -21,7 +21,19 @@ class ForestFire(Model):
     Simple Forest Fire model.
     '''
 
-    def __init__(self, height, width, density, temperature, truck_strategy, river_number, river_width, num_firetruck, wind, vision, max_speed):
+    def __init__(
+            self,
+            height,
+            width,
+            density,
+            temperature,
+            truck_strategy,
+            river_number,
+            river_width,
+            num_firetruck,
+            wind,
+            vision,
+            max_speed):
         super().__init__()
         '''
         Create a new forest fire model.
