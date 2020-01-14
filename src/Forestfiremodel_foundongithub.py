@@ -77,6 +77,7 @@ class ForestFire(Model):
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
 
         self.temperature = temperature
+        self.num_firetruck = num_firetruck
         self.truck_strategy = truck_strategy
         self.agents[10].condition = "On Fire"
         self.running = True
