@@ -150,7 +150,7 @@ class Walker(Agent):
     def closestfire_move(self):
         fire_intheneighborhood = False
         for i in [5, 15, 25, 50, 100]:
-            limited_vision = int(self.vision * i/100.)
+            limited_vision = int(self.vision * i / 100.)
             print(limited_vision)
             # find hot trees in neighborhood
             neighbors_list = self.model.grid.get_neighbors(
@@ -185,7 +185,6 @@ class Walker(Agent):
         #             min_distance = distance
         #             closest_neighbor = neighbor
         #             fire_intheneighborhood = True
-
 
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
