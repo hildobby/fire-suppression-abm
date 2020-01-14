@@ -148,22 +148,44 @@ class Walker(Agent):
 
     # Makes the firetruck move towards the fire
     def closestfire_move(self):
-
-        # find hot trees in neighborhood
-        neighbors_list = self.model.grid.get_neighbors(
-            self.pos, moore=True, radius=self.vision)
-
-        neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
-
-        # find closest fire
-        min_distance = self.vision**2
         fire_intheneighborhood = False
-        for neighbor in neighbors_list:
-            distance = abs(neighbor.pos[0]**2 - self.pos[0]**2) + abs(neighbor.pos[1]**2 - self.pos[1]**2)
-            if distance < min_distance:
-                min_distance = distance
-                closest_neighbor = neighbor
-                fire_intheneighborhood = True
+        for i in [5, 15, 25, 50, 100]:
+            limited_vision = int(self.vision * i/100.)
+            print(limited_vision)
+            # find hot trees in neighborhood
+            neighbors_list = self.model.grid.get_neighbors(
+                self.pos, moore=True, radius=limited_vision)
+
+            neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
+
+            # find closest fire
+            min_distance = limited_vision**2
+            for neighbor in neighbors_list:
+                distance = abs(neighbor.pos[0]**2 - self.pos[0]**2) + abs(neighbor.pos[1]**2 - self.pos[1]**2)
+                if distance < min_distance:
+                    min_distance = distance
+                    closest_neighbor = neighbor
+                    fire_intheneighborhood = True
+            if fire_intheneighborhood:
+                break
+
+        # if fire_intheneighborhood == False:
+        #     # find hot trees in neighborhood
+        #     neighbors_list = self.model.grid.get_neighbors(
+        #         self.pos, moore=True, radius=self.vision)
+        #
+        #     neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
+        #
+        #     # find closest fire
+        #     min_distance = self.vision**2
+        #     fire_intheneighborhood = False
+        #     for neighbor in neighbors_list:
+        #         distance = abs(neighbor.pos[0]**2 - self.pos[0]**2) + abs(neighbor.pos[1]**2 - self.pos[1]**2)
+        #         if distance < min_distance:
+        #             min_distance = distance
+        #             closest_neighbor = neighbor
+        #             fire_intheneighborhood = True
+
 
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
