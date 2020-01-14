@@ -17,21 +17,21 @@ from mesa import Agent
 class TreeCell(Agent):
 
 
-'''
-A tree cell.
+    '''
+    A tree cell.
 
-Attributes:
-    x, y: Grid coordinates
-    condition: Can be "Fine", "On Fire", or "Burned Out"
-    unique_id: (x,y) tuple.
-    live_bar : looks at the live bar of the tree
+    Attributes:
+        x, y: Grid coordinates
+        condition: Can be "Fine", "On Fire", or "Burned Out"
+        unique_id: (x,y) tuple.
+        live_bar : looks at the live bar of the tree
 
-unique_id isn't strictly necessary here,
-but it's good practice to give one to each
-agent anyway.
-'''
+    unique_id isn't strictly necessary here,
+    but it's good practice to give one to each
+    agent anyway.
+    '''
 
-   def __init__(self, model, unique_id, pos):
+    def __init__(self, model, unique_id, pos):
         '''
         Create a new tree.
         Args:
@@ -157,11 +157,11 @@ class Firetruck(Walker):
         return self.pos
 
     def step(self):
-    '''
-    This method should move the Sheep using the `random_move()`
-    method implemented earlier, then conditionally reproduce.
-    '''
-       if(self.truck_strategy == 'Goes to the closest fire'):
+        '''
+        This method should move the Sheep using the `random_move()`
+        method implemented earlier, then conditionally reproduce.
+        '''
+        if(self.truck_strategy == 'Goes to the closest fire'):
             self.closestfire_move()
         else:
             self.random_move()
