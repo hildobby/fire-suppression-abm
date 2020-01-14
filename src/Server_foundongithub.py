@@ -37,6 +37,7 @@ def forest_fire_portrayal(agent):
 
     return portrayal
 
+
 canvas_element = CanvasGrid(forest_fire_portrayal, 100, 100, 500, 500)
 # create line graph
 tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
