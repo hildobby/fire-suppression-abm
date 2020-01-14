@@ -14,6 +14,7 @@ from agent import *
 
 # defines the model
 
+
 class ForestFire(Model):
     '''
     Simple Forest Fire model.

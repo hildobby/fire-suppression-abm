@@ -15,6 +15,8 @@ from mesa import Agent
 
 
 class TreeCell(Agent):
+
+
 '''
 A tree cell.
 
@@ -29,7 +31,7 @@ but it's good practice to give one to each
 agent anyway.
 '''
 
-    def __init__(self, model, unique_id, pos):
+   def __init__(self, model, unique_id, pos):
         '''
         Create a new tree.
         Args:
@@ -64,6 +66,7 @@ agent anyway.
         return self.pos
 
 # defines a random walker class
+
 
 class Walker(Agent):
     def __init__(self, unique_id, model, pos):
@@ -138,6 +141,7 @@ class Walker(Agent):
         else:
             self.random_move()
 
+
 class Firetruck(Walker):
     def __init__(self, model, unique_id, pos, truck_strategy, vision, max_speed):
         super().__init__(unique_id, model, pos)
@@ -157,7 +161,7 @@ class Firetruck(Walker):
     This method should move the Sheep using the `random_move()`
     method implemented earlier, then conditionally reproduce.
     '''
-        if(self.truck_strategy == 'Goes to the closest fire'):
+       if(self.truck_strategy == 'Goes to the closest fire'):
             self.closestfire_move()
         else:
             self.random_move()
