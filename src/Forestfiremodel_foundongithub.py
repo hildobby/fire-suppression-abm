@@ -46,6 +46,7 @@ class ForestFire(Model):
         self.height = height
         self.width = width
         self.density = density
+        self.temperature = temperature
 
         self.n_agents = 0
         self.agents = []
