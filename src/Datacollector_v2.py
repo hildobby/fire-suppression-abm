@@ -97,8 +97,12 @@ class DataCollector:
                 self._new_model_reporter(name, reporter)
 
         if agent_reporters is not None:
-            for agent, name,  reporter in agent_reporters.items():
-                self._new_agent_reporter(name, reporter)
+            for agent, dict in agent_reporters.items():
+                for name, reporter in dict.items():
+                    print('agent, dict, name, reporter: ', agent, dict, name, reporter)
+                    self._new_agent_reporter(name, reporter, agent)
+
+
 
         if tables is not None:
             for name, columns in tables.items():
@@ -117,7 +121,7 @@ class DataCollector:
         self.model_reporters[name] = reporter
         self.model_vars[name] = []
 
-    def _new_agent_reporter(self, name, reporter):
+    def _new_agent_reporter(self, name, reporter, agent):
         """ Add a new agent-level reporter to collect.
 
         Args:
@@ -128,9 +132,11 @@ class DataCollector:
         """
         if type(reporter) is str:
             attribute_name = reporter
+            print("Attribute name: ", attribute_name)
             reporter = partial(self._getattr, reporter)
             reporter.attribute_name = attribute_name
-        self.agent_reporters[name] = reporter
+        self.agent_reporters[agent, name] = reporter
+        print(self.agent_reporters)
 
     def _new_table(self, table_name, table_columns):
         """ Add a new table that objects can write to.

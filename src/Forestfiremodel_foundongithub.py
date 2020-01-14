@@ -8,6 +8,7 @@ from mesa import Model, Agent
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
+#from Datacollector_v2 import DataCollector
 from mesa.batchrunner import BatchRunner
 
 from agent import *
@@ -53,6 +54,7 @@ class ForestFire(Model):
                 "Extinguished": lambda m: self.count_extinguished_fires(m)
             },
             tables={"Life bar": "life_bar", "Burning rate": "burning_rate"})
+        # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
         self.init_population(TreeCell, self.initial_tree)
 
@@ -202,8 +204,8 @@ To be used if you want to run the model without the visualiser:
     agent_variable = fire.dc.get_agent_vars_dataframe()
     results_firetrucks = fire.dc.get_model_vars_dataframe()
 
-    print(results_firetrucks)
-    results[['Fine', 'On Fire', 'Burned Out']].plot()
-    results[['Extinguished']].plot()
-    # plt.show()
+print(results_firetrucks)
+results[['Fine', 'On Fire', 'Burned Out']].plot()
+results[['Extinguished']].plot()
+# plt.show()
 '''
