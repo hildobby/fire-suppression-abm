@@ -10,6 +10,7 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 import random
 from mesa import Agent
 
+
 class TreeCell(Agent):
 
     '''
@@ -61,6 +62,7 @@ class TreeCell(Agent):
         return self.pos
 
 # defines a random walker class
+
 
 class Walker(Agent):
     def __init__(self, unique_id, model, pos):
