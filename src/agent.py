@@ -89,7 +89,7 @@ class Walker(Agent):
         '''
         # find hot trees in neighborhood
         fire_intheneighborhood = False
-        for i in [5, 15, 25, 50, 100]:
+        for i in [25, 50, 100]:
             limited_vision = int(self.vision * i / 100.)
             # find hot trees in neighborhood
             neighbors_list = self.model.grid.get_neighbors(
