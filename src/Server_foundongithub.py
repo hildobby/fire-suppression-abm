@@ -55,7 +55,7 @@ model_parameters = {
     'vision': 100,
     'max_speed': 2,
     'density': UserSettableParameter('slider', 'Tree density', 0.65, 0.01, 1.0, 0.01),
-    'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 100, 1),  # Unused for now
+    'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1),
     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 30, 0, 300, 1),
     'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Goes to the biggest fire',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',

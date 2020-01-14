@@ -2,6 +2,8 @@ import random
 
 import numpy as np
 
+import math
+
 import matplotlib.pyplot as plt
 
 from mesa import Model, Agent
@@ -117,16 +119,21 @@ class ForestFire(Model):
 
         self.dc.collect(self)
 
+        num_fine_trees = self.count_type(self, "Fine")
+        if self.is_tree_fine(self):
+            self.randomfire(self, self.temperature, num_fine_trees)
+
         # Halt if no more fire
         if self.count_type(self, "On Fire") == 0:
             print(" \n \n Fire is gone ! \n \n")
             self.running = False
 
-    def randomfire(self, temperature, num_firetruck):
-        if (random.random() < (self.temperature / 1000.0)):
-            concerned_tree = random.randint(0, len(self.agents) - num_firetruck)
-            if (self.agents[concerned_tree].condition == "Fine"):
-                self.agents[concerned_tree].condition = "On Fire"
+    @staticmethod
+    def randomfire(self, temperature, num_fine_trees):
+        for i in range(0, num_fine_trees):
+            if (random.random() < (math.exp(temperature/10) / 600.0) and self.agents[num_fine_trees].condition == "Fine"):
+                self.agents[num_fine_trees].condition = "On Fire"
+            return True
 
     @staticmethod
     def count_type(model, tree_condition):
@@ -139,6 +146,16 @@ class ForestFire(Model):
             if tree.condition == tree_condition:
                 count += 1
         return count
+    
+    @staticmethod
+    def is_tree_fine(model):
+        '''
+        Helper method to check if tree_condition is "Fine".
+        '''
+        for tree in model.schedule_TreeCell.agents:
+            if tree.condition == "Fine":
+                return True
+            return False
 
     @staticmethod
     def count_extinguished_fires(model):
