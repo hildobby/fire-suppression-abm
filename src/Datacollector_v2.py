@@ -102,8 +102,6 @@ class DataCollector:
                     print('agent, dict, name, reporter: ', agent, dict, name, reporter)
                     self._new_agent_reporter(name, reporter, agent)
 
-
-
         if tables is not None:
             for name, columns in tables.items():
                 self._new_table(name, columns)
@@ -116,7 +114,7 @@ class DataCollector:
             reporter: Attribute string, or function object that returns the
                       variable when given a model instance.
         """
-        if type(reporter) is str:
+        if isinstance(reporter, str):
             reporter = partial(self._getattr, reporter)
         self.model_reporters[name] = reporter
         self.model_vars[name] = []
@@ -130,7 +128,7 @@ class DataCollector:
                       variable when given a model instance.
 
         """
-        if type(reporter) is str:
+        if isinstance(reporter, str):
             attribute_name = reporter
             print("Attribute name: ", attribute_name)
             reporter = partial(self._getattr, reporter)
@@ -174,7 +172,6 @@ class DataCollector:
             agent_records = self._record_agents(model)
             self._agent_records[model.schedule.steps] = list(agent_records)
 
-
     def add_table_row(self, table_name, row, ignore_missing=False):
         """ Add a row dictionary to a specific table.
 
@@ -196,7 +193,6 @@ class DataCollector:
             else:
                 raise Exception("Could not insert row with missing column")
 
-
     @staticmethod
     def _getattr(name, object):
         """ Turn around arguments of getattr to make it partially callable."""
@@ -210,7 +206,6 @@ class DataCollector:
 
         """
         return pd.DataFrame(self.model_vars)
-
 
     def get_agent_vars_dataframe(self):
         """ Create a pandas DataFrame from the agent variables.
@@ -229,7 +224,6 @@ class DataCollector:
         )
         df = df.set_index(["Step", "AgentID"])
         return df
-
 
     def get_table_dataframe(self, table_name):
         """ Create a pandas DataFrame from a particular table.
