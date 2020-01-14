@@ -52,7 +52,7 @@ class ForestFire(Model):
                 "Burned Out": lambda m: self.count_type(m, "Burned Out"),
                 "Extinguished": lambda m: self.count_extinguished_fires(m)
             },
-            agent_reporters={"Life bar": "life_bar", "Burning rate": "burning_rate"})
+            tables={"Life bar": "life_bar", "Burning rate": "burning_rate"})
 
         self.init_population(TreeCell, self.initial_tree)
 
@@ -60,7 +60,7 @@ class ForestFire(Model):
             self.schedule_TreeCell.add(self.agents[i])
             # self.schedule.add(self.agents[i])
 
-        self.init_firefighters(Firetruck, num_firetruck, vision, max_speed)
+        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
 
         self.temperature = temperature
         self.truck_strategy = truck_strategy
@@ -82,12 +82,12 @@ class ForestFire(Model):
                 y = random.randrange(self.height)
             self.new_agent(agent_type, (x, y))
 
-    def init_firefighters(self, agent_type, num_firetruck, vision, max_speed):
+    def init_firefighters(self, agent_type, num_firetruck, truck_strategy, vision, max_speed):
         for i in range(num_firetruck):
             self.n_agents += 1
             x = random.randrange(self.width)
             y = random.randrange(self.height)
-            firetruck = self.new_firetruck(Firetruck, (x, y), vision, max_speed)
+            firetruck = self.new_firetruck(Firetruck, (x, y), truck_strategy, vision, max_speed)
             self.schedule_FireTruck.add(firetruck)
             # self.schedule.add(firetruck)
 
@@ -153,14 +153,14 @@ class ForestFire(Model):
 
         return new_agent
 
-    def new_firetruck(self, agent_type, pos, vision, max_speed):
+    def new_firetruck(self, agent_type, pos, truck_strategy, vision, max_speed):
         '''
         Method that enables us to add agents of a given type.
         '''
         self.n_agents += 1
 
         # Create a new agent of the given type
-        new_agent = agent_type(self, self.n_agents, pos, vision, max_speed)
+        new_agent = agent_type(self, self.n_agents, pos, truck_strategy, vision, max_speed)
 
         # Place the agent on the grid
         self.grid.place_agent(new_agent, pos)
@@ -184,24 +184,26 @@ class ForestFire(Model):
 
 
 '''
-temperature = 20
-truck_strategy = 'Goes to the closest fire'
-density = 0.6
-width = 100
-height = 100
-num_firetruck = 30
-vision = 100
-max_speed = 2
-# wind[0],wind[1]=[direction,speed]
-wind = [1, 2]
-fire = ForestFire(width, height, density, temperature, truck_strategy, num_firetruck, wind, vision, max_speed)
-fire.run_model()
-results = fire.dc.get_model_vars_dataframe()
-agent_variable = fire.dc.get_agent_vars_dataframe()
-results_firetrucks = fire.dc.get_model_vars_dataframe()
+To be used if you want to run the model without the visualiser:
 
-print(results_firetrucks)
-results[['Fine', 'On Fire', 'Burned Out']].plot()
-results[['Extinguished']].plot()
-# plt.show()
+    temperature = 20
+    truck_strategy = 'Goes to the closest fire'
+    density = 0.6
+    width = 100
+    height = 100
+    num_firetruck = 30
+    vision = 100
+    max_speed = 2
+    # wind[0],wind[1]=[direction,speed]
+    wind = [1, 2]
+    fire = ForestFire(width, height, density, temperature, truck_strategy, num_firetruck, wind, vision, max_speed)
+    fire.run_model()
+    results = fire.dc.get_model_vars_dataframe()
+    agent_variable = fire.dc.get_agent_vars_dataframe()
+    results_firetrucks = fire.dc.get_model_vars_dataframe()
+
+    print(results_firetrucks)
+    results[['Fine', 'On Fire', 'Burned Out']].plot()
+    results[['Extinguished']].plot()
+    # plt.show()
 '''

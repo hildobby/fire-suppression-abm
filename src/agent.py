@@ -15,6 +15,7 @@ from mesa import Agent
 
 
 class TreeCell(Agent):
+
     '''
     A tree cell.
 
@@ -31,16 +32,17 @@ class TreeCell(Agent):
 
     def __init__(self, model, unique_id, pos):
         '''
-            Create a new tree.
-            Args:
-                pos: The tree's coordinates on the grid. Used as the unique_id
+        Create a new tree.
+        Args:
+            pos: The tree's coordinates on the grid. Used as the unique_id
         '''
         super().__init__(unique_id, model)
         self.pos = pos
         self.unique_id = unique_id
         self.condition = "Fine"
-        self.life_bar = 100        # give the tree a life bar
-        self.burning_rate = 20
+        self.life_bar = 100       # give the tree a life bar
+        self.burning_rate = 5
+        self.probability = 0.7
 
     def step(self):
         '''
@@ -50,18 +52,17 @@ class TreeCell(Agent):
             neighbors = self.model.grid.get_neighbors(self.pos, moore=True)
             for neighbor in neighbors:
                 if isinstance(neighbor, TreeCell):
-                    if neighbor.condition == "Fine":
+                    if neighbor.condition == "Fine" and random.uniform(0, 1) < self.probability:
                         neighbor.condition = "On Fire"
 
             # if on fire reduce life_bar
             if self.life_bar != 0:
-                self.life_bar -= 20
+                self.life_bar -= self.burning_rate
             else:
                 self.condition = "Burned Out"
 
     def get_pos(self):
         return self.pos
-
 
 # defines a random walker class
 
@@ -141,15 +142,15 @@ class Walker(Agent):
 
 
 class Firetruck(Walker):
-    def __init__(self, model, unique_id, pos, vision, max_speed):
+    def __init__(self, model, unique_id, pos, truck_strategy, vision, max_speed):
         super().__init__(unique_id, model, pos)
         self.unique_id = unique_id
         self.condition = "Full"
         self.extinguished = 0
+        self.truck_strategy = truck_strategy
         self.vision = vision
         self.max_speed = max_speed
         self.life_bar = -5
-        self.burning_rate = 20  # needs to be deleted somehow
 
     def get_pos(self):
         return self.pos
@@ -159,7 +160,10 @@ class Firetruck(Walker):
         This method should move the Sheep using the `random_move()`
         method implemented earlier, then conditionally reproduce.
         '''
-        self.closestfire_move()
+        if(self.truck_strategy == 'Goes to the closest fire'):
+            self.closestfire_move()
+        else:
+            self.random_move()
         self.extinguish()
 
     def extinguish(self):
