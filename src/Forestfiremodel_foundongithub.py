@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from mesa import Model, Agent
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
-from mesa.datacollection import DataCollector
-#from Datacollector_v2 import DataCollector
+#from mesa.datacollection import DataCollector
+from Datacollector_v2 import DataCollector
 from mesa.batchrunner import BatchRunner
 
 from agent import *
@@ -65,14 +65,14 @@ class ForestFire(Model):
                 "Burned Out": lambda m: self.count_type(m, "Burned Out"),
                 "Extinguished": lambda m: self.count_extinguished_fires(m)
             },
-            tables={"Life bar": "life_bar", "Burning rate": "burning_rate"})
+            agent_reporters={TreeCell: {"Life bar": "life_bar", "Burning rate": "burning_rate"}})
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
         self.init_population(TreeCell, self.initial_tree)
 
         for i in range(len(self.agents)):
             self.schedule_TreeCell.add(self.agents[i])
-            # self.schedule.add(self.agents[i])
+            self.schedule.add(self.agents[i])
 
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
 
@@ -104,7 +104,7 @@ class ForestFire(Model):
             y = random.randrange(self.height)
             firetruck = self.new_firetruck(Firetruck, (x, y), truck_strategy, vision, max_speed)
             self.schedule_FireTruck.add(firetruck)
-            # self.schedule.add(firetruck)
+            self.schedule.add(firetruck)
 
     def step(self):
         '''
@@ -113,11 +113,12 @@ class ForestFire(Model):
 
         self.schedule_TreeCell.step()
         self.schedule_FireTruck.step()
-
+        print("STEP")
         self.dc.collect(self)
 
         # Halt if no more fire
         if self.count_type(self, "On Fire") == 0:
+            print(self.count_type(self, "On Fire"))
             print(" \n \n Fire is gone ! \n \n")
             self.running = False
 
@@ -198,27 +199,28 @@ class ForestFire(Model):
         self.agents.remove(agent)
 
 
-'''
-To be used if you want to run the model without the visualiser:
 
-    temperature = 20
-    truck_strategy = 'Goes to the closest fire'
-    density = 0.6
-    width = 100
-    height = 100
-    num_firetruck = 30
-    vision = 100
-    max_speed = 2
-    # wind[0],wind[1]=[direction,speed]
-    wind = [1, 2]
-    fire = ForestFire(width, height, density, temperature, truck_strategy, num_firetruck, wind, vision, max_speed)
-    fire.run_model()
-    results = fire.dc.get_model_vars_dataframe()
-    agent_variable = fire.dc.get_agent_vars_dataframe()
-    results_firetrucks = fire.dc.get_model_vars_dataframe()
+# To be used if you want to run the model without the visualiser:
 
-print(results_firetrucks)
-results[['Fine', 'On Fire', 'Burned Out']].plot()
-results[['Extinguished']].plot()
-# plt.show()
-'''
+temperature = 20
+truck_strategy = 'Goes to the closest fire'
+density = 0.6
+width = 100
+height = 100
+num_firetruck = 30
+vision = 100
+max_speed = 2
+river_number = 0
+river_width = 0
+# wind[0],wind[1]=[direction,speed]
+wind = [1, 2]
+fire = ForestFire(width, height, density, temperature, truck_strategy, river_number, river_width, num_firetruck, wind, vision, max_speed)
+fire.run_model()
+results = fire.dc.get_model_vars_dataframe()
+agent_variable = fire.dc.get_agent_vars_dataframe()
+results_firetrucks = fire.dc.get_model_vars_dataframe()
+
+print(agent_variable)
+agent_variable['AgentID'==1].plot()
+agent_variable['Burning rate'].plot()
+plt.show()
