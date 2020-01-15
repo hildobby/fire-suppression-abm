@@ -64,7 +64,7 @@ model_parameters = {
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
                                                      'Random movements']),
     'text_settings': UserSettableParameter('static_text', value='Other Settings'),
-    'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value = True),
+    'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=True),
     'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1),
 }
 
