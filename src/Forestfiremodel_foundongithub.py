@@ -80,6 +80,7 @@ class ForestFire(Model):
 
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
 
+        self.random_fires = random_fires
         self.temperature = temperature
         self.num_firetruck = num_firetruck
         self.truck_strategy = truck_strategy
@@ -120,9 +121,10 @@ class ForestFire(Model):
 
         self.dc.collect(self)
 
-        num_fine_trees = self.count_type(self, "Fine")
-        if self.is_tree_fine(self):
-            self.randomfire(self, self.temperature, num_fine_trees)
+        if self.random_fires == True:
+            num_fine_trees = self.count_type(self, "Fine")
+            if self.agents[num_fine_trees].condition == "Fine":
+                self.randomfire(self, self.temperature, num_fine_trees)
 
         # Halt if no more fire
         if self.count_type(self, "On Fire") == 0:
@@ -148,16 +150,6 @@ class ForestFire(Model):
             if tree.condition == tree_condition:
                 count += 1
         return count
-
-    @staticmethod
-    def is_tree_fine(model):
-        '''
-        Helper method to check if tree_condition is "Fine".
-        '''
-        for tree in model.schedule_TreeCell.agents:
-            if tree.condition == "Fine":
-                return True
-            return False
 
     @staticmethod
     def count_extinguished_fires(model):
