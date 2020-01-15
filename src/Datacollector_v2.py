@@ -158,14 +158,14 @@ class DataCollector:
             attributes = [func.attribute_name for func in rep_funcs]
 
             get_reports = attrgetter(*prefix + attributes)
-            #print(get_reports)
+            # print(get_reports)
         else:
             def get_reports(agent):
                 prefix = (agent.model.schedule.steps, agent.unique_id)
                 reports = tuple(rep(agent) for rep in rep_funcs)
                 return prefix + reports
 
-        #print(model.schedule.agents)
+        # print(model.schedule.agents)
 
         #print(list(filter(lambda elm: isinstance(elm, self.agent), model.schedule.agents)))
         agent_records = map(get_reports, list(filter(lambda elm: isinstance(elm, self.agent), model.schedule.agents)))

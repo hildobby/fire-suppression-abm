@@ -213,9 +213,7 @@ class ForestFire(Model):
         self.agents.remove(agent)
 
 
-
 # To be used if you want to run the model without the visualiser:
-
 temperature = 20
 truck_strategy = 'Goes to the closest fire'
 density = 0.6
@@ -228,13 +226,24 @@ river_number = 0
 river_width = 0
 # wind[0],wind[1]=[direction,speed]
 wind = [1, 2]
-fire = ForestFire(width, height, density, temperature, truck_strategy, river_number, river_width, num_firetruck, wind, vision, max_speed)
+fire = ForestFire(
+    width,
+    height,
+    density,
+    temperature,
+    truck_strategy,
+    river_number,
+    river_width,
+    num_firetruck,
+    wind,
+    vision,
+    max_speed)
 fire.run_model()
 results = fire.dc.get_model_vars_dataframe()
 agent_variable = fire.dc.get_agent_vars_dataframe()
 results_firetrucks = fire.dc.get_model_vars_dataframe()
 
 print(agent_variable)
-agent_variable['AgentID'==1].plot()
+agent_variable['AgentID' == 1].plot()
 agent_variable['Burning rate'].plot()
 plt.show()
