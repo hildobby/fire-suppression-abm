@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 from mesa import Model, Agent
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
-from mesa.datacollection import DataCollector
-# from Datacollector_v2 import DataCollector
+#from mesa.datacollection import DataCollector
+from Datacollector_v2 import DataCollector
 from mesa.batchrunner import BatchRunner
 from random import randint
 from agent import *
@@ -52,7 +52,7 @@ class ForestFire(Model):
         
         self.river_length = width
         # Will suck when set to higher than 2
-        self.river_width = 2
+        self.river_width = river_width
 
         self.temperature = temperature
 
@@ -79,11 +79,11 @@ class ForestFire(Model):
                 "Extinguished": lambda m: self.count_extinguished_fires(m)
             },
 
-            tables={"Life bar": "life_bar", "Burning rate": "burning_rate"})
-        
-        self.init_river(self.river_size)
+            #tables={"Life bar": "life_bar", "Burning rate": "burning_rate"},
 
             agent_reporters={TreeCell: {"Life bar": "life_bar", "Burning rate": "burning_rate"}})
+        
+        self.init_river(self.river_size)
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
         self.init_vegetation(TreeCell, self.initial_tree)
@@ -108,19 +108,22 @@ class ForestFire(Model):
         '''
         Creating a river
         '''
-        x = -1
-        y = random.randrange(self.height)
-        for i in range(int(n)): 
-            x += 1
-            y += random.randint(-1, 1)
-            while y <= 0 or y >= self.height or not self.grid.is_cell_empty((x,y)):
+        if self.river_width == 0:
+            pass
+        else:
+            x = -1
+            y = random.randrange(self.height)
+            for i in range(int(n)): 
+                x += 1
                 y += random.randint(-1, 1)
-            self.new_river(RiverCell, (x, y))
-            for j in range(self.river_width-1):
-                y += random.choice([-1, 1])
                 while y <= 0 or y >= self.height or not self.grid.is_cell_empty((x,y)):
-                    y += random.choice([-1, 1])
+                    y += random.randint(-1, 1)
                 self.new_river(RiverCell, (x, y))
+                for j in range(self.river_width-1):
+                    y += random.choice([-1, 1])
+                    while y <= 0 or y >= self.height or not self.grid.is_cell_empty((x,y)):
+                        y += random.choice([-1, 1])
+                    self.new_river(RiverCell, (x, y))
             
     def init_vegetation(self, agent_type, n):
         '''
@@ -265,16 +268,18 @@ vision = 100
 max_speed = 2
 river_number = 0
 river_width = 0
+random_fires = 1
 # wind[0],wind[1]=[direction,speed]
 wind = [1, 2]
 fire = ForestFire(
-    width,
     height,
+    width,
     density,
     temperature,
     truck_strategy,
     river_number,
     river_width,
+    random_fires,
     num_firetruck,
     wind,
     vision,
@@ -283,8 +288,3 @@ fire.run_model()
 results = fire.dc.get_model_vars_dataframe()
 agent_variable = fire.dc.get_agent_vars_dataframe()
 results_firetrucks = fire.dc.get_model_vars_dataframe()
-
-print(agent_variable)
-agent_variable['AgentID' == 1].plot()
-agent_variable['Burning rate'].plot()
-plt.show()
