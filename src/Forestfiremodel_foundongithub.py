@@ -79,11 +79,11 @@ class ForestFire(Model):
                 "Extinguished": lambda m: self.count_extinguished_fires(m)
             },
 
-            tables={"Life bar": "life_bar", "Burning rate": "burning_rate"})
+        tables={"Life bar": "life_bar", "Burning rate": "burning_rate"})
 
         self.init_river(self.river_size)
 
-            agent_reporters = {TreeCell: {"Life bar": "life_bar", "Burning rate": "burning_rate"}})
+        agent_reporters = {TreeCell: {"Life bar": "life_bar", "Burning rate": "burning_rate"}})
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
         self.init_vegetation(TreeCell, self.initial_tree)
