@@ -41,7 +41,7 @@ class TreeCell(Agent):
         self.burning_rate = 20
         self.probability = 0.5
 
-        self.speed= 0.47
+        self.speed = 0.47
 
     def step(self):
         '''
@@ -51,41 +51,44 @@ class TreeCell(Agent):
             neighbors = self.model.grid.get_neighbors(self.pos, moore=True)
             for neighbor in neighbors:
 
-               if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine":
-                           # Look at the position of the neighbor and the wind which to calculate the probability
-                           if self.pos[0]<neighbor.pos[0] and self.pos[1]==neighbor.pos[1]:
-                                if random.uniform(0,1)< self.probability + (self.model.wind[0]*self.speed):
-                                    neighbor.condition="On Fire"
-                                    break
-                           elif self.pos[0]>neighbor.pos[0] and self.pos[1]==neighbor.pos[1]:
-                                if random.uniform(0,1)< self.probability - (self.model.wind[0]*self.speed):
-                                    neighbor.condition = "On Fire"
-                                    break
-                           elif self.pos[0] == neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
-                                if random.uniform(0,1)< self.probability + (self.model.wind[1]*self.speed):
-                                    neighbor.condition = "On Fire"
-                                    break
-                           elif self.pos[0] == neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
-                                    if random.uniform(0, 1) < self.probability - (self.model.wind[1] * self.speed):
-                                        neighbor.condition = "On Fire"
-                                    break
-                           elif self.pos[0] < neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
-                               if random.uniform(0, 1) < self.probability + (self.model.wind[0] * self.speed *self.model.wind[0]):
-                                   neighbor.condition = "On Fire"
-                                   break
-                           elif self.pos[0] < neighbor.pos[0] and self.pos[1] > neighbor.pos[1]:
-                               if random.uniform(0, 1) < self.probability - (self.model.wind[1] * self.speed *self.model.wind[0]):
-                                   neighbor.condition = "On Fire"
-                                   break
-                           elif self.pos[0] > neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
-                               if random.uniform(0, 1) < self.probability - (self.model.wind[0] * self.speed* self.model.wind[1]):
-                                   neighbor.condition = "On Fire"
-                                   break
-                           elif self.pos[0] > neighbor.pos[0] and self.pos[1] > neighbor.pos[1]:
-                               if random.uniform(0, 1) < self.probability - (self.model.wind[0] * self.speed *self.model.wind[0]):
-                                   neighbor.condition = "On Fire"
-                                   break
-
+                if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine":
+                    # Look at the position of the neighbor and the wind which to calculate the probability
+                    if self.pos[0] < neighbor.pos[0] and self.pos[1] == neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability + (self.model.wind[0] * self.speed):
+                            neighbor.condition = "On Fire"
+                            break
+                    elif self.pos[0] > neighbor.pos[0] and self.pos[1] == neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability - (self.model.wind[0] * self.speed):
+                            neighbor.condition = "On Fire"
+                            break
+                    elif self.pos[0] == neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability + (self.model.wind[1] * self.speed):
+                            neighbor.condition = "On Fire"
+                            break
+                    elif self.pos[0] == neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability - (self.model.wind[1] * self.speed):
+                            neighbor.condition = "On Fire"
+                        break
+                    elif self.pos[0] < neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability + \
+                                (self.model.wind[0] * self.speed * self.model.wind[0]):
+                            neighbor.condition = "On Fire"
+                            break
+                    elif self.pos[0] < neighbor.pos[0] and self.pos[1] > neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability - \
+                                (self.model.wind[1] * self.speed * self.model.wind[0]):
+                            neighbor.condition = "On Fire"
+                            break
+                    elif self.pos[0] > neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability - \
+                                (self.model.wind[0] * self.speed * self.model.wind[1]):
+                            neighbor.condition = "On Fire"
+                            break
+                    elif self.pos[0] > neighbor.pos[0] and self.pos[1] > neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability - \
+                                (self.model.wind[0] * self.speed * self.model.wind[0]):
+                            neighbor.condition = "On Fire"
+                            break
 
             # if on fire reduce life_bar
             if self.life_bar != 0:

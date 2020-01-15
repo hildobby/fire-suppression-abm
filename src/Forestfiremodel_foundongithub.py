@@ -61,7 +61,7 @@ class ForestFire(Model):
         self.schedule = RandomActivation(self)
 
         # Set the wind
-        self.wind=(randint(-1,1),randint(-1,1))
+        self.wind = (randint(-1, 1), randint(-1, 1))
         self.grid = MultiGrid(height, width, torus=False)
 
         self.dc = DataCollector(
