@@ -121,7 +121,7 @@ class ForestFire(Model):
 
         self.dc.collect(self)
 
-        if self.random_fires == True:
+        if self.random_fires:
             num_fine_trees = self.count_type(self, "Fine")
             if self.agents[num_fine_trees].condition == "Fine":
                 self.randomfire(self, self.temperature, num_fine_trees)
