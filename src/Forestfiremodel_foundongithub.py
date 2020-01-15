@@ -32,6 +32,7 @@ class ForestFire(Model):
             truck_strategy,
             river_number,
             river_width,
+            random_fires,
             num_firetruck,
             wind,
             vision,
