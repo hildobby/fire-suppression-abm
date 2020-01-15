@@ -12,7 +12,7 @@ from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
 # from Datacollector_v2 import DataCollector
 from mesa.batchrunner import BatchRunner
-
+from random import randint
 from agent import *
 
 # defines the model
@@ -60,6 +60,8 @@ class ForestFire(Model):
         self.schedule_FireTruck = RandomActivation(self)
         self.schedule = RandomActivation(self)
 
+        # Set the wind
+        self.wind=(randint(-1,1),randint(-1,1))
         self.grid = MultiGrid(height, width, torus=False)
 
         self.dc = DataCollector(

@@ -38,8 +38,10 @@ class TreeCell(Agent):
         self.unique_id = unique_id
         self.condition = "Fine"
         self.life_bar = 100       # give the tree a life bar
-        self.burning_rate = 5
-        self.probability = 0.7
+        self.burning_rate = 20
+        self.probability = 0.5
+
+        self.speed= 0.47
 
     def step(self):
         '''
@@ -48,9 +50,42 @@ class TreeCell(Agent):
         if self.condition == "On Fire":
             neighbors = self.model.grid.get_neighbors(self.pos, moore=True)
             for neighbor in neighbors:
-                if isinstance(neighbor, TreeCell):
-                    if neighbor.condition == "Fine" and random.uniform(0, 1) < self.probability:
-                        neighbor.condition = "On Fire"
+
+               if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine":
+                           # Look at the position of the neighbor and the wind which to calculate the probability
+                           if self.pos[0]<neighbor.pos[0] and self.pos[1]==neighbor.pos[1]:
+                                if random.uniform(0,1)< self.probability + (self.model.wind[0]*self.speed):
+                                    neighbor.condition="On Fire"
+                                    break
+                           elif self.pos[0]>neighbor.pos[0] and self.pos[1]==neighbor.pos[1]:
+                                if random.uniform(0,1)< self.probability - (self.model.wind[0]*self.speed):
+                                    neighbor.condition = "On Fire"
+                                    break
+                           elif self.pos[0] == neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
+                                if random.uniform(0,1)< self.probability + (self.model.wind[1]*self.speed):
+                                    neighbor.condition = "On Fire"
+                                    break
+                           elif self.pos[0] == neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
+                                    if random.uniform(0, 1) < self.probability - (self.model.wind[1] * self.speed):
+                                        neighbor.condition = "On Fire"
+                                    break
+                           elif self.pos[0] < neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
+                               if random.uniform(0, 1) < self.probability + (self.model.wind[0] * self.speed *self.model.wind[0]):
+                                   neighbor.condition = "On Fire"
+                                   break
+                           elif self.pos[0] < neighbor.pos[0] and self.pos[1] > neighbor.pos[1]:
+                               if random.uniform(0, 1) < self.probability - (self.model.wind[1] * self.speed *self.model.wind[0]):
+                                   neighbor.condition = "On Fire"
+                                   break
+                           elif self.pos[0] > neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
+                               if random.uniform(0, 1) < self.probability - (self.model.wind[0] * self.speed* self.model.wind[1]):
+                                   neighbor.condition = "On Fire"
+                                   break
+                           elif self.pos[0] > neighbor.pos[0] and self.pos[1] > neighbor.pos[1]:
+                               if random.uniform(0, 1) < self.probability - (self.model.wind[0] * self.speed *self.model.wind[0]):
+                                   neighbor.condition = "On Fire"
+                                   break
+
 
             # if on fire reduce life_bar
             if self.life_bar != 0:
@@ -153,7 +188,7 @@ class Walker(Agent):
         fire_intheneighborhood = False
         for i in [5, 15, 25, 50, 100]:
             limited_vision = int(self.vision * i / 100.)
-            print(limited_vision)
+
             # find hot trees in neighborhood
             neighbors_list = self.model.grid.get_neighbors(
                 self.pos, moore=True, radius=limited_vision)
