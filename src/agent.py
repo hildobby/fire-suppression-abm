@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
-
 """
 Created on Wed Jan  8 15:30:03 2020
 
@@ -10,7 +8,6 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 
 """
 import random
-
 from mesa import Agent
 
 
@@ -23,7 +20,7 @@ class TreeCell(Agent):
         x, y: Grid coordinates
         condition: Can be "Fine", "On Fire", or "Burned Out"
         unique_id: (x,y) tuple.
-        live_bar : looks at the live bar of the tree
+        life_bar : looks at the life bar of the tree
 
     unique_id isn't strictly necessary here,
     but it's good practice to give one to each
@@ -34,15 +31,17 @@ class TreeCell(Agent):
         '''
         Create a new tree.
         Args:
-            pos: The tree's coordinates on the grid. Used as the unique_id
+        pos: The tree's coordinates on the grid. Used as the unique_id
         '''
         super().__init__(unique_id, model)
         self.pos = pos
         self.unique_id = unique_id
         self.condition = "Fine"
         self.life_bar = 100       # give the tree a life bar
-        self.burning_rate = 5
-        self.probability = 0.7
+        self.burning_rate = 20
+        self.probability = 0.5
+
+        self.speed = 0.47
 
     def step(self):
         '''
@@ -51,9 +50,45 @@ class TreeCell(Agent):
         if self.condition == "On Fire":
             neighbors = self.model.grid.get_neighbors(self.pos, moore=True)
             for neighbor in neighbors:
-                if isinstance(neighbor, TreeCell):
-                    if neighbor.condition == "Fine" and random.uniform(0, 1) < self.probability:
-                        neighbor.condition = "On Fire"
+
+                if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine":
+                    # Look at the position of the neighbor and the wind which to calculate the probability
+                    if self.pos[0] < neighbor.pos[0] and self.pos[1] == neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability + (self.model.wind[0] * self.speed):
+                            neighbor.condition = "On Fire"
+                            break
+                    elif self.pos[0] > neighbor.pos[0] and self.pos[1] == neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability - (self.model.wind[0] * self.speed):
+                            neighbor.condition = "On Fire"
+                            break
+                    elif self.pos[0] == neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability + (self.model.wind[1] * self.speed):
+                            neighbor.condition = "On Fire"
+                            break
+                    elif self.pos[0] == neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability - (self.model.wind[1] * self.speed):
+                            neighbor.condition = "On Fire"
+                        break
+                    elif self.pos[0] < neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability + \
+                                (self.model.wind[0] * self.speed * self.model.wind[0]):
+                            neighbor.condition = "On Fire"
+                            break
+                    elif self.pos[0] < neighbor.pos[0] and self.pos[1] > neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability - \
+                                (self.model.wind[1] * self.speed * self.model.wind[0]):
+                            neighbor.condition = "On Fire"
+                            break
+                    elif self.pos[0] > neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability - \
+                                (self.model.wind[0] * self.speed * self.model.wind[1]):
+                            neighbor.condition = "On Fire"
+                            break
+                    elif self.pos[0] > neighbor.pos[0] and self.pos[1] > neighbor.pos[1]:
+                        if random.uniform(0, 1) < self.probability - \
+                                (self.model.wind[0] * self.speed * self.model.wind[0]):
+                            neighbor.condition = "On Fire"
+                            break
 
             # if on fire reduce life_bar
             if self.life_bar != 0:
@@ -91,23 +126,28 @@ class Walker(Agent):
         It also checks if the position is closeby, otherwise it does not go there
         '''
         # find hot trees in neighborhood
-        neighbors_list = self.model.grid.get_neighbors(
-            self.pos, moore=True, radius=self.vision)
-
-        neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
-
-        # find closest fire
-        min_life_bar = 0
-        min_distance = self.vision**2
         fire_intheneighborhood = False
-        for neighbor in neighbors_list:
-            current_life_bar = neighbor.life_bar
-            distance = abs(neighbor.pos[0]**2 - self.pos[0]**2) + abs(neighbor.pos[1]**2 - self.pos[1]**2)
-            if current_life_bar >= min_life_bar and distance <= min_distance:
-                min_distance = distance
-                min_life_bar = current_life_bar
-                closest_neighbor = neighbor
-                fire_intheneighborhood = True
+        for i in [25, 50, 100]:
+            limited_vision = int(self.vision * i / 100.)
+            # find hot trees in neighborhood
+            neighbors_list = self.model.grid.get_neighbors(
+                self.pos, moore=True, radius=limited_vision)
+
+            neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
+
+            # find closest fire
+            min_distance = limited_vision**2
+            min_life_bar = 0
+            for neighbor in neighbors_list:
+                current_life_bar = neighbor.life_bar
+                distance = abs(neighbor.pos[0]**2 - self.pos[0]**2) + abs(neighbor.pos[1]**2 - self.pos[1]**2)
+                if current_life_bar >= min_life_bar and distance <= min_distance:
+                    min_distance = distance
+                    min_life_bar = current_life_bar
+                    closest_neighbor = neighbor
+                    fire_intheneighborhood = True
+            if fire_intheneighborhood:
+                break
 
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
@@ -150,7 +190,8 @@ class Walker(Agent):
     def closestfire_move(self):
         fire_intheneighborhood = False
         for i in [5, 15, 25, 50, 100]:
-            limited_vision = int(self.vision * i/100.)
+            limited_vision = int(self.vision * i / 100.)
+
             # find hot trees in neighborhood
             neighbors_list = self.model.grid.get_neighbors(
                 self.pos, moore=True, radius=limited_vision)
@@ -168,23 +209,24 @@ class Walker(Agent):
             if fire_intheneighborhood:
                 break
 
-        # if fire_intheneighborhood == False:
-        #     # find hot trees in neighborhood
-        #     neighbors_list = self.model.grid.get_neighbors(
-        #         self.pos, moore=True, radius=self.vision)
-        #
-        #     neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
-        #
-        #     # find closest fire
-        #     min_distance = self.vision**2
-        #     fire_intheneighborhood = False
-        #     for neighbor in neighbors_list:
-        #         distance = abs(neighbor.pos[0]**2 - self.pos[0]**2) + abs(neighbor.pos[1]**2 - self.pos[1]**2)
-        #         if distance < min_distance:
-        #             min_distance = distance
-        #             closest_neighbor = neighbor
-        #             fire_intheneighborhood = True
+        """
+        if fire_intheneighborhood == False:
+            # find hot trees in neighborhood
+            neighbors_list = self.model.grid.get_neighbors(
+                self.pos, moore=True, radius=self.vision)
 
+            neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
+
+            # find closest fire
+            min_distance = self.vision**2
+            fire_intheneighborhood = False
+            for neighbor in neighbors_list:
+                distance = abs(neighbor.pos[0]**2 - self.pos[0]**2) + abs(neighbor.pos[1]**2 - self.pos[1]**2)
+                if distance < min_distance:
+                    min_distance = distance
+                    closest_neighbor = neighbor
+                    fire_intheneighborhood = True
+        """
 
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
@@ -253,7 +295,7 @@ class Firetruck(Walker):
 
     def extinguish(self):
         neighbors_list = self.model.grid.get_neighbors(
-            self.pos, moore=True, radius=1)
+            self.pos, moore=True, radius=1, include_center=True)
         for tree in neighbors_list:
             if tree.condition == "On Fire":
                 tree.condition = "Is Extinguished"

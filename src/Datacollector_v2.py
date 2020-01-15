@@ -105,6 +105,7 @@ class DataCollector:
 
         if tables is not None:
             for name, columns in tables.items():
+                print("Name ", name, " columns ", columns)
                 self._new_table(name, columns)
 
     def _new_model_reporter(self, name, reporter):

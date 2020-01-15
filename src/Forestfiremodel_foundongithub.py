@@ -2,15 +2,17 @@ import random
 
 import numpy as np
 
+import math
+
 import matplotlib.pyplot as plt
 
 from mesa import Model, Agent
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
-#from mesa.datacollection import DataCollector
-from Datacollector_v2 import DataCollector
+from mesa.datacollection import DataCollector
+# from Datacollector_v2 import DataCollector
 from mesa.batchrunner import BatchRunner
-
+from random import randint
 from agent import *
 
 # defines the model
@@ -30,6 +32,7 @@ class ForestFire(Model):
             truck_strategy,
             river_number,
             river_width,
+            random_fires,
             num_firetruck,
             wind,
             vision,
@@ -46,6 +49,7 @@ class ForestFire(Model):
         self.height = height
         self.width = width
         self.density = density
+        self.temperature = temperature
 
         self.n_agents = 0
         self.agents = []
@@ -56,6 +60,8 @@ class ForestFire(Model):
         self.schedule_FireTruck = RandomActivation(self)
         self.schedule = RandomActivation(self)
 
+        # Set the wind
+        self.wind = (randint(-1, 1), randint(-1, 1))
         self.grid = MultiGrid(height, width, torus=False)
 
         self.dc = DataCollector(
@@ -76,6 +82,7 @@ class ForestFire(Model):
 
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
 
+        self.random_fires = random_fires
         self.temperature = temperature
         self.num_firetruck = num_firetruck
         self.truck_strategy = truck_strategy
@@ -113,8 +120,13 @@ class ForestFire(Model):
 
         self.schedule_TreeCell.step()
         self.schedule_FireTruck.step()
-        print("STEP")
+
         self.dc.collect(self)
+
+        if self.random_fires:
+            num_fine_trees = self.count_type(self, "Fine")
+            if self.agents[num_fine_trees].condition == "Fine":
+                self.randomfire(self, self.temperature, num_fine_trees)
 
         # Halt if no more fire
         if self.count_type(self, "On Fire") == 0:
@@ -122,11 +134,13 @@ class ForestFire(Model):
             print(" \n \n Fire is gone ! \n \n")
             self.running = False
 
-    def randomfire(self, temperature, num_firetruck):
-        if (random.random() < (self.temperature / 1000.0)):
-            concerned_tree = random.randint(0, len(self.agents) - num_firetruck)
-            if (self.agents[concerned_tree].condition == "Fine"):
-                self.agents[concerned_tree].condition = "On Fire"
+    @staticmethod
+    def randomfire(self, temperature, num_fine_trees):
+        for i in range(0, num_fine_trees):
+            if (random.random() < (math.exp(temperature / 10) / 600.0) and
+                    self.agents[num_fine_trees].condition == "Fine"):
+                self.agents[num_fine_trees].condition = "On Fire"
+            return True
 
     @staticmethod
     def count_type(model, tree_condition):
