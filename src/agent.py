@@ -10,6 +10,7 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 import random
 from mesa import Agent
 
+
 class RiverCell(Agent):
     def __init__(self, model, unique_id, pos):
         '''
@@ -20,8 +21,8 @@ class RiverCell(Agent):
         super().__init__(unique_id, model)
         self.pos = pos
         self.unique_id = unique_id
-        self.condition = "Plenty" 
-        
+        self.condition = "Plenty"
+
     def get_pos(self):
         return self.pos
 
