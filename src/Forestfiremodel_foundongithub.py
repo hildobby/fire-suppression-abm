@@ -2,14 +2,17 @@ import random
 
 import numpy as np
 
+import math
+
 import matplotlib.pyplot as plt
 
 from mesa import Model, Agent
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
+# from Datacollector_v2 import DataCollector
 from mesa.batchrunner import BatchRunner
-
+from random import randint
 from agent import *
 
 # defines the model
@@ -20,7 +23,20 @@ class ForestFire(Model):
     Simple Forest Fire model.
     '''
 
-    def __init__(self, height, width, density, temperature, truck_strategy, num_firetruck, wind, vision, max_speed):
+    def __init__(
+            self,
+            height,
+            width,
+            density,
+            temperature,
+            truck_strategy,
+            river_number,
+            river_width,
+            random_fires,
+            num_firetruck,
+            wind,
+            vision,
+            max_speed):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -38,6 +54,8 @@ class ForestFire(Model):
         # Will suck when set to higher than 2
         self.river_width = 2
 
+        self.temperature = temperature
+
         self.n_agents = 0
         self.agents = []
         self.initial_tree = height * width * density - self.river_length * self.river_width
@@ -49,6 +67,8 @@ class ForestFire(Model):
         self.schedule_FireTruck = RandomActivation(self)
         self.schedule = RandomActivation(self)
 
+        # Set the wind
+        self.wind = (randint(-1, 1), randint(-1, 1))
         self.grid = MultiGrid(height, width, torus=False)
 
         self.dc = DataCollector(
@@ -58,19 +78,25 @@ class ForestFire(Model):
                 "Burned Out": lambda m: self.count_type(m, "Burned Out"),
                 "Extinguished": lambda m: self.count_extinguished_fires(m)
             },
+
             tables={"Life bar": "life_bar", "Burning rate": "burning_rate"})
         
         self.init_river(self.river_size)
+
+            agent_reporters={TreeCell: {"Life bar": "life_bar", "Burning rate": "burning_rate"}})
+        # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
         self.init_vegetation(TreeCell, self.initial_tree)
 
         for i in range(len(self.agents)):
             self.schedule_TreeCell.add(self.agents[i])
-            # self.schedule.add(self.agents[i])
+            self.schedule.add(self.agents[i])
 
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
 
+        self.random_fires = random_fires
         self.temperature = temperature
+        self.num_firetruck = num_firetruck
         self.truck_strategy = truck_strategy
         self.agents[10].condition = "On Fire"
         self.running = True
@@ -100,10 +126,10 @@ class ForestFire(Model):
         '''
         Creating trees
         '''
-        for i in range(int(n)): 
+        for i in range(int(n)):
             x = random.randrange(self.width)
             y = random.randrange(self.height)
-            while not self.grid.is_cell_empty((x,y)):
+            while not self.grid.is_cell_empty((x, y)):
                 x = random.randrange(self.width)
                 y = random.randrange(self.height)
             self.new_agent(agent_type, (x, y))
@@ -114,7 +140,7 @@ class ForestFire(Model):
             y = random.randrange(self.height)
             firetruck = self.new_firetruck(Firetruck, (x, y), truck_strategy, vision, max_speed)
             self.schedule_FireTruck.add(firetruck)
-            # self.schedule.add(firetruck)
+            self.schedule.add(firetruck)
 
     def step(self):
         '''
@@ -126,16 +152,24 @@ class ForestFire(Model):
 
         self.dc.collect(self)
 
+        if self.random_fires:
+            num_fine_trees = self.count_type(self, "Fine")
+            if self.agents[num_fine_trees].condition == "Fine":
+                self.randomfire(self, self.temperature, num_fine_trees)
+
         # Halt if no more fire
         if self.count_type(self, "On Fire") == 0:
+            print(self.count_type(self, "On Fire"))
             print(" \n \n Fire is gone ! \n \n")
             self.running = False
 
-    def randomfire(self, temperature, num_firetruck):
-        if (random.random() < (self.temperature / 1000.0)):
-            concerned_tree = random.randint(0, len(self.agents) - num_firetruck)
-            if (self.agents[concerned_tree].condition == "Fine"):
-                self.agents[concerned_tree].condition = "On Fire"
+    @staticmethod
+    def randomfire(self, temperature, num_fine_trees):
+        for i in range(0, num_fine_trees):
+            if (random.random() < (math.exp(temperature / 10) / 600.0) and
+                    self.agents[num_fine_trees].condition == "Fine"):
+                self.agents[num_fine_trees].condition = "On Fire"
+            return True
 
     @staticmethod
     def count_type(model, tree_condition):
@@ -220,27 +254,37 @@ class ForestFire(Model):
         self.agents.remove(agent)
 
 
-'''
-To be used if you want to run the model without the visualiser:
+# To be used if you want to run the model without the visualiser:
+temperature = 20
+truck_strategy = 'Goes to the closest fire'
+density = 0.6
+width = 100
+height = 100
+num_firetruck = 30
+vision = 100
+max_speed = 2
+river_number = 0
+river_width = 0
+# wind[0],wind[1]=[direction,speed]
+wind = [1, 2]
+fire = ForestFire(
+    width,
+    height,
+    density,
+    temperature,
+    truck_strategy,
+    river_number,
+    river_width,
+    num_firetruck,
+    wind,
+    vision,
+    max_speed)
+fire.run_model()
+results = fire.dc.get_model_vars_dataframe()
+agent_variable = fire.dc.get_agent_vars_dataframe()
+results_firetrucks = fire.dc.get_model_vars_dataframe()
 
-    temperature = 20
-    truck_strategy = 'Goes to the closest fire'
-    density = 0.6
-    width = 100
-    height = 100
-    num_firetruck = 30
-    vision = 100
-    max_speed = 2
-    # wind[0],wind[1]=[direction,speed]
-    wind = [1, 2]
-    fire = ForestFire(width, height, density, temperature, truck_strategy, num_firetruck, wind, vision, max_speed)
-    fire.run_model()
-    results = fire.dc.get_model_vars_dataframe()
-    agent_variable = fire.dc.get_agent_vars_dataframe()
-    results_firetrucks = fire.dc.get_model_vars_dataframe()
-
-    print(results_firetrucks)
-    results[['Fine', 'On Fire', 'Burned Out']].plot()
-    results[['Extinguished']].plot()
-    # plt.show()
-'''
+print(agent_variable)
+agent_variable['AgentID' == 1].plot()
+agent_variable['Burning rate'].plot()
+plt.show()

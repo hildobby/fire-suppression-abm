@@ -97,11 +97,15 @@ class DataCollector:
                 self._new_model_reporter(name, reporter)
 
         if agent_reporters is not None:
-            for agent, name,  reporter in agent_reporters.items():
-                self._new_agent_reporter(name, reporter)
+            for agent, dict in agent_reporters.items():
+                for name, reporter in dict.items():
+                    self.agent = agent
+                    print('agent, dict, name, reporter: ', agent, dict, name, reporter)
+                    self._new_agent_reporter(name, reporter, agent)
 
         if tables is not None:
             for name, columns in tables.items():
+                print("Name ", name, " columns ", columns)
                 self._new_table(name, columns)
 
     def _new_model_reporter(self, name, reporter):
@@ -112,12 +116,12 @@ class DataCollector:
             reporter: Attribute string, or function object that returns the
                       variable when given a model instance.
         """
-        if type(reporter) is str:
+        if isinstance(reporter, str):
             reporter = partial(self._getattr, reporter)
         self.model_reporters[name] = reporter
         self.model_vars[name] = []
 
-    def _new_agent_reporter(self, name, reporter):
+    def _new_agent_reporter(self, name, reporter, agent):
         """ Add a new agent-level reporter to collect.
 
         Args:
@@ -126,11 +130,14 @@ class DataCollector:
                       variable when given a model instance.
 
         """
-        if type(reporter) is str:
+        if isinstance(reporter, str):
             attribute_name = reporter
+            print("Attribute name: ", attribute_name)
             reporter = partial(self._getattr, reporter)
             reporter.attribute_name = attribute_name
+            print(reporter)
         self.agent_reporters[name] = reporter
+        print(self.agent_reporters)
 
     def _new_table(self, table_name, table_columns):
         """ Add a new table that objects can write to.
@@ -146,16 +153,23 @@ class DataCollector:
     def _record_agents(self, model):
         """ Record agents data in a mapping of functions and agents. """
         rep_funcs = self.agent_reporters.values()
-        if all([hasattr(rep, 'attribute_name') for rep in rep_funcs]):
+        if all([(hasattr(rep, 'attribute_name')) for rep in rep_funcs]):
             prefix = ['model.schedule.steps', 'unique_id']
             attributes = [func.attribute_name for func in rep_funcs]
+
             get_reports = attrgetter(*prefix + attributes)
+            # print(get_reports)
         else:
             def get_reports(agent):
                 prefix = (agent.model.schedule.steps, agent.unique_id)
                 reports = tuple(rep(agent) for rep in rep_funcs)
                 return prefix + reports
-        agent_records = map(get_reports, model.schedule.agents)
+
+        # print(model.schedule.agents)
+
+        #print(list(filter(lambda elm: isinstance(elm, self.agent), model.schedule.agents)))
+        agent_records = map(get_reports, list(filter(lambda elm: isinstance(elm, self.agent), model.schedule.agents)))
+
         return agent_records
 
     def collect(self, model):
@@ -166,8 +180,8 @@ class DataCollector:
 
         if self.agent_reporters:
             agent_records = self._record_agents(model)
-            self._agent_records[model.schedule.steps] = list(agent_records)
-
+            print(model.schedule_FireTruck.steps)
+            self._agent_records[model.schedule_FireTruck.steps] = list(agent_records)
 
     def add_table_row(self, table_name, row, ignore_missing=False):
         """ Add a row dictionary to a specific table.
@@ -190,7 +204,6 @@ class DataCollector:
             else:
                 raise Exception("Could not insert row with missing column")
 
-
     @staticmethod
     def _getattr(name, object):
         """ Turn around arguments of getattr to make it partially callable."""
@@ -204,7 +217,6 @@ class DataCollector:
 
         """
         return pd.DataFrame(self.model_vars)
-
 
     def get_agent_vars_dataframe(self):
         """ Create a pandas DataFrame from the agent variables.
@@ -223,7 +235,6 @@ class DataCollector:
         )
         df = df.set_index(["Step", "AgentID"])
         return df
-
 
     def get_table_dataframe(self, table_name):
         """ Create a pandas DataFrame from a particular table.
