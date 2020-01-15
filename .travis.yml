@@ -43,7 +43,7 @@ script:
 
     - |
         if (( $num_errors_after < $num_errors_before )); then
-            git commit -a -m "PEP-8 Fix [ci skip]"
+            git commit -a -m "PEP-8 Fix"
             git config --global push.default simple # Push only to the current branch.  
             # Make sure to make the output quiet, or else the API token will 
             # leak!  This works because the API key can replace your password.
