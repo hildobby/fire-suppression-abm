@@ -26,7 +26,8 @@ def forest_fire_portrayal(agent):
               "On Fire": "#880000",
               "Burned Out": "#000000",
               "Is Extinguished": "#0000ff",
-              "Full": "#ffa500"}
+              "Full": "#ffa500",
+              "Plenty": "#0000ff"}
     if isinstance(agent, Firetruck):
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "arrowHead"

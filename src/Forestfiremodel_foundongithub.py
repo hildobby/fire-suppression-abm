@@ -33,10 +33,16 @@ class ForestFire(Model):
         self.height = height
         self.width = width
         self.density = density
+        
+        self.river_length = width
+        # Will suck when set to higher than 2
+        self.river_width = 2
 
         self.n_agents = 0
         self.agents = []
-        self.initial_tree = height * width * density
+        self.initial_tree = height * width * density - self.river_length * self.river_width
+        
+        self.river_size = width
 
         # Set up model objects
         self.schedule_TreeCell = RandomActivation(self)
@@ -53,8 +59,10 @@ class ForestFire(Model):
                 "Extinguished": lambda m: self.count_extinguished_fires(m)
             },
             tables={"Life bar": "life_bar", "Burning rate": "burning_rate"})
+        
+        self.init_river(self.river_size)
 
-        self.init_population(TreeCell, self.initial_tree)
+        self.init_vegetation(TreeCell, self.initial_tree)
 
         for i in range(len(self.agents)):
             self.schedule_TreeCell.add(self.agents[i])
@@ -70,9 +78,27 @@ class ForestFire(Model):
         self.wind_direction = wind[0]
         self.wind_speed = wind[1]
 
-    def init_population(self, agent_type, n):
+    def init_river(self, n):
         '''
-        Method that provides an easy way of making a bunch of agents at once.
+        Creating a river
+        '''
+        x = -1
+        y = random.randrange(self.height)
+        for i in range(int(n)): 
+            x += 1
+            y += random.randint(-1, 1)
+            while y <= 0 or y >= self.height or not self.grid.is_cell_empty((x,y)):
+                y += random.randint(-1, 1)
+            self.new_river(RiverCell, (x, y))
+            for j in range(self.river_width-1):
+                y += random.choice([-1, 1])
+                while y <= 0 or y >= self.height or not self.grid.is_cell_empty((x,y)):
+                    y += random.choice([-1, 1])
+                self.new_river(RiverCell, (x, y))
+            
+    def init_vegetation(self, agent_type, n):
+        '''
+        Creating trees
         '''
         for i in range(int(n)): 
             x = random.randrange(self.width)
@@ -84,7 +110,6 @@ class ForestFire(Model):
 
     def init_firefighters(self, agent_type, num_firetruck, truck_strategy, vision, max_speed):
         for i in range(num_firetruck):
-            self.n_agents += 1
             x = random.randrange(self.width)
             y = random.randrange(self.height)
             firetruck = self.new_firetruck(Firetruck, (x, y), truck_strategy, vision, max_speed)
@@ -167,6 +192,18 @@ class ForestFire(Model):
 
         # And add the agent to the model so we can track it
         self.agents.append(new_agent)
+
+        return new_agent
+    
+    def new_river(self, agent_type, pos):
+        
+        # Create a new agent of the given type
+        new_agent = agent_type(self, self.n_agents, pos)
+
+        # Place the agent on the grid
+        self.grid.place_agent(new_agent, pos)
+
+        # And add the agent to the model so we can track it
 
         return new_agent
 
