@@ -49,7 +49,7 @@ class ForestFire(Model):
         self.height = height
         self.width = width
         self.density = density
-        
+
         self.river_length = width
         # Will suck when set to higher than 2
         self.river_width = river_width
@@ -59,7 +59,7 @@ class ForestFire(Model):
         self.n_agents = 0
         self.agents = []
         self.initial_tree = height * width * density - self.river_length * self.river_width
-        
+
         self.river_size = width
 
         # Set up model objects
@@ -84,6 +84,7 @@ class ForestFire(Model):
             agent_reporters={TreeCell: {"Life bar": "life_bar", "Burning rate": "burning_rate"}})
         
         self.init_river(self.river_size)
+
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
         self.init_vegetation(TreeCell, self.initial_tree)
@@ -94,15 +95,15 @@ class ForestFire(Model):
 
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
 
-        self.random_fires = random_fires
-        self.temperature = temperature
-        self.num_firetruck = num_firetruck
-        self.truck_strategy = truck_strategy
-        self.agents[10].condition = "On Fire"
-        self.running = True
+        self.random_fires=random_fires
+        self.temperature=temperature
+        self.num_firetruck=num_firetruck
+        self.truck_strategy=truck_strategy
+        self.agents[10].condition="On Fire"
+        self.running=True
         self.dc.collect(self)
-        self.wind_direction = wind[0]
-        self.wind_speed = wind[1]
+        self.wind_direction=wind[0]
+        self.wind_speed=wind[1]
 
     def init_river(self, n):
         '''
@@ -130,18 +131,18 @@ class ForestFire(Model):
         Creating trees
         '''
         for i in range(int(n)):
-            x = random.randrange(self.width)
-            y = random.randrange(self.height)
+            x=random.randrange(self.width)
+            y=random.randrange(self.height)
             while not self.grid.is_cell_empty((x, y)):
-                x = random.randrange(self.width)
-                y = random.randrange(self.height)
+                x=random.randrange(self.width)
+                y=random.randrange(self.height)
             self.new_agent(agent_type, (x, y))
 
     def init_firefighters(self, agent_type, num_firetruck, truck_strategy, vision, max_speed):
         for i in range(num_firetruck):
-            x = random.randrange(self.width)
-            y = random.randrange(self.height)
-            firetruck = self.new_firetruck(Firetruck, (x, y), truck_strategy, vision, max_speed)
+            x=random.randrange(self.width)
+            y=random.randrange(self.height)
+            firetruck=self.new_firetruck(Firetruck, (x, y), truck_strategy, vision, max_speed)
             self.schedule_FireTruck.add(firetruck)
             self.schedule.add(firetruck)
 
@@ -156,7 +157,7 @@ class ForestFire(Model):
         self.dc.collect(self)
 
         if self.random_fires:
-            num_fine_trees = self.count_type(self, "Fine")
+            num_fine_trees=self.count_type(self, "Fine")
             if self.agents[num_fine_trees].condition == "Fine":
                 self.randomfire(self, self.temperature, num_fine_trees)
 
@@ -164,14 +165,14 @@ class ForestFire(Model):
         if self.count_type(self, "On Fire") == 0:
             print(self.count_type(self, "On Fire"))
             print(" \n \n Fire is gone ! \n \n")
-            self.running = False
+            self.running=False
 
     @staticmethod
     def randomfire(self, temperature, num_fine_trees):
         for i in range(0, num_fine_trees):
             if (random.random() < (math.exp(temperature / 10) / 600.0) and
                     self.agents[num_fine_trees].condition == "Fine"):
-                self.agents[num_fine_trees].condition = "On Fire"
+                self.agents[num_fine_trees].condition="On Fire"
             return True
 
     @staticmethod
@@ -179,7 +180,7 @@ class ForestFire(Model):
         '''
         Helper method to count trees in a given condition in a given model.
         '''
-        count = 0
+        count=0
         for tree in model.schedule_TreeCell.agents:
 
             if tree.condition == tree_condition:
@@ -192,7 +193,7 @@ class ForestFire(Model):
         Helper method to count extinguished fires in a given condition in a given model.
         '''
 
-        count = 0
+        count=0
         for firetruck in model.schedule_FireTruck.agents:
             count += firetruck.extinguished
 
@@ -205,7 +206,7 @@ class ForestFire(Model):
         self.n_agents += 1
 
         # Create a new agent of the given type
-        new_agent = agent_type(self, self.n_agents, pos)
+        new_agent=agent_type(self, self.n_agents, pos)
 
         # Place the agent on the grid
         self.grid.place_agent(new_agent, pos)
@@ -222,7 +223,7 @@ class ForestFire(Model):
         self.n_agents += 1
 
         # Create a new agent of the given type
-        new_agent = agent_type(self, self.n_agents, pos, truck_strategy, vision, max_speed)
+        new_agent=agent_type(self, self.n_agents, pos, truck_strategy, vision, max_speed)
 
         # Place the agent on the grid
         self.grid.place_agent(new_agent, pos)
@@ -231,11 +232,11 @@ class ForestFire(Model):
         self.agents.append(new_agent)
 
         return new_agent
-    
+
     def new_river(self, agent_type, pos):
-        
+
         # Create a new agent of the given type
-        new_agent = agent_type(self, self.n_agents, pos)
+        new_agent=agent_type(self, self.n_agents, pos)
 
         # Place the agent on the grid
         self.grid.place_agent(new_agent, pos)
@@ -285,6 +286,8 @@ fire = ForestFire(
     vision,
     max_speed)
 fire.run_model()
+
 results = fire.dc.get_model_vars_dataframe()
 agent_variable = fire.dc.get_agent_vars_dataframe()
 results_firetrucks = fire.dc.get_model_vars_dataframe()
+
