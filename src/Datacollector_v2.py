@@ -167,7 +167,7 @@ class DataCollector:
 
         # print(model.schedule.agents)
 
-        #print(list(filter(lambda elm: isinstance(elm, self.agent), model.schedule.agents)))
+        # print(list(filter(lambda elm: isinstance(elm, self.agent), model.schedule.agents)))
         agent_records = map(get_reports, list(filter(lambda elm: isinstance(elm, self.agent), model.schedule.agents)))
 
         return agent_records

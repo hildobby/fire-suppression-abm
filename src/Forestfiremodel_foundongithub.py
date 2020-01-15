@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from mesa import Model, Agent
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
-#from mesa.datacollection import DataCollector
+# from mesa.datacollection import DataCollector
 from Datacollector_v2 import DataCollector
 from mesa.batchrunner import BatchRunner
 from random import randint
@@ -79,7 +79,7 @@ class ForestFire(Model):
                 "Extinguished": lambda m: self.count_extinguished_fires(m)
             },
 
-            #tables={"Life bar": "life_bar", "Burning rate": "burning_rate"},
+            # tables={"Life bar": "life_bar", "Burning rate": "burning_rate"},
 
             agent_reporters={TreeCell: {"Life bar": "life_bar", "Burning rate": "burning_rate"}})
         
@@ -170,7 +170,7 @@ class ForestFire(Model):
     @staticmethod
     def randomfire(self, temperature, num_fine_trees):
         for i in range(0, num_fine_trees):
-            if (random.random() < (math.exp(temperature / 10) / 600.0) and
+            if (random.random() < (math.exp(temperature / 10) / 600.0) and \
                     self.agents[num_fine_trees].condition == "Fine"):
                 self.agents[num_fine_trees].condition="On Fire"
             return True
