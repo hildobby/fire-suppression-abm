@@ -9,6 +9,7 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 """
 import random
 from mesa import Agent
+from River import RiverCell
 
 
 class Walker(Agent):
@@ -72,24 +73,25 @@ class Walker(Agent):
                 speed = self.max_speed
 
             # choose step
-            if places_to_move_x > 0 and places_to_move_y > 0:
-                self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1] + speed))
-            elif places_to_move_x < 0 and places_to_move_y < 0:
-                self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1] - speed))
-            elif places_to_move_y > 0 and places_to_move_x < 0:
-                self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1] + speed))
-            elif places_to_move_y < 0 and places_to_move_x > 0:
-                self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1] - speed))
-            elif places_to_move_x == 0:
-                if places_to_move_y > 0:
-                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + speed))
-                elif places_to_move_y < 0:
-                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - speed))
-            elif places_to_move_y == 0:
-                if places_to_move_x > 0:
-                    self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1]))
-                elif places_to_move_x < 0:
-                    self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1]))
+            new_x, new_y = self.pos[0], self.pos[1]
+            
+            if places_to_move_x > 0:
+                new_x += speed
+            if places_to_move_x < 0:
+                new_x -= speed 
+            if places_to_move_y > 0:
+                new_y += speed
+            if places_to_move_y < 0:
+                new_y -= speed 
+                
+            if self.model.grid.get_cell_list_contents((new_x, new_y)):
+                if isinstance(self.model.grid.get_cell_list_contents((new_x, new_y))[0], RiverCell):
+                    pass
+                else:
+                    self.model.grid.move_agent(self, (new_x, new_y))
+
+            else:
+                self.model.grid.move_agent(self, (new_x, new_y))
 
         # if fire not in the neighboorhood, do random move
         else:
@@ -151,25 +153,20 @@ class Walker(Agent):
                 speed = self.max_speed
 
             # choose step
-            if places_to_move_x > 0 and places_to_move_y > 0:
-                self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1] + speed))
-            elif places_to_move_x < 0 and places_to_move_y < 0:
-                self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1] - speed))
-            elif places_to_move_y > 0 and places_to_move_x < 0:
-                self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1] + speed))
-            elif places_to_move_y < 0 and places_to_move_x > 0:
-                self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1] - speed))
-            elif places_to_move_x == 0:
-                if places_to_move_y > 0:
-                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + speed))
-                elif places_to_move_y < 0:
-                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - speed))
-            elif places_to_move_y == 0:
-                if places_to_move_x > 0:
-                    self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1]))
-                elif places_to_move_x < 0:
-                    self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1]))
-
+            new_x, new_y = self.pos[0], self.pos[1]
+            
+            if places_to_move_x > 0:
+                new_x += speed
+            if places_to_move_x < 0:
+                new_x -= speed 
+            if places_to_move_y > 0:
+                new_y += speed
+            if places_to_move_y < 0:
+                new_y -= speed 
+                
+            if not isinstance((new_x, new_y), RiverCell):
+                self.model.grid.move_agent(self, (new_x, new_y))
+                
         # if fire not in the neighboorhood, do random move
         else:
             self.random_move()
