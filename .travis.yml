@@ -15,7 +15,7 @@ before_install:
     
 notifications:
   email: false
-  slack: asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0
+  slack:
    - rooms:
       - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0
       on_success: always
