@@ -91,17 +91,17 @@ class ForestFire(Model):
 
         # initiate the datacollector
         self.dc = DataCollector(self,
-            model_reporters={
-                "Fine": lambda m: self.count_type(m, "Fine"),
-                "On Fire": lambda m: self.count_type(m, "On Fire"),
-                "Burned Out": lambda m: self.count_type(m, "Burned Out"),
-                "Extinguished": lambda m: self.count_extinguished_fires(m)
-            },
+                                model_reporters={
+                                    "Fine": lambda m: self.count_type(m, "Fine"),
+                                    "On Fire": lambda m: self.count_type(m, "On Fire"),
+                                    "Burned Out": lambda m: self.count_type(m, "Burned Out"),
+                                    "Extinguished": lambda m: self.count_extinguished_fires(m)
+                                },
 
-            # tables={"Life bar": "life_bar", "Burning rate": "burning_rate"},
+                                # tables={"Life bar": "life_bar", "Burning rate": "burning_rate"},
 
-            agent_reporters={TreeCell: {"Life bar": "life_bar", "Burning rate": "burning_rate"},
-                             Firetruck: {"Condition": "condition"}})
+                                agent_reporters={TreeCell: {"Life bar": "life_bar", "Burning rate": "burning_rate"},
+                                                 Firetruck: {"Condition": "condition"}})
 
         self.running = True
         self.dc.collect(self, [TreeCell, Firetruck])

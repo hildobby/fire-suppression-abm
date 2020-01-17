@@ -106,10 +106,10 @@ class DataCollector:
                 self.agent_list.append(agent)
                 dictionary = list(list(agent_reporters.items())[i])[1]
                 for name, reporter in dictionary.items():
-                        self.agent = agent
-                        self._new_agent_reporter(name, reporter, agent)
-                        self.seperated_agentlist[agent] = list(filter(lambda elm: isinstance(elm, agent), model.schedule.agents))
-
+                    self.agent = agent
+                    self._new_agent_reporter(name, reporter, agent)
+                    self.seperated_agentlist[agent] = list(
+                        filter(lambda elm: isinstance(elm, agent), model.schedule.agents))
 
         if tables is not None:
             for name, columns in tables.items():
@@ -242,7 +242,7 @@ class DataCollector:
             all_records = itertools.chain.from_iterable(
                 self._agent_records[i].values())
             new_rep_names = []
-            
+
             for j in range(len(rep_funcs)):
                 if rep_funcs[j][0] == self.agent_list[i]:
                     new_rep_names.append(rep_names[j])
