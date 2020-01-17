@@ -11,9 +11,6 @@ import random
 from mesa import Agent
 
 
-
-
-
 class RiverCell(Agent):
     def __init__(self, model, unique_id, pos):
         '''

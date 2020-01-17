@@ -11,7 +11,6 @@ from Vegetation import TreeCell
 from Firetruck import Firetruck
 
 
-
 def forest_fire_portrayal(agent):
     portrayal = {"w": 1,
                  "h": 1,
