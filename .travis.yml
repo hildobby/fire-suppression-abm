@@ -28,7 +28,7 @@ notifications:
         - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0#successes
       on_success: always
       on_failure: never
-      message: "Success, you successfully succeeded, now go get Dobby's coffee!"
+      message: "Success, you successfully succeeded, now go get Dobby's coffee"
       template:
         - "%{repository_slug} (%{commit}) : %{message}"
         - "Build details: %{build_url}"
