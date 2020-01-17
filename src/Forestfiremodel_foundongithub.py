@@ -77,8 +77,9 @@ class ForestFire(Model):
         self.wind_dir = wind_dir
 
         # Translate the wind_dir string into vector
-        wind_vector = {"\u2B06 North": (0, 1), "\u2196 North/East": (1, 1), "\u2B05 East": (1, 0), "\u2199 South/East": (
-            1, -1), "\u2B07 South": (0, -1), "\u2198 South/West": (-1, -1), "\u27A1 West": (-1, 0), "\u2197 North/West": (-1, 1)}
+        wind_vector = {"\u2B06 North": (0, 1), "\u2196 North/East": (1, 1), "\u2B05 East": (1, 0),
+        "\u2199 South/East": (1, -1), "\u2B07 South": (0, -1), "\u2198 South/West": (-1, -1),
+        "\u27A1 West": (-1, 0), "\u2197 North/West": (-1, 1)}
         self.wind_dir = wind_vector[self.wind_dir]
 
         self.grid = MultiGrid(height, width, torus=False)
