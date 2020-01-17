@@ -11,118 +11,6 @@ import random
 from mesa import Agent
 
 
-class RiverCell(Agent):
-    def __init__(self, model, unique_id, pos):
-        '''
-        Create one cell of a river.
-        Args:
-            pos: The tree's coordinates on the grid. Used as the unique_id
-        '''
-        super().__init__(unique_id, model)
-        self.pos = pos
-        self.unique_id = unique_id
-        self.condition = "Plenty"
-
-    def get_pos(self):
-        return self.pos
-
-
-class TreeCell(Agent):
-
-    '''
-    A tree cell.
-
-    Attributes:
-        x, y: Grid coordinates
-        condition: Can be "Fine", "On Fire", or "Burned Out"
-        unique_id: (x,y) tuple.
-        life_bar : looks at the life bar of the tree
-
-    unique_id isn't strictly necessary here,
-    but it's good practice to give one to each
-    agent anyway.
-    '''
-
-    def __init__(self, model, unique_id, pos):
-        '''
-        Create a new tree.
-        Args:
-        pos: The tree's coordinates on the grid. Used as the unique_id
-        '''
-        super().__init__(unique_id, model)
-        self.pos = pos
-        self.unique_id = unique_id
-        self.condition = "Fine"
-        self.life_bar = 100       # give the tree a life bar
-        self.burning_rate = 20
-        self.probability = 0.5
-
-        self.speed = 0.47
-
-    def step(self):
-        '''
-        If the tree is on fire, spread it to fine trees nearby.
-        '''
-        if self.condition == "On Fire":
-            neighbors = self.model.grid.get_neighbors(self.pos, moore=True)
-            for neighbor in neighbors:
-
-                if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine":
-
-                    # Look at the position of the neighbor and the wind which to calculate the probability
-                    if self.pos[0] < neighbor.pos[0] and self.pos[1] == neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability + \
-                                (self.model.wind_dir[0] * self.model.wind_strength):
-                            neighbor.condition = "On Fire"
-                            break
-                    elif self.pos[0] > neighbor.pos[0] and self.pos[1] == neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability - \
-                                (self.model.wind_dir[0] * self.model.wind_strength):
-                            neighbor.condition = "On Fire"
-                            break
-                    elif self.pos[0] == neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability + \
-                                (self.model.wind_dir[1] * self.model.wind_strength):
-                            neighbor.condition = "On Fire"
-                            break
-                    elif self.pos[0] == neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability - \
-                                (self.model.wind_dir[1] * self.model.wind_strength):
-                            neighbor.condition = "On Fire"
-                        break
-                    elif self.pos[0] < neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability + \
-                                (self.model.wind_dir[0] * self.model.wind_strength * self.model.wind_dir[1]):
-                            neighbor.condition = "On Fire"
-                            break
-                    elif self.pos[0] < neighbor.pos[0] and self.pos[1] > neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability - \
-                                (self.model.wind_dir[1] * self.model.wind_strength * self.model.wind_dir[0]):
-                            neighbor.condition = "On Fire"
-                            break
-                    elif self.pos[0] > neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability - \
-                                (self.model.wind_dir[0] * self.model.wind_strength * self.model.wind_dir[1]):
-                            neighbor.condition = "On Fire"
-                            break
-                    elif self.pos[0] > neighbor.pos[0] and self.pos[1] > neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability - \
-                                (self.model.wind_dir[0] * self.model.wind_strength * self.model.wind_dir[0]):
-                            neighbor.condition = "On Fire"
-                            break
-
-            # if on fire reduce life_bar
-            if self.life_bar != 0:
-                self.life_bar -= self.burning_rate
-            else:
-                self.condition = "Burned Out"
-
-    def get_pos(self):
-        return self.pos
-
-# defines a random walker class
-
-
 class Walker(Agent):
     def __init__(self, unique_id, model, pos):
         super().__init__(unique_id, model)
@@ -184,18 +72,24 @@ class Walker(Agent):
                 speed = self.max_speed
 
             # choose step
-            new_x, new_y = self.pos[0], self.pos[1]
-            
-            if places_to_move_x > 0:
-                new_x += speed
-            if places_to_move_x < 0:
-                new_x -= speed 
-            if places_to_move_y > 0:
-                new_y += speed
-            if places_to_move_y < 0:
-                new_y -= speed 
-                
-            self.model.grid.move_agent(self, (new_x, new_y))
+            if places_to_move_x > 0 and places_to_move_y > 0:
+                self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1] + speed))
+            elif places_to_move_x < 0 and places_to_move_y < 0:
+                self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1] - speed))
+            elif places_to_move_y > 0 and places_to_move_x < 0:
+                self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1] + speed))
+            elif places_to_move_y < 0 and places_to_move_x > 0:
+                self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1] - speed))
+            elif places_to_move_x == 0:
+                if places_to_move_y > 0:
+                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + speed))
+                elif places_to_move_y < 0:
+                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - speed))
+            elif places_to_move_y == 0:
+                if places_to_move_x > 0:
+                    self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1]))
+                elif places_to_move_x < 0:
+                    self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1]))
 
         # if fire not in the neighboorhood, do random move
         else:
@@ -257,19 +151,24 @@ class Walker(Agent):
                 speed = self.max_speed
 
             # choose step
-            new_x, new_y = self.pos[0], self.pos[1]
-            
-            if places_to_move_x > 0:
-                new_x += speed
-            if places_to_move_x < 0:
-                new_x -= speed 
-            if places_to_move_y > 0:
-                new_y += speed
-            if places_to_move_y < 0:
-                new_y -= speed 
-                
-            #if isinstance(neighbor, TreeCell)    
-            self.model.grid.move_agent(self, (new_x, new_y))
+            if places_to_move_x > 0 and places_to_move_y > 0:
+                self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1] + speed))
+            elif places_to_move_x < 0 and places_to_move_y < 0:
+                self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1] - speed))
+            elif places_to_move_y > 0 and places_to_move_x < 0:
+                self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1] + speed))
+            elif places_to_move_y < 0 and places_to_move_x > 0:
+                self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1] - speed))
+            elif places_to_move_x == 0:
+                if places_to_move_y > 0:
+                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + speed))
+                elif places_to_move_y < 0:
+                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - speed))
+            elif places_to_move_y == 0:
+                if places_to_move_x > 0:
+                    self.model.grid.move_agent(self, (self.pos[0] + speed, self.pos[1]))
+                elif places_to_move_x < 0:
+                    self.model.grid.move_agent(self, (self.pos[0] - speed, self.pos[1]))
 
         # if fire not in the neighboorhood, do random move
         else:
