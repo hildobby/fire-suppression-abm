@@ -161,8 +161,9 @@ class ForestFire(Model):
 
         if self.random_fires:
             num_fine_trees = self.count_type(self, "Fine")
-            if self.agents[num_fine_trees].condition == "Fine":
-                self.randomfire(self, self.temperature, num_fine_trees)
+            randtree = int(random.random()*self.height*self.width)
+            if self.agents[randtree].condition == "Fine":
+                self.randomfire(self, randtree)
 
         # Halt if no more fire
         if self.count_type(self, "On Fire") == 0:
@@ -171,11 +172,9 @@ class ForestFire(Model):
             self.running = False
 
     @staticmethod
-    def randomfire(self, temperature, num_fine_trees):
-        for i in range(0, num_fine_trees):
-            if (random.random() < (math.exp(temperature / 10) / 600.0)):
-                if (self.agents[num_fine_trees].condition == "Fine"):
-                    self.agents[num_fine_trees].condition = "On Fire"
+    def randomfire(self, randtree):
+        if (random.random() < (math.exp(self.temperature/10) / 300.0)):
+            self.agents[randtree].condition = "On Fire"
 
     @staticmethod
     def count_type(model, tree_condition):
