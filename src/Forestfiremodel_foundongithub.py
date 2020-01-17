@@ -128,8 +128,8 @@ class ForestFire(Model):
         else:
             # initiating the river offgrid
             x = -1
-            y = random.randrange(self.height-1)
-            
+            y = random.randrange(self.height - 1)
+
             # increasing the length of the river
             for i in range(int(n)):
                 x += 1
@@ -137,7 +137,7 @@ class ForestFire(Model):
                 while y < 0 or y >= self.height:
                     y += random.randint(-1, 1)
                 self.new_river(RiverCell, (x, y))
-                
+
                 # increasing the width of the river
                 for j in range(self.river_width - 1):
                     new_width = random.choice([-1, 1])
@@ -314,4 +314,3 @@ agent_variable = fire.dc.get_agent_vars_dataframe()
 results_firetrucks = fire.dc.get_model_vars_dataframe()
 
 '''
-

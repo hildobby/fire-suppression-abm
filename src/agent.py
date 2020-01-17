@@ -185,16 +185,16 @@ class Walker(Agent):
 
             # choose step
             new_x, new_y = self.pos[0], self.pos[1]
-            
+
             if places_to_move_x > 0:
                 new_x += speed
             if places_to_move_x < 0:
-                new_x -= speed 
+                new_x -= speed
             if places_to_move_y > 0:
                 new_y += speed
             if places_to_move_y < 0:
-                new_y -= speed 
-                
+                new_y -= speed
+
             self.model.grid.move_agent(self, (new_x, new_y))
 
         # if fire not in the neighboorhood, do random move
@@ -258,17 +258,17 @@ class Walker(Agent):
 
             # choose step
             new_x, new_y = self.pos[0], self.pos[1]
-            
+
             if places_to_move_x > 0:
                 new_x += speed
             if places_to_move_x < 0:
-                new_x -= speed 
+                new_x -= speed
             if places_to_move_y > 0:
                 new_y += speed
             if places_to_move_y < 0:
-                new_y -= speed 
-                
-            #if isinstance(neighbor, TreeCell)    
+                new_y -= speed
+
+            # if isinstance(neighbor, TreeCell)
             self.model.grid.move_agent(self, (new_x, new_y))
 
         # if fire not in the neighboorhood, do random move
