@@ -13,7 +13,11 @@ from mesa.space import MultiGrid
 from Datacollector_v2 import DataCollector
 from mesa.batchrunner import BatchRunner
 from random import randint
-from agent import *
+
+
+from River import RiverCell
+from Vegetation import TreeCell
+from Firetruck import Firetruck
 
 # defines the model
 

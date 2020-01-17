@@ -5,8 +5,11 @@ from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
 
 from Forestfiremodel_foundongithub import ForestFire
-from agent import *
-from random import randint
+
+from River import RiverCell
+from Vegetation import TreeCell
+from Firetruck import Firetruck
+
 
 def forest_fire_portrayal(agent):
     portrayal = {"w": 1,
