@@ -71,18 +71,6 @@ class ForestFire(Model):
         self.wind = (randint(-1, 1), randint(-1, 1))
         self.grid = MultiGrid(height, width, torus=False)
 
-        self.dc = DataCollector(
-            model_reporters={
-                "Fine": lambda m: self.count_type(m, "Fine"),
-                "On Fire": lambda m: self.count_type(m, "On Fire"),
-                "Burned Out": lambda m: self.count_type(m, "Burned Out"),
-                "Extinguished": lambda m: self.count_extinguished_fires(m)
-            },
-
-            # tables={"Life bar": "life_bar", "Burning rate": "burning_rate"},
-
-            agent_reporters={TreeCell: {"Life bar": "life_bar", "Burning rate": "burning_rate"}})
-
         self.init_river(self.river_size)
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
@@ -100,8 +88,23 @@ class ForestFire(Model):
         self.num_firetruck = num_firetruck
         self.truck_strategy = truck_strategy
         self.agents[10].condition = "On Fire"
+
+        # initiate the datacollector
+        self.dc = DataCollector(self,
+            model_reporters={
+                "Fine": lambda m: self.count_type(m, "Fine"),
+                "On Fire": lambda m: self.count_type(m, "On Fire"),
+                "Burned Out": lambda m: self.count_type(m, "Burned Out"),
+                "Extinguished": lambda m: self.count_extinguished_fires(m)
+            },
+
+            # tables={"Life bar": "life_bar", "Burning rate": "burning_rate"},
+
+            agent_reporters={TreeCell: {"Life bar": "life_bar", "Burning rate": "burning_rate"},
+                             Firetruck: {"Condition": "condition"}})
+
         self.running = True
-        self.dc.collect(self)
+        self.dc.collect(self, [TreeCell, Firetruck])
         self.wind_direction = wind[0]
         self.wind_speed = wind[1]
 
@@ -154,7 +157,7 @@ class ForestFire(Model):
         self.schedule_TreeCell.step()
         self.schedule_FireTruck.step()
 
-        self.dc.collect(self)
+        self.dc.collect(self, [TreeCell, Firetruck])
 
         if self.random_fires:
             num_fine_trees = self.count_type(self, "Fine")
@@ -289,3 +292,6 @@ fire.run_model()
 results = fire.dc.get_model_vars_dataframe()
 agent_variable = fire.dc.get_agent_vars_dataframe()
 results_firetrucks = fire.dc.get_model_vars_dataframe()
+
+print(agent_variable[0])
+print(agent_variable[1])

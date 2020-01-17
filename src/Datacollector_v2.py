@@ -55,7 +55,7 @@ class DataCollector:
 
     model = None
 
-    def __init__(self, model_reporters=None, agent_reporters=None, tables=None):
+    def __init__(self, model, model_reporters=None, agent_reporters=None, tables=None):
         """ Instantiate a DataCollector with lists of model and agent reporters.
 
         Both model_reporters and agent_reporters accept a dictionary mapping a
@@ -89,19 +89,27 @@ class DataCollector:
         self.agent_reporters = {}
 
         self.model_vars = {}
-        self._agent_records = {}
+        self._agent_records = []
         self.tables = {}
+        self.agent_list = []
+
+        self.seperated_agentlist = {}
 
         if model_reporters is not None:
             for name, reporter in model_reporters.items():
                 self._new_model_reporter(name, reporter)
 
         if agent_reporters is not None:
-            for agent, dict in agent_reporters.items():
-                for name, reporter in dict.items():
-                    self.agent = agent
-                    print('agent, dict, name, reporter: ', agent, dict, name, reporter)
-                    self._new_agent_reporter(name, reporter, agent)
+            for i in range(len(agent_reporters.items())):
+                self._agent_records.append({})
+                agent = list(list(agent_reporters.items())[i])[0]
+                self.agent_list.append(agent)
+                dictionary = list(list(agent_reporters.items())[i])[1]
+                for name, reporter in dictionary.items():
+                        self.agent = agent
+                        self._new_agent_reporter(name, reporter, agent)
+                        self.seperated_agentlist[agent] = list(filter(lambda elm: isinstance(elm, agent), model.schedule.agents))
+
 
         if tables is not None:
             for name, columns in tables.items():
@@ -132,12 +140,9 @@ class DataCollector:
         """
         if isinstance(reporter, str):
             attribute_name = reporter
-            print("Attribute name: ", attribute_name)
             reporter = partial(self._getattr, reporter)
             reporter.attribute_name = attribute_name
-            print(reporter)
-        self.agent_reporters[name] = reporter
-        print(self.agent_reporters)
+        self.agent_reporters[name] = (agent, reporter)
 
     def _new_table(self, table_name, table_columns):
         """ Add a new table that objects can write to.
@@ -150,38 +155,42 @@ class DataCollector:
         new_table = {column: [] for column in table_columns}
         self.tables[table_name] = new_table
 
-    def _record_agents(self, model):
+    def _record_agents(self, model, search_agent):
         """ Record agents data in a mapping of functions and agents. """
-        rep_funcs = self.agent_reporters.values()
-        if all([(hasattr(rep, 'attribute_name')) for rep in rep_funcs]):
-            prefix = ['model.schedule.steps', 'unique_id']
-            attributes = [func.attribute_name for func in rep_funcs]
+        rep_funcs = list(self.agent_reporters.values())
 
+        new_rep_functions = []
+        for i in range(len(rep_funcs)):
+            if rep_funcs[i][0] == search_agent:
+                new_rep_functions.append(rep_funcs[i][1])
+
+        if all([(hasattr(rep, 'attribute_name')) for rep in new_rep_functions]):
+            prefix = ['model.schedule.steps', 'unique_id']
+            attributes = [func.attribute_name for func in new_rep_functions]
             get_reports = attrgetter(*prefix + attributes)
-            # print(get_reports)
+
         else:
             def get_reports(agent):
                 prefix = (agent.model.schedule.steps, agent.unique_id)
-                reports = tuple(rep(agent) for rep in rep_funcs)
+                reports = tuple(rep(agent) for rep in new_rep_functions)
                 return prefix + reports
 
-        # print(model.schedule.agents)
-
-        # print(list(filter(lambda elm: isinstance(elm, self.agent), model.schedule.agents)))
-        agent_records = map(get_reports, list(filter(lambda elm: isinstance(elm, self.agent), model.schedule.agents)))
+        agent_records = map(get_reports, self.seperated_agentlist[search_agent])
 
         return agent_records
 
-    def collect(self, model):
+    def collect(self, model, agents):
         """ Collect all the data for the given model object. """
         if self.model_reporters:
             for var, reporter in self.model_reporters.items():
                 self.model_vars[var].append(reporter(model))
 
         if self.agent_reporters:
-            agent_records = self._record_agents(model)
-            print(model.schedule_FireTruck.steps)
-            self._agent_records[model.schedule_FireTruck.steps] = list(agent_records)
+            j = 0
+            for i in agents:
+                agent_records = self._record_agents(model, i)
+                self._agent_records[j][model.schedule_FireTruck.steps] = list(agent_records)
+                j += 1
 
     def add_table_row(self, table_name, row, ignore_missing=False):
         """ Add a row dictionary to a specific table.
@@ -225,16 +234,26 @@ class DataCollector:
         columns for tick and agent_id.
 
         """
-        all_records = itertools.chain.from_iterable(
-            self._agent_records.values())
+        dataframes = {}
+        rep_funcs = list(self.agent_reporters.values())
         rep_names = [rep_name for rep_name in self.agent_reporters]
 
-        df = pd.DataFrame.from_records(
-            data=all_records,
-            columns=["Step", "AgentID"] + rep_names,
-        )
-        df = df.set_index(["Step", "AgentID"])
-        return df
+        for i in range(len(self.agent_list)):
+            all_records = itertools.chain.from_iterable(
+                self._agent_records[i].values())
+            new_rep_names = []
+            
+            for j in range(len(rep_funcs)):
+                if rep_funcs[j][0] == self.agent_list[i]:
+                    new_rep_names.append(rep_names[j])
+
+            df = pd.DataFrame.from_records(
+                data=all_records,
+                columns=["Step", "AgentID"] + new_rep_names,
+            )
+            df = df.set_index(["Step", "AgentID"])
+            dataframes[i] = df
+        return dataframes
 
     def get_table_dataframe(self, table_name):
         """ Create a pandas DataFrame from a particular table.
