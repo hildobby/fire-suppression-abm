@@ -73,14 +73,13 @@ class ForestFire(Model):
         self.schedule = RandomActivation(self)
 
         # Set the wind
-        self.wind=wind_strength
-        self.wind_dir=wind_dir
+        self.wind = wind_strength
+        self.wind_dir = wind_dir
 
-        #Translate the wind_dir string into vector
-        wind_vector={"N":(0,1),"NE":(1,1),"E":(1,0),"SE":(1,-1),"S":(0,-1),"SW":(-1,-1),"W":(-1,0),"NW":(-1,1)}
-        self.wind_dir=wind_vector[self.wind_dir]
-
-
+        # Translate the wind_dir string into vector
+        wind_vector = {"N": (0, 1), "NE": (1, 1), "E": (1, 0), "SE": (
+            1, -1), "S": (0, -1), "SW": (-1, -1), "W": (-1, 0), "NW": (-1, 1)}
+        self.wind_dir = wind_vector[self.wind_dir]
 
         self.grid = MultiGrid(height, width, torus=False)
 
@@ -117,9 +116,8 @@ class ForestFire(Model):
                                                  Firetruck: {"Condition": "condition"}})
 
         self.running = True
-        self.dc.collect(self,[TreeCell,Firetruck])
+        self.dc.collect(self, [TreeCell, Firetruck])
         self.wind_strength = wind_strength
-
 
     def init_river(self, n):
         '''
