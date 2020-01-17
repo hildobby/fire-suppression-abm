@@ -259,7 +259,7 @@ class ForestFire(Model):
         # Remove agent from model
         self.agents.remove(agent)
 
-
+'''
 # To be used if you want to run the model without the visualiser:
 temperature = 20
 truck_strategy = 'Goes to the closest fire'
@@ -295,3 +295,4 @@ results_firetrucks = fire.dc.get_model_vars_dataframe()
 
 print(agent_variable[0])
 print(agent_variable[1])
+'''
