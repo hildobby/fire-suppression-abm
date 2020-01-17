@@ -258,6 +258,7 @@ class ForestFire(Model):
         # Remove agent from model
         self.agents.remove(agent)
 
+
 '''
 # To be used if you want to run the model without the visualiser:
 temperature = 20
