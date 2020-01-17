@@ -57,8 +57,8 @@ model_parameters = {
     'max_speed': 2,
     'text_environment': UserSettableParameter('static_text', value='Environment Generation Settings'),
     'density': UserSettableParameter('slider', 'Tree density', 0.65, 0.01, 1.0, 0.01),
-    'river_number': UserSettableParameter('slider', 'Number of rivers', 2, 0, 10, 1),  # Unused for now
-    'river_width': UserSettableParameter('slider', 'River width', 1, 0, 2, 1),
+    'river_number': UserSettableParameter('slider', 'Number of rivers', 0, 0, 10, 1),  # Unused for now
+    'river_width': UserSettableParameter('slider', 'River width', 1, 0, 10, 1),
     'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 30, 0, 300, 1),
     'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Goes to the biggest fire',

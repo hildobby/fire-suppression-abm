@@ -112,18 +112,28 @@ class ForestFire(Model):
         if self.river_width == 0:
             pass
         else:
+            # initiating the river offgrid
             x = -1
-            y = random.randrange(self.height)
+            y = random.randrange(self.height-1)
+            
+            # increasing the length of the river
             for i in range(int(n)):
                 x += 1
                 y += random.randint(-1, 1)
-                while y <= 0 or y >= self.height or not self.grid.is_cell_empty((x, y)):
+                while y < 0 or y >= self.height:
                     y += random.randint(-1, 1)
                 self.new_river(RiverCell, (x, y))
+                
+                # increasing the width of the river
                 for j in range(self.river_width - 1):
-                    y += random.choice([-1, 1])
-                    while y <= 0 or y >= self.height or not self.grid.is_cell_empty((x, y)):
-                        y += random.choice([-1, 1])
+                    new_width = random.choice([-1, 1])
+                    if y + new_width < 0 or y + new_width == self.height:
+                        new_width = -new_width
+                    y += new_width
+                    while not self.grid.is_cell_empty((x, y)):
+                        if y + new_width < 0 or y + new_width == self.height:
+                            new_width = -new_width
+                        y += new_width
                     self.new_river(RiverCell, (x, y))
 
     def init_vegetation(self, agent_type, n):
@@ -256,7 +266,7 @@ class ForestFire(Model):
         # Remove agent from model
         self.agents.remove(agent)
 
-
+'''
 # To be used if you want to run the model without the visualiser:
 temperature = 20
 truck_strategy = 'Goes to the closest fire'
@@ -289,3 +299,4 @@ fire.run_model()
 results = fire.dc.get_model_vars_dataframe()
 agent_variable = fire.dc.get_agent_vars_dataframe()
 results_firetrucks = fire.dc.get_model_vars_dataframe()
+'''

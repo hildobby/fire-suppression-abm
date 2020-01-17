@@ -100,12 +100,12 @@ class DataCollector:
             for agent, dict in agent_reporters.items():
                 for name, reporter in dict.items():
                     self.agent = agent
-                    print('agent, dict, name, reporter: ', agent, dict, name, reporter)
+                    # print('agent, dict, name, reporter: ', agent, dict, name, reporter)
                     self._new_agent_reporter(name, reporter, agent)
 
         if tables is not None:
             for name, columns in tables.items():
-                print("Name ", name, " columns ", columns)
+                # print("Name ", name, " columns ", columns)
                 self._new_table(name, columns)
 
     def _new_model_reporter(self, name, reporter):
@@ -132,12 +132,12 @@ class DataCollector:
         """
         if isinstance(reporter, str):
             attribute_name = reporter
-            print("Attribute name: ", attribute_name)
+            # print("Attribute name: ", attribute_name)
             reporter = partial(self._getattr, reporter)
             reporter.attribute_name = attribute_name
-            print(reporter)
+            # print(reporter)
         self.agent_reporters[name] = reporter
-        print(self.agent_reporters)
+        # print(self.agent_reporters)
 
     def _new_table(self, table_name, table_columns):
         """ Add a new table that objects can write to.
@@ -180,7 +180,7 @@ class DataCollector:
 
         if self.agent_reporters:
             agent_records = self._record_agents(model)
-            print(model.schedule_FireTruck.steps)
+            # print(model.schedule_FireTruck.steps)
             self._agent_records[model.schedule_FireTruck.steps] = list(agent_records)
 
     def add_table_row(self, table_name, row, ignore_missing=False):
