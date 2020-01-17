@@ -34,9 +34,10 @@ class ForestFire(Model):
             river_width,
             random_fires,
             num_firetruck,
-            wind,
             vision,
-            max_speed):
+            max_speed,
+            wind_strength,
+            wind_dir):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -68,7 +69,15 @@ class ForestFire(Model):
         self.schedule = RandomActivation(self)
 
         # Set the wind
-        self.wind = (randint(-1, 1), randint(-1, 1))
+        self.wind=wind_strength
+        self.wind_dir=wind_dir
+
+        #Translate the wind_dir string into vector
+        wind_vector={"N":(0,1),"NE":(1,1),"E":(1,0),"SE":(1,-1),"S":(0,-1),"SW":(-1,-1),"W":(-1,0),"NW":(-1,1)}
+        self.wind_dir=wind_vector[self.wind_dir]
+
+
+
         self.grid = MultiGrid(height, width, torus=False)
 
         self.init_river(self.river_size)
@@ -104,9 +113,9 @@ class ForestFire(Model):
                                                  Firetruck: {"Condition": "condition"}})
 
         self.running = True
-        self.dc.collect(self, [TreeCell, Firetruck])
-        self.wind_direction = wind[0]
-        self.wind_speed = wind[1]
+        self.dc.collect(self,[TreeCell,Firetruck])
+        self.wind_strength = wind_strength
+
 
     def init_river(self, n):
         '''

@@ -6,7 +6,7 @@ from mesa.visualization.UserParam import UserSettableParameter
 
 from Forestfiremodel_foundongithub import ForestFire
 from agent import *
-
+from random import randint
 
 def forest_fire_portrayal(agent):
     portrayal = {"w": 1,
@@ -52,7 +52,7 @@ extinguished_chart = ChartModule([{"Label": "Extinguished", "Color": "blue"}],
 model_parameters = {
     'height': 100,
     'width': 100,
-    'wind': (3, 4),
+    #'wind': (3, 4),
     'vision': 100,
     'max_speed': 2,
     'text_environment': UserSettableParameter('static_text', value='Environment Generation Settings'),
@@ -64,6 +64,12 @@ model_parameters = {
     'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Goes to the biggest fire',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
                                                      'Random movements']),
+    'text_settings': UserSettableParameter('static_text', value='Wind Settings'),
+    'wind_strength': UserSettableParameter('slider', 'Wind strength',0.45, 0, 0.5, 0.01),
+    'wind_dir': UserSettableParameter('choice', 'Wind Direction', value=('N'),
+                                            choices=['N','NE','E','SE','S','SW','W','NW']),
+
+
     'text_settings': UserSettableParameter('static_text', value='Other Settings'),
     'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=True),
     'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1),
