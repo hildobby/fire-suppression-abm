@@ -145,7 +145,6 @@ class DataCollector:
             reporter.attribute_name = attribute_name
         self.agent_reporters[name] = (agent, reporter)
 
-
     def _new_table(self, table_name, table_columns):
         """ Add a new table that objects can write to.
 
@@ -194,7 +193,6 @@ class DataCollector:
                 agent_records = self._record_agents(model, i)
                 self._agent_records[j][model.schedule_FireTruck.steps] = list(agent_records)
                 j += 1
-
 
     def add_table_row(self, table_name, row, ignore_missing=False):
         """ Add a row dictionary to a specific table.

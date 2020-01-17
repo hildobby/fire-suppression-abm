@@ -77,8 +77,9 @@ class ForestFire(Model):
         self.wind_dir = wind_dir
 
         # Translate the wind_dir string into vector
-        wind_vector = {"N": (0, 1), "NE": (1, 1), "E": (1, 0), "SE": (
-            1, -1), "S": (0, -1), "SW": (-1, -1), "W": (-1, 0), "NW": (-1, 1)}
+        wind_vector = {"\u2B06 North": (0, 1), "\u2196 North/East": (1, 1), "\u2B05 East": (1, 0),
+                       "\u2199 South/East": (1, -1), "\u2B07 South": (0, -1), "\u2198 South/West": (-1, -1),
+                       "\u27A1 West": (-1, 0), "\u2197 North/West": (-1, 1)}
         self.wind_dir = wind_vector[self.wind_dir]
 
         self.grid = MultiGrid(height, width, torus=False)
@@ -129,7 +130,7 @@ class ForestFire(Model):
             # initiating the river offgrid
             x = -1
             y_init = random.randrange(self.height-1)
-            
+
             # increasing the length of the river
             for i in range(int(n)):
                 x += 1
@@ -140,6 +141,7 @@ class ForestFire(Model):
                 self.new_river(RiverCell, (x, y))
                 
                 y_init = y
+
                 # increasing the width of the river
                 for j in range(self.river_width - 1):
                     new_width = random.choice([-1, 1])
@@ -196,6 +198,7 @@ class ForestFire(Model):
     @staticmethod
     def randomfire(self, randtree):
         if (random.random() < (math.exp(self.temperature / 10) / 300.0)):
+            print(math.exp(self.temperature / 10) / 300.0)
             self.agents[randtree].condition = "On Fire"
 
     @staticmethod
@@ -316,4 +319,3 @@ agent_variable = fire.dc.get_agent_vars_dataframe()
 results_firetrucks = fire.dc.get_model_vars_dataframe()
 
 '''
-

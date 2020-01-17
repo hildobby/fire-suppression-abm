@@ -29,6 +29,36 @@ class Walker(Agent):
         new_pos = cell_list[random.randint(0, len(cell_list) - 1)]
         self.model.grid.move_agent(self, new_pos)
 
+    def take_step(self, closest_neighbor):
+        # choose step
+        places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
+        places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
+
+        if self.pos[0] == 1 or self.pos[0] == self.model.width - 2 or self.pos[1] == 1 or \
+                self.pos[1] == self.model.height - 2:
+            speed = 1
+        else:
+            speed = self.max_speed
+        new_x, new_y = self.pos[0], self.pos[1]
+            
+        if places_to_move_x > 0:
+            new_x += speed
+        if places_to_move_x < 0:
+            new_x -= speed 
+        if places_to_move_y > 0:
+            new_y += speed
+        if places_to_move_y < 0:
+            new_y -= speed 
+            
+        if self.model.grid.get_cell_list_contents((new_x, new_y)):
+            if isinstance(self.model.grid.get_cell_list_contents((new_x, new_y))[0], RiverCell):
+                pass
+            else:
+                self.model.grid.move_agent(self, (new_x, new_y))
+
+        else:
+            self.model.grid.move_agent(self, (new_x, new_y))
+
     def biggestfire_move(self):
         '''
         This method should get the neighbouring cells (Moore's neighbourhood)
@@ -62,36 +92,10 @@ class Walker(Agent):
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
 
-            # find how many places to move to reach the closest fire
-            places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
-            places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
-
-            if self.pos[0] == 1 or self.pos[0] == self.model.width - 2 or self.pos[1] == 1 or \
-                    self.pos[1] == self.model.height - 2:
-                speed = 1
-            else:
-                speed = self.max_speed
 
             # choose step
-            new_x, new_y = self.pos[0], self.pos[1]
-            
-            if places_to_move_x > 0:
-                new_x += speed
-            if places_to_move_x < 0:
-                new_x -= speed 
-            if places_to_move_y > 0:
-                new_y += speed
-            if places_to_move_y < 0:
-                new_y -= speed 
-                
-            if self.model.grid.get_cell_list_contents((new_x, new_y)):
-                if isinstance(self.model.grid.get_cell_list_contents((new_x, new_y))[0], RiverCell):
-                    pass
-                else:
-                    self.model.grid.move_agent(self, (new_x, new_y))
 
-            else:
-                self.model.grid.move_agent(self, (new_x, new_y))
+            self.take_step(closest_neighbor)
 
         # if fire not in the neighboorhood, do random move
         else:
@@ -142,31 +146,8 @@ class Walker(Agent):
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
 
-            # find how many places to move to reach the closest fire
-            places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
-            places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
+            self.take_step(closest_neighbor)
 
-            if self.pos[0] == 1 or self.pos[0] == self.model.width - 2 or self.pos[1] == 1 or \
-                    self.pos[1] == self.model.height - 2:
-                speed = 1
-            else:
-                speed = self.max_speed
-
-            # choose step
-            new_x, new_y = self.pos[0], self.pos[1]
-            
-            if places_to_move_x > 0:
-                new_x += speed
-            if places_to_move_x < 0:
-                new_x -= speed 
-            if places_to_move_y > 0:
-                new_y += speed
-            if places_to_move_y < 0:
-                new_y -= speed 
-                
-            if not isinstance((new_x, new_y), RiverCell):
-                self.model.grid.move_agent(self, (new_x, new_y))
-                
         # if fire not in the neighboorhood, do random move
         else:
             self.random_move()
