@@ -67,11 +67,9 @@ model_parameters = {
                                                      'Random movements']),
     'text_settings': UserSettableParameter('static_text', value='Wind Settings'),
     'wind_strength': UserSettableParameter('slider', 'Wind strength', 0.45, 0, 0.5, 0.01),
-    'wind_dir': UserSettableParameter('choice', 'Wind Direction', value=('N'),
-                                      choices=['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']),
-
-
-    'text_settings': UserSettableParameter('static_text', value='Other Settings'),
+    'wind_dir': UserSettableParameter('choice', 'Wind Direction', value=('\u2B06 North'),
+                                      choices=['\u2B06 North', '\u2196 North/East', '\u2B05 East', '\u2199 South/East', '\u2B07 South', '\u2198 South/West', '\u27A1 West', '\u2197 North/West']),
+'text_settings': UserSettableParameter('static_text', value='Other Settings'),
     'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=True),
     'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1),
 }
