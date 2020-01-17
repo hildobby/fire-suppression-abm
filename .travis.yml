@@ -17,21 +17,23 @@ notifications:
   email: false
   slack: asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0
    - rooms:
-        - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0#failures
-      on_success: never
-      on_failure: always
-      message: "Yo wtf dude, you high or smth? You clearly fucked up"
-      template:
-        - "%{repository_slug} (%{commit}) : %{message}"
-        - "Build details: %{build_url}"
-    - rooms:
-        - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0#successes
+      - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0
       on_success: always
       on_failure: never
+      result: "fucking worked"
+      message: "Yo wtf dude, you high or smth? You clearly fucked up"
+      template:
+      - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch} by %{author} the great %{result} in %{duration}"
+   - rooms:
+      - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0
+      on_success: never
+      on_failure: always
+      result: "Failed miserably"
       message: "Success, you successfully succeeded, now go get Dobby's coffee"
       template:
-        - "%{repository_slug} (%{commit}) : %{message}"
-        - "Build details: %{build_url}"
+      - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch} by %{author} %{result} in %{duration}"
+      - "%{message}"
+
 
 script:
     - git remote rm origin
