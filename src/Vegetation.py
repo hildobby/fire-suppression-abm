@@ -43,13 +43,10 @@ class TreeCell(Agent):
         self.life_bar = 100       # give the tree a life bar
         self.burning_rate = 20   # need to change that as well
 
-        self.veg_state=0.4
-        self.veg_density=0.3
+        self.veg_state = 0.4
+        self.veg_density = 0.3
 
         #
-
-
-
 
     def step(self):
         '''
@@ -61,8 +58,9 @@ class TreeCell(Agent):
 
                 if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine":
 
-                    prob_of_spread= TreeCell.prob_of_spreading(self, neighbor, self.model.wind_dir, self.model.wind_strength)
-                    if random.uniform(0,1) <  prob_of_spread:
+                    prob_of_spread = TreeCell.prob_of_spreading(
+                        self, neighbor, self.model.wind_dir, self.model.wind_strength)
+                    if random.uniform(0, 1) < prob_of_spread:
                         neighbor.condition = "On Fire"
 
             # if on fire reduce life_bar
@@ -71,38 +69,32 @@ class TreeCell(Agent):
             else:
                 self.condition = "Burned Out"
 
-
-
     def get_pos(self):
         return self.pos
 
+    def prob_of_spreading(self, neighbour, wind_dir, wind_strength):
 
-
-    def prob_of_spreading(self,neighbour,wind_dir,wind_strength):
-
-        p_h=0.58
-        p_veg=neighbour.veg_state
-        p_den=neighbour.veg_density
+        p_h = 0.58
+        p_veg = neighbour.veg_state
+        p_den = neighbour.veg_density
         p_s = 1  # no elavation
-        a=0.078
-        c1=0.045
-        c2=0.131
-        theta=0  # in case wind_strength is zero
-
-
+        a = 0.078
+        c1 = 0.045
+        c2 = 0.131
+        theta = 0  # in case wind_strength is zero
 
         # if winf actually exists
         if self.model.wind_strength != 0:
-            neighbour_vec=[neighbour.pos[0]-self.pos[0],neighbour.pos[1]-self.pos[1]]
-            wind_vec=[wind_dir[0],wind_dir[1]]
+            neighbour_vec = [neighbour.pos[0] - self.pos[0], neighbour.pos[1] - self.pos[1]]
+            wind_vec = [wind_dir[0], wind_dir[1]]
 
             # get the angle theat between wind in the spreading direction
-            dot_product=np.dot(neighbour_vec,wind_vec)
-            theta=math.acos((dot_product/(LA.norm(neighbour_vec)*LA.norm(wind_vec))))
+            dot_product = np.dot(neighbour_vec, wind_vec)
+            theta = math.acos((dot_product / (LA.norm(neighbour_vec) * LA.norm(wind_vec))))
 
-        p_w=math.exp(c2*wind_strength*(math.cos(theta)-1))
+        p_w = math.exp(c2 * wind_strength * (math.cos(theta) - 1))
 
-        p_burn=p_h*(1+p_veg)*(1+p_den)*p_w*p_s
+        p_burn = p_h * (1 + p_veg) * (1 + p_den) * p_w * p_s
 
         print(p_burn)
         return p_burn
