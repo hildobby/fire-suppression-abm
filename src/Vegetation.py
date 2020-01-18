@@ -100,20 +100,8 @@ class TreeCell(Agent):
             dot_product=np.dot(neighbour_vec,wind_vec)
             theta=math.acos((dot_product/(LA.norm(neighbour_vec)*LA.norm(wind_vec))))
 
-
-
-
         p_w=math.exp(c2*wind_strength*(math.cos(theta)-1))
 
-        print("P_w :",p_w)
-        # distance for non-local effect
-        #mu, sigma = 0, 0.1
-        #r_n = random.gauss(mu, sigma)
-        #d_p= r_n *math.exp(self.model.wind_strength*c2*(math.cos()))
-
-
         p_burn=p_h*(1+p_veg)*(1+p_den)*p_w*p_s
-
-        print("Probability to burn",p_burn)
 
         return p_burn
