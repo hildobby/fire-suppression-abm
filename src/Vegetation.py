@@ -104,4 +104,5 @@ class TreeCell(Agent):
 
         p_burn=p_h*(1+p_veg)*(1+p_den)*p_w*p_s
 
+        print(p_burn)
         return p_burn
