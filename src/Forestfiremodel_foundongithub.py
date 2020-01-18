@@ -77,17 +77,15 @@ class ForestFire(Model):
         self.wind_dir = wind_dir
 
         # Translate the wind_dir string into vector
-        wind_vector = {"\u2B06 North": (0, 1), "\u2196 North/East": (1, 1), "\u2B05 East": (1, 0),
-                       "\u2199 South/East": (1, -1), "\u2B07 South": (0, -1), "\u2198 South/West": (-1, -1),
-                       "\u27A1 West": (-1, 0), "\u2197 North/West": (-1, 1)}
+        wind_vector = {"\u2B06 South": (0, 1), " \u2197 South/West": (1, 1), "\u27A1 West": (1, 0),
+                       "\u2198North/West": (1, -1), "\u2B07 North": (0, -1), "\u2199 North/East": (-1, -1),
+                       "\u2B05 East": (-1, 0), " \u2196South/East": (-1, 1)}
         self.wind_dir = wind_vector[self.wind_dir]
 
         self.grid = MultiGrid(height, width, torus=False)
 
         self.init_river(self.river_size)
         
-        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
-
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
         self.init_vegetation(TreeCell, self.initial_tree)
@@ -95,6 +93,8 @@ class ForestFire(Model):
         for i in range(len(self.agents)):
             self.schedule_TreeCell.add(self.agents[i])
             self.schedule.add(self.agents[i])
+            
+        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
 
         self.random_fires = random_fires
         self.temperature = temperature
@@ -129,7 +129,7 @@ class ForestFire(Model):
         else:
             # initiating the river offgrid
             x = -1
-            y_init = random.randrange(self.height-1)
+            y_init = random.randrange(self.height - 1)
 
             # increasing the length of the river
             for i in range(int(n)):
@@ -139,7 +139,7 @@ class ForestFire(Model):
                 while y < 0 or y >= self.height:
                     y += random.randint(-1, 1)
                 self.new_river(RiverCell, (x, y))
-                
+
                 y_init = y
 
                 # increasing the width of the river
@@ -170,9 +170,13 @@ class ForestFire(Model):
         for i in range(num_firetruck):
             x = random.randrange(self.width)
             y = random.randrange(self.height)
-            while not self.grid.is_cell_empty((x, y)):
-                x = random.randrange(self.width)
-                y = random.randrange(self.height)
+            while self.grid.get_cell_list_contents((x,y)):
+                if isinstance(self.grid.get_cell_list_contents((x,y))[0], RiverCell):
+                    x = random.randrange(self.width)
+                    y = random.randrange(self.height)
+                else:
+                    break
+
             firetruck = self.new_firetruck(Firetruck, (x, y), truck_strategy, vision, max_speed)
             self.schedule_FireTruck.add(firetruck)
             self.schedule.add(firetruck)

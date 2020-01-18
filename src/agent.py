@@ -145,16 +145,16 @@ class Walker(Agent):
         places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
         places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
 
-            new_x, new_y = self.pos[0], self.pos[1]
-            
-            if places_to_move_x > 0:
-                new_x += speed
-            if places_to_move_x < 0:
-                new_x -= speed 
-            if places_to_move_y > 0:
-                new_y += speed
-            if places_to_move_y < 0:
-                new_y -= speed 
+        new_x, new_y = self.pos[0], self.pos[1]
+
+        if places_to_move_x > 0:
+            new_x += speed
+        if places_to_move_x < 0:
+            new_x -= speed
+        if places_to_move_y > 0:
+            new_y += speed
+        if places_to_move_y < 0:
+            new_y -= speed
 
     def biggestfire_move(self):
         '''
@@ -263,7 +263,6 @@ class Walker(Agent):
 
             # choose step
             self.take_step(closest_neighbor)
-
 
         # if fire not in the neighboorhood, do random move
         else:

@@ -9,6 +9,9 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 """
 import random
 from mesa import Agent
+import math
+import numpy as np
+from numpy import linalg as LA
 
 
 class TreeCell(Agent):
@@ -38,10 +41,12 @@ class TreeCell(Agent):
         self.unique_id = unique_id
         self.condition = "Fine"
         self.life_bar = 100       # give the tree a life bar
-        self.burning_rate = 20
-        self.probability = 0.5
+        self.burning_rate = 20   # need to change that as well
 
-        self.speed = 0.47
+        self.veg_state = 0.4
+        self.veg_density = 0.3
+
+        #
 
     def step(self):
         '''
@@ -53,47 +58,10 @@ class TreeCell(Agent):
 
                 if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine":
 
-                    # Look at the position of the neighbor and the wind which to calculate the probability
-                    if self.pos[0] < neighbor.pos[0] and self.pos[1] == neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability + \
-                                (self.model.wind_dir[0] * self.model.wind_strength):
-                            neighbor.condition = "On Fire"
-                            break
-                    elif self.pos[0] > neighbor.pos[0] and self.pos[1] == neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability - \
-                                (self.model.wind_dir[0] * self.model.wind_strength):
-                            neighbor.condition = "On Fire"
-                            break
-                    elif self.pos[0] == neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability + \
-                                (self.model.wind_dir[1] * self.model.wind_strength):
-                            neighbor.condition = "On Fire"
-                            break
-                    elif self.pos[0] == neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability - \
-                                (self.model.wind_dir[1] * self.model.wind_strength):
-                            neighbor.condition = "On Fire"
-                        break
-                    elif self.pos[0] < neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability + \
-                                (self.model.wind_dir[0] * self.model.wind_strength * self.model.wind_dir[1]):
-                            neighbor.condition = "On Fire"
-                            break
-                    elif self.pos[0] < neighbor.pos[0] and self.pos[1] > neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability - \
-                                (self.model.wind_dir[1] * self.model.wind_strength * self.model.wind_dir[0]):
-                            neighbor.condition = "On Fire"
-                            break
-                    elif self.pos[0] > neighbor.pos[0] and self.pos[1] < neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability - \
-                                (self.model.wind_dir[0] * self.model.wind_strength * self.model.wind_dir[1]):
-                            neighbor.condition = "On Fire"
-                            break
-                    elif self.pos[0] > neighbor.pos[0] and self.pos[1] > neighbor.pos[1]:
-                        if random.uniform(0, 1) < self.probability - \
-                                (self.model.wind_dir[0] * self.model.wind_strength * self.model.wind_dir[0]):
-                            neighbor.condition = "On Fire"
-                            break
+                    # probability of spreading
+                    prob_sp = TreeCell.prob_of_spreading(self, neighbor, self.model.wind_dir, self.model.wind_strength)
+                    if random.uniform(0, 1) < prob_sp:
+                        neighbor.condition = "On Fire"
 
             # if on fire reduce life_bar
             if self.life_bar != 0:
@@ -103,3 +71,30 @@ class TreeCell(Agent):
 
     def get_pos(self):
         return self.pos
+
+    def prob_of_spreading(self, neighbour, wind_dir, wind_strength):
+
+        p_h = 0.58
+        p_veg = neighbour.veg_state
+        p_den = neighbour.veg_density
+        p_s = 1  # no elavation
+        a = 0.078
+        c1 = 0.045
+        c2 = 0.131
+        theta = 0  # in case wind_strength is zero
+
+        # if winf actually exists
+        if self.model.wind_strength != 0:
+            neighbour_vec = [neighbour.pos[0] - self.pos[0], neighbour.pos[1] - self.pos[1]]
+            wind_vec = [wind_dir[0], wind_dir[1]]
+
+            # get the angle theat between wind in the spreading direction
+            dot_product = np.dot(neighbour_vec, wind_vec)
+            theta = math.acos((dot_product / (LA.norm(neighbour_vec) * LA.norm(wind_vec))))
+
+        p_w = math.exp(c2 * wind_strength * (math.cos(theta) - 1))
+
+        p_burn = p_h * (1 + p_veg) * (1 + p_den) * p_w * p_s
+
+        print(p_burn)
+        return p_burn
