@@ -85,6 +85,8 @@ class ForestFire(Model):
         self.grid = MultiGrid(height, width, torus=False)
 
         self.init_river(self.river_size)
+        
+        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
@@ -93,8 +95,6 @@ class ForestFire(Model):
         for i in range(len(self.agents)):
             self.schedule_TreeCell.add(self.agents[i])
             self.schedule.add(self.agents[i])
-
-        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
 
         self.random_fires = random_fires
         self.temperature = temperature
@@ -170,6 +170,9 @@ class ForestFire(Model):
         for i in range(num_firetruck):
             x = random.randrange(self.width)
             y = random.randrange(self.height)
+            while not self.grid.is_cell_empty((x, y)):
+                x = random.randrange(self.width)
+                y = random.randrange(self.height)
             firetruck = self.new_firetruck(Firetruck, (x, y), truck_strategy, vision, max_speed)
             self.schedule_FireTruck.add(firetruck)
             self.schedule.add(firetruck)

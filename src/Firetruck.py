@@ -26,7 +26,14 @@ class Walker(Agent):
         '''
 
         cell_list = self.model.grid.get_neighborhood(self.pos, moore=True)
+        
+        for cell in cell_list:    
+            if self.model.grid.get_cell_list_contents(cell):
+                if isinstance(self.model.grid.get_cell_list_contents(cell)[0], RiverCell):
+                    cell_list.remove(cell)
+        
         new_pos = cell_list[random.randint(0, len(cell_list) - 1)]
+                
         self.model.grid.move_agent(self, new_pos)
 
     def take_step(self, closest_neighbor):
@@ -39,6 +46,7 @@ class Walker(Agent):
             speed = 1
         else:
             speed = self.max_speed
+            
         new_x, new_y = self.pos[0], self.pos[1]
             
         if places_to_move_x > 0:
@@ -51,13 +59,9 @@ class Walker(Agent):
             new_y -= speed 
             
         if self.model.grid.get_cell_list_contents((new_x, new_y)):
-            if isinstance(self.model.grid.get_cell_list_contents((new_x, new_y))[0], RiverCell):
-                pass
-            else:
+            if not isinstance(self.model.grid.get_cell_list_contents((new_x, new_y))[0], RiverCell):
                 self.model.grid.move_agent(self, (new_x, new_y))
 
-        else:
-            self.model.grid.move_agent(self, (new_x, new_y))
 
     def biggestfire_move(self):
         '''
@@ -91,10 +95,6 @@ class Walker(Agent):
 
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
-
-
-            # choose step
-
             self.take_step(closest_neighbor)
 
         # if fire not in the neighboorhood, do random move
@@ -145,7 +145,6 @@ class Walker(Agent):
 
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
-
             self.take_step(closest_neighbor)
 
         # if fire not in the neighboorhood, do random move
