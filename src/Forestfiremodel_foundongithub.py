@@ -85,7 +85,7 @@ class ForestFire(Model):
         self.grid = MultiGrid(height, width, torus=False)
 
         self.init_river(self.river_size)
-        
+
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
         self.init_vegetation(TreeCell, self.initial_tree)
@@ -93,7 +93,7 @@ class ForestFire(Model):
         for i in range(len(self.agents)):
             self.schedule_TreeCell.add(self.agents[i])
             self.schedule.add(self.agents[i])
-            
+
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
 
         self.random_fires = random_fires
@@ -170,8 +170,8 @@ class ForestFire(Model):
         for i in range(num_firetruck):
             x = random.randrange(self.width)
             y = random.randrange(self.height)
-            while self.grid.get_cell_list_contents((x,y)):
-                if isinstance(self.grid.get_cell_list_contents((x,y))[0], RiverCell):
+            while self.grid.get_cell_list_contents((x, y)):
+                if isinstance(self.grid.get_cell_list_contents((x, y))[0], RiverCell):
                     x = random.randrange(self.width)
                     y = random.randrange(self.height)
                 else:
