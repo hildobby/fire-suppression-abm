@@ -17,7 +17,7 @@ notifications:
   email: false
   slack:
    - rooms:
-      - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0
+        - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0
       on_success: always
       on_failure: never
       result: "fucking worked"
@@ -25,8 +25,7 @@ notifications:
       template:
        - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch} by %{author} the great %{result} in %{duration}"
    - rooms:
-      - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0
-      - asian
+        - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0
       on_success: never
       on_failure: always
       result: "Failed miserably"
