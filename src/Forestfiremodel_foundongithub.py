@@ -129,7 +129,7 @@ class ForestFire(Model):
         else:
             # initiating the river offgrid
             x = -1
-            y_init = random.randrange(self.height-1)
+            y_init = random.randrange(self.height - 1)
 
             # increasing the length of the river
             for i in range(int(n)):
@@ -139,7 +139,7 @@ class ForestFire(Model):
                 while y < 0 or y >= self.height:
                     y += random.randint(-1, 1)
                 self.new_river(RiverCell, (x, y))
-                
+
                 y_init = y
 
                 # increasing the width of the river

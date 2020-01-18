@@ -40,16 +40,16 @@ class Walker(Agent):
         else:
             speed = self.max_speed
         new_x, new_y = self.pos[0], self.pos[1]
-            
+
         if places_to_move_x > 0:
             new_x += speed
         if places_to_move_x < 0:
-            new_x -= speed 
+            new_x -= speed
         if places_to_move_y > 0:
             new_y += speed
         if places_to_move_y < 0:
-            new_y -= speed 
-            
+            new_y -= speed
+
         if self.model.grid.get_cell_list_contents((new_x, new_y)):
             if isinstance(self.model.grid.get_cell_list_contents((new_x, new_y))[0], RiverCell):
                 pass
@@ -91,7 +91,6 @@ class Walker(Agent):
 
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
-
 
             # choose step
 

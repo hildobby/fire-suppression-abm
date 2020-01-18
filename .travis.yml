@@ -16,25 +16,20 @@ before_install:
 notifications:
   email: false
   slack:
-   - rooms:
-      - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0#github_code
-      on_success: always
-      on_failure: never
-      result: "fucking worked"
-      message: "Yo wtf dude, you high or smth? You clearly fucked up"
-      template:
-      - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch} by %{author} the great %{result} in %{duration}"
-   - rooms:
-      - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0#github_code
-      - asian
+    - rooms:
+        - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0#failures
       on_success: never
       on_failure: always
-      result: "Failed miserably"
-      message: "Success, you successfully succeeded, now go get Dobby's coffee"
       template:
-      - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch} by %{author} %{result} in %{duration}"
-      - "%{message}"
-
+        - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch} by %{author} the great failed miserably in %{duration}"
+        - "Yo wtf dude, you high or smth? You clearly fucked up"
+    - rooms:
+        - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0#successes
+      on_success: always
+      on_failure: never
+      template:
+        - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch} by %{author} the great fucking worked in %{duration}"
+        - "Success, you successfully succeeded!"
 
 script:
     - git remote rm origin
