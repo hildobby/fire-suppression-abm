@@ -21,15 +21,17 @@ notifications:
       on_success: never
       on_failure: always
       template:
-        - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch} by %{author} the great failed miserably in %{duration}"
-        - "Yo wtf dude, you high or smth? You clearly fucked up"
+        - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) by %{author} the great failed miserably in %{duration}"
+        - "Yo wtf dude, you high or smth? You clearly fucked up :eggplant: :: "
+        - ":letter_y::letter_o::letter_u:  :letter_h::letter_o::letter_r::letter_r::letter_i::letter_b::letter_l::letter_e:  :letter_h::letter_u::letter_m::letter_a::letter_m::exclamation:"
     - rooms:
         - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0
       on_success: always
       on_failure: never
       template:
-        - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) of %{repository_slug}@%{branch} by %{author} the great fucking worked in %{duration}"
-        - "Success, you successfully succeeded!"
+        - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) by %{author} the great fucking worked in %{duration}"
+        - "Success, you successfully succeeded! :baby-yoda-soup: :aww_yeah:"
+        - ":letter_g::letter_o::letter_o::letter_d:  :letter_j::letter_o::letter_b::grey_exclamation:"
 
 script:
     - git remote rm origin
