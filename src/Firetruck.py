@@ -26,14 +26,14 @@ class Walker(Agent):
         '''
 
         cell_list = self.model.grid.get_neighborhood(self.pos, moore=True)
-        
-        for cell in cell_list:    
+
+        for cell in cell_list:
             if self.model.grid.get_cell_list_contents(cell):
                 if isinstance(self.model.grid.get_cell_list_contents(cell)[0], RiverCell):
                     cell_list.remove(cell)
-        
+
         new_pos = cell_list[random.randint(0, len(cell_list) - 1)]
-                
+
         self.model.grid.move_agent(self, new_pos)
 
     def take_step(self, closest_neighbor):
@@ -46,7 +46,7 @@ class Walker(Agent):
             speed = 1
         else:
             speed = self.max_speed
-            
+
         new_x, new_y = self.pos[0], self.pos[1]
 
         if places_to_move_x > 0:
@@ -61,6 +61,7 @@ class Walker(Agent):
         if self.model.grid.get_cell_list_contents((new_x, new_y)):
             if not isinstance(self.model.grid.get_cell_list_contents((new_x, new_y))[0], RiverCell):
                 self.model.grid.move_agent(self, (new_x, new_y))
+
         else:
             self.model.grid.move_agent(self, (new_x, new_y))
 
