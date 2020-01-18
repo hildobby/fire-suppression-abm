@@ -59,8 +59,8 @@ class TreeCell(Agent):
                 if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine":
 
                     # probability of spreading
-                    prob_sp= TreeCell.prob_of_spreading(self, neighbor, self.model.wind_dir, self.model.wind_strength)
-                    if random.uniform(0,1) <  prob_sp:
+                    prob_sp = TreeCell.prob_of_spreading(self, neighbor, self.model.wind_dir, self.model.wind_strength)
+                    if random.uniform(0, 1) < prob_sp:
                         neighbor.condition = "On Fire"
 
             # if on fire reduce life_bar
