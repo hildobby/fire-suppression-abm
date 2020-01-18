@@ -22,7 +22,7 @@ notifications:
       on_failure: always
       template:
         - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) by %{author} the great failed miserably in %{duration}"
-        - "Yo wtf dude, you high or smth? You clearly fucked up :eggplant: :: "
+        - "Yo wtf dude, you high or smth? You clearly fucked up :eggplant: :-1:"
         - ":letter_y::letter_o::letter_u:  :letter_m::letter_i::letter_s::letter_e::letter_r::letter_a::letter_b::letter_l::letter_e:  :letter_p::letter_i::letter_e::letter_c::letter_e:  :letter_o::letter_f:  :letter_s::letter_h::letter_i::letter_t::exclamation:"
     - rooms:
         - asian-pacedyodeling:KUcuh0LZlw6M6dOe96wR2DE0
@@ -30,7 +30,7 @@ notifications:
       on_failure: never
       template:
         - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) by %{author} the great fucking worked in %{duration}"
-        - "Success, you successfully succeeded! :baby-yoda-soup: :aww_yeah:"
+        - "Success, you successfully succeeded! :baby-yoda-soup: :aww_yeah: :success_kid:"
         - ":letter_g::letter_o::letter_o::letter_d:  :letter_j::letter_o::letter_b::grey_exclamation:"
 
 script:
