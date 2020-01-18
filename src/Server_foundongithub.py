@@ -69,7 +69,7 @@ model_parameters = {
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
                                                      'Random movements']),
     'text_settings': UserSettableParameter('static_text', value='Wind Settings'),
-    'wind_strength': UserSettableParameter('slider', 'Wind strength', 0.45, 0, 0.5, 0.01),
+    'wind_strength': UserSettableParameter('slider', 'Wind strength', 5, 0, 30, 1),
     'wind_dir': UserSettableParameter('choice', 'Wind Direction', value=('N'),
                                       choices=['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']),
 
