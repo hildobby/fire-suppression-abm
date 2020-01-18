@@ -30,7 +30,7 @@ notifications:
       on_failure: never
       template:
         - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) by %{author} the great fucking worked in %{duration}"
-        - "Success, you successfully succeeded! :baby-yoda-soup: :aww_yeah: :success_kid:"
+        - "Success, you successfully succeeded! :baby-yoda-soup: :aww_yeah: :success-kid:"
         - ":letter_g::letter_o::letter_o::letter_d:  :letter_j::letter_o::letter_b::grey_exclamation:"
 
 script:
