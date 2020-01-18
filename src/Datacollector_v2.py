@@ -106,14 +106,14 @@ class DataCollector:
                 self.agent_list.append(agent)
                 dictionary = list(list(agent_reporters.items())[i])[1]
                 for name, reporter in dictionary.items():
-                    self.agent = agent
+
                     self._new_agent_reporter(name, reporter, agent)
                     self.seperated_agentlist[agent] = list(
                         filter(lambda elm: isinstance(elm, agent), model.schedule.agents))
 
         if tables is not None:
             for name, columns in tables.items():
-                print("Name ", name, " columns ", columns)
+                # print("Name ", name, " columns ", columns)
                 self._new_table(name, columns)
 
     def _new_model_reporter(self, name, reporter):
@@ -140,6 +140,7 @@ class DataCollector:
         """
         if isinstance(reporter, str):
             attribute_name = reporter
+
             reporter = partial(self._getattr, reporter)
             reporter.attribute_name = attribute_name
         self.agent_reporters[name] = (agent, reporter)
@@ -186,6 +187,7 @@ class DataCollector:
                 self.model_vars[var].append(reporter(model))
 
         if self.agent_reporters:
+
             j = 0
             for i in agents:
                 agent_records = self._record_agents(model, i)

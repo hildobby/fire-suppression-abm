@@ -77,8 +77,9 @@ class ForestFire(Model):
         self.wind_dir = wind_dir
 
         # Translate the wind_dir string into vector
-        wind_vector = {"N": (0, 1), "NE": (1, 1), "E": (1, 0), "SE": (
-            1, -1), "S": (0, -1), "SW": (-1, -1), "W": (-1, 0), "NW": (-1, 1)}
+        wind_vector = {"\u2B06 North": (0, 1), "\u2196 North/East": (1, 1), "\u2B05 East": (1, 0),
+                       "\u2199 South/East": (1, -1), "\u2B07 South": (0, -1), "\u2198 South/West": (-1, -1),
+                       "\u27A1 West": (-1, 0), "\u2197 North/West": (-1, 1)}
         self.wind_dir = wind_vector[self.wind_dir]
 
         self.grid = MultiGrid(height, width, torus=False)
@@ -126,18 +127,31 @@ class ForestFire(Model):
         if self.river_width == 0:
             pass
         else:
+            # initiating the river offgrid
             x = -1
-            y = random.randrange(self.height)
+            y_init = random.randrange(self.height-1)
+
+            # increasing the length of the river
             for i in range(int(n)):
                 x += 1
-                y += random.randint(-1, 1)
-                while y <= 0 or y >= self.height or not self.grid.is_cell_empty((x, y)):
+                y = y_init + random.randint(-1, 1)
+
+                while y < 0 or y >= self.height:
                     y += random.randint(-1, 1)
                 self.new_river(RiverCell, (x, y))
+                
+                y_init = y
+
+                # increasing the width of the river
                 for j in range(self.river_width - 1):
-                    y += random.choice([-1, 1])
-                    while y <= 0 or y >= self.height or not self.grid.is_cell_empty((x, y)):
-                        y += random.choice([-1, 1])
+                    new_width = random.choice([-1, 1])
+                    if y + new_width < 0 or y + new_width == self.height:
+                        new_width = -new_width
+                    y += new_width
+                    while not self.grid.is_cell_empty((x, y)):
+                        if y + new_width < 0 or y + new_width == self.height:
+                            new_width = -new_width
+                        y += new_width
                     self.new_river(RiverCell, (x, y))
 
     def init_vegetation(self, agent_type, n):
@@ -184,6 +198,7 @@ class ForestFire(Model):
     @staticmethod
     def randomfire(self, randtree):
         if (random.random() < (math.exp(self.temperature / 10) / 300.0)):
+            print(math.exp(self.temperature / 10) / 300.0)
             self.agents[randtree].condition = "On Fire"
 
     @staticmethod
@@ -303,6 +318,4 @@ results = fire.dc.get_model_vars_dataframe()
 agent_variable = fire.dc.get_agent_vars_dataframe()
 results_firetrucks = fire.dc.get_model_vars_dataframe()
 
-print(agent_variable[0])
-print(agent_variable[1])
 '''

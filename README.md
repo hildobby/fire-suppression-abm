@@ -35,6 +35,25 @@ To push it to github
 ```bash
 git push
 ```
+
+*if `git push` doesn't tells you to merge before pushing, do `git pull`, fix merge conflicts if there are any and then `git push` again
+
+
+## Updating the github repo with your local changes
+
+For each of the files you changed:
+```bash
+git add [filename]
+```
+
+Then,
+```bash
+git commit -m '[your_message]'
+git pull
+git push
+```
+
+
 # Auto Linting
 
 To install

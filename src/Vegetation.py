@@ -59,7 +59,7 @@ class TreeCell(Agent):
             neighbors = self.model.grid.get_neighbors(self.pos, moore=True)
             for neighbor in neighbors:
 
-               if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine":
+                if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine":
 
                     prob_of_spread= TreeCell.prob_of_spreading(self, neighbor, self.model.wind_dir, self.model.wind_strength)
                     if random.uniform(0,1) <  prob_of_spread:
