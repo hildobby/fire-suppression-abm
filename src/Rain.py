@@ -11,7 +11,6 @@ import random
 from mesa import Agent
 from River import RiverCell
 from Vegetation import TreeCell
-from Firetruck import Firetruck
 
 
 class Rain(Agent):
