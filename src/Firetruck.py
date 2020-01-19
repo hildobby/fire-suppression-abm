@@ -41,11 +41,11 @@ class Walker(Agent):
         places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
         places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
 
+        speed = self.max_speed
+
         if self.pos[0] == 1 or self.pos[0] == self.model.width - 2 or self.pos[1] == 1 or \
                 self.pos[1] == self.model.height - 2:
             speed = 1
-        else:
-            speed = self.max_speed
 
         new_x, new_y = self.pos[0], self.pos[1]
 
@@ -97,10 +97,9 @@ class Walker(Agent):
 
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
-
             self.take_step(closest_neighbor)
 
-        # if fire not in the neighboorhood, do random move
+        # if fire not in the neighbourhood, do random move
         else:
             self.random_move()
 

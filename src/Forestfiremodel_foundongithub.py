@@ -18,6 +18,7 @@ from random import randint
 from River import RiverCell
 from Vegetation import TreeCell
 from Firetruck import Firetruck
+from Rain import Rain
 
 # defines the model
 
@@ -85,6 +86,7 @@ class ForestFire(Model):
         self.grid = MultiGrid(height, width, torus=False)
 
         self.init_river(self.river_size)
+        self.init_rain()
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
@@ -180,6 +182,13 @@ class ForestFire(Model):
             firetruck = self.new_firetruck(Firetruck, (x, y), truck_strategy, vision, max_speed)
             self.schedule_FireTruck.add(firetruck)
             self.schedule.add(firetruck)
+    def init_rain(self):
+        '''
+        Creating trees
+        '''
+        x = random.randrange(self.width)
+        y = random.randrange(self.height)
+        self.new_agent(Rain, (x, y))
 
     def step(self):
         '''
