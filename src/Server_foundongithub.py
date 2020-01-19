@@ -12,7 +12,6 @@ from Firetruck import Firetruck
 from Rain import Rain
 
 
-
 def forest_fire_portrayal(agent):
     portrayal = {"w": 1,
                  "h": 1,
@@ -40,7 +39,6 @@ def forest_fire_portrayal(agent):
     portrayal["Color"] = colors[agent.condition]
     if isinstance(agent, Rain):
         portrayal["Layer"] = "1"
-
 
     # give a color to the fire depending on the life_bar
     if agent.condition == "On Fire" and agent.life_bar > 0:

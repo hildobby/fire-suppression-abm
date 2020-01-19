@@ -182,6 +182,7 @@ class ForestFire(Model):
             firetruck = self.new_firetruck(Firetruck, (x, y), truck_strategy, vision, max_speed)
             self.schedule_FireTruck.add(firetruck)
             self.schedule.add(firetruck)
+
     def init_rain(self):
         '''
         Creating trees
