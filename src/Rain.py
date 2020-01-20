@@ -39,6 +39,7 @@ class Rain(Agent):
                 if neighbor.condition == "Burned Out" or neighbor.condition == "On Fire":
                     neighbor.condition = "Fine"
 
+
         self.random_move()
 
     def random_move(self):

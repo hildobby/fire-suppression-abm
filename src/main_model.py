@@ -64,6 +64,7 @@ class ForestFire(Model):
         self.temperature = temperature
 
         self.n_agents = 0
+
         self.agents = []
         self.initial_tree = height * width * density - self.river_length * self.river_width
 

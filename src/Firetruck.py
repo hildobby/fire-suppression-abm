@@ -44,7 +44,8 @@ class Walker(Agent):
         speed = self.max_speed
 
         if self.pos[0] == 1 or self.pos[0] == self.model.width - 2 or self.pos[1] == 1 or \
-                self.pos[1] == self.model.height - 2:
+                self.pos[1] == self.model.height - 2 or abs(places_to_move_y) <= 1 and \
+                abs(places_to_move_x) <= 1:
             speed = 1
 
         new_x, new_y = self.pos[0], self.pos[1]
