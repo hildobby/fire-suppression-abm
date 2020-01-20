@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jan  8 15:30:03 2020
+Created on Mon Jan 20 17:54:44 2020
 
 This code was implemented by
 Louis Weyland, Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
@@ -9,19 +9,19 @@ Louis Weyland, Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe J
 """
 import random
 from mesa import Agent
+    
 
-
-class RiverCell(Agent):
+class BreakCell(Agent):
     def __init__(self, model, unique_id, pos):
         '''
-        Create one cell of a river.
+        A firebreak cell.
         Args:
-            pos: The tree's coordinates on the grid. Used as the unique_id
+            position & spread probability
         '''
         super().__init__(unique_id, model)
         self.pos = pos
         self.unique_id = unique_id
-        self.condition = "Plenty"
+        self.condition = "Firebreak"
 
     def get_pos(self):
         return self.pos

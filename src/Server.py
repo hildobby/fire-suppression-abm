@@ -10,6 +10,7 @@ from environment.river import RiverCell
 from environment.vegetation import TreeCell
 from agents.firetruck import Firetruck
 from environment.rain import Rain
+from environment.firebreak import BreakCell
 
 
 def forest_fire_portrayal(agent):
@@ -32,7 +33,8 @@ def forest_fire_portrayal(agent):
               "Is Extinguished": "#c994c7",
               "Full": "#ffa500",
               "Plenty": "#0000ff",
-              "Rain": "#636363"}
+              "Rain": "#636363",
+              "Firebreak": "#bdbdbd"}
     if isinstance(agent, Firetruck):
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "arrowHead"
@@ -67,7 +69,9 @@ model_parameters = {
     'text_environment': UserSettableParameter('static_text', value='Environment Generation Settings'),
     'density': UserSettableParameter('slider', 'Tree density', 0.65, 0.01, 1.0, 0.01),
     'river_number': UserSettableParameter('slider', 'Number of rivers', 0, 0, 10, 1),  # Unused for now
+    'break_number': UserSettableParameter('slider', 'Number of breaks', 0, 0, 10, 1),  # Unused for now
     'river_width': UserSettableParameter('slider', 'River width', 1, 0, 10, 1),
+    'break_width': UserSettableParameter('slider', 'Firebreak width', 5, 0, 20, 1),
     'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 30, 0, 300, 1),
     'truck_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 5, 1, 30, 1),  # Unused for now
