@@ -53,14 +53,13 @@ class TreeCell(Agent):
         '''
         If the tree is on fire, spread it to fine trees nearby.
         '''
-        if self.condition == "On Fire":
+        if self.condition == "On Fire" and self.fireinitstep != self.model.current_step:
             neighbors = self.model.grid.get_neighbors(self.pos, moore=True, radius=1)
             for neighbor in neighbors:
 
-                if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine" and \
-                        neighbor.fireinitstep != self.model.current_step:
-                    # or neighbor.condition == "Is Extinguished" \
-                    # and neighbor.life_bar > 0 and neighbor.fireinitstep != self.model.current_step:
+                if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine":
+                        #or neighbor.condition == "Is Extinguished" \
+                        #and neighbor.life_bar > 0 and neighbor.fireinitstep != self.model.current_step:
 
                     # probability of spreading
                     prob_sp = TreeCell.prob_of_spreading(self, neighbor, self.model.wind_dir, self.model.wind_strength)
