@@ -79,8 +79,6 @@ class TreeCell(Agent):
         p_veg = neighbour.veg_state
         p_den = neighbour.veg_density
         p_s = 1  # no elavation
-        a = 0.078
-        c1 = 0.045
         c2 = 0.131
         theta = 0  # in case wind_strength is zero
 
