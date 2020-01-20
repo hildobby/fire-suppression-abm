@@ -4,12 +4,12 @@ from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
 
-from Forestfiremodel import ForestFire
+from main_model import ForestFire
 
-from River import RiverCell
-from Vegetation import TreeCell
-from Firetruck import Firetruck
-from Rain import Rain
+from environment.river import RiverCell
+from environment.vegetation import TreeCell
+from agents.firetruck import Firetruck
+from environment.rain import Rain
 
 
 def forest_fire_portrayal(agent):
@@ -74,13 +74,12 @@ model_parameters = {
     'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Goes to the biggest fire',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
                                                      'Random movements']),
-    'text_settings': UserSettableParameter('static_text', value='Wind Settings'),
+    'text_other_settings': UserSettableParameter('static_text', value='Other Settings'),
     'wind_strength': UserSettableParameter('slider', 'Wind strength', 10, 0, 80, 1),
     'wind_dir': UserSettableParameter('choice', 'Wind Direction', value=('\u2B06 North'),
                                       choices=["\u2B07 South", "\u2198 South/West", "\u27A1 West",
                                                "\u2197 North/West", "\u2B06 North", "\u2196 North/East",
                                                "\u2B05 East", "\u2199 South/East"]),
-    'text_settings': UserSettableParameter('static_text', value='Other Settings'),
     'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=True),
     'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1),
 }
