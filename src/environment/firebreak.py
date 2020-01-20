@@ -9,7 +9,7 @@ Louis Weyland, Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe J
 """
 import random
 from mesa import Agent
-    
+
 
 class BreakCell(Agent):
     def __init__(self, model, unique_id, pos):

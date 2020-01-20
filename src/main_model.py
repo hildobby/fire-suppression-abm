@@ -63,7 +63,7 @@ class ForestFire(Model):
         self.river_length = width
         # Will suck when set to higher than 2
         self.river_width = river_width
-        
+
         self.break_length = width
         self.break_width = break_width
         self.break_size = width
@@ -76,7 +76,6 @@ class ForestFire(Model):
         self.initial_tree = height * width * density - self.river_length * self.river_width - self.break_length * self.break_width
 
         self.river_size = width
-        
 
         # Set up model objects
         self.schedule_TreeCell = RandomActivation(self)
@@ -167,9 +166,8 @@ class ForestFire(Model):
                             new_width = -new_width
                         y += new_width
                     self.new_river(RiverCell, (x, y))
-                    
-    def init_break(self,n):
-        
+
+    def init_break(self, n):
         '''
         Creating a Firebreak (no fuel to burn on the designated area)
         '''
@@ -202,8 +200,7 @@ class ForestFire(Model):
                             new_w = -new_w
                         y += new_w
                     self.new_break(BreakCell, (x, y))
-                
-        
+
     def init_vegetation(self, agent_type, n):
         '''
         Creating trees
@@ -336,7 +333,7 @@ class ForestFire(Model):
         # And add the agent to the model so we can track it
 
         return new_agent
-    
+
     def new_break(self, agent_type, pos):
 
         # Create a new agent of the given type

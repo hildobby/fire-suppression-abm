@@ -33,17 +33,19 @@ def forest_fire_portrayal(agent):
               "Is Extinguished": "#c994c7",
               "Full": "#ffa500",
               "Plenty": "#0000ff",
-<<<<<<< HEAD
+<< << << < HEAD
               "Rain": "#636363",
               "Firebreak": "#bdbdbd"}
     if isinstance(agent, Firetruck):
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "arrowHead"
     portrayal["Color"] = colors[agent.condition]
-=======
+
+
+== == == =
               "Rain": "#636363"}
 
->>>>>>> b0ae295460e1810d0fdd2496b7701845619a10c5
+>> >>>> > b0ae295460e1810d0fdd2496b7701845619a10c5
     if isinstance(agent, Rain):
         portrayal["Layer"] = "3"
         portrayal["w"] = "3"
@@ -66,11 +68,11 @@ canvas_element = CanvasGrid(forest_fire_portrayal, 100, 100, 500, 500)
 tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
                           {"Label": "On Fire", "Color": "red"},
                           {"Label": "Burned Out", "Color": "black"}],
-                         data_collector_name='dc')
-extinguished_chart = ChartModule([{"Label": "Extinguished", "Color": "blue"}],
-                                 data_collector_name='dc')
+                         data_collector_name = 'dc')
+extinguished_chart=ChartModule([{"Label": "Extinguished", "Color": "blue"}],
+                                 data_collector_name = 'dc')
 
-model_parameters = {
+model_parameters={
     'height': 100,
     'width': 100,
     # 'wind': (3, 4),
