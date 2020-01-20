@@ -9,7 +9,7 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 """
 import random
 from mesa import Agent
-from River import RiverCell
+from river import RiverCell
 
 
 class Walker(Agent):

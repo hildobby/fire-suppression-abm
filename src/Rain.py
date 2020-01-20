@@ -9,8 +9,8 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 """
 import random
 from mesa import Agent
-from River import RiverCell
-from Vegetation import TreeCell
+from river import RiverCell
+from vegetation import TreeCell
 
 
 class Rain(Agent):

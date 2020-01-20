@@ -10,15 +10,15 @@ from mesa import Model, Agent
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 # from mesa.datacollection import DataCollector
-from Datacollector_v2 import DataCollector
+from datacollector_v2 import DataCollector
 from mesa.batchrunner import BatchRunner
 from random import randint
 
 
-from River import RiverCell
-from Vegetation import TreeCell
-from Firetruck import Firetruck
-from Rain import Rain
+from river import RiverCell
+from vegetation import TreeCell
+from firetruck import Firetruck
+from rain import Rain
 
 # defines the model
 

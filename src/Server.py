@@ -4,12 +4,12 @@ from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
 
-from Forestfiremodel import ForestFire
+from main_model import ForestFire
 
-from River import RiverCell
-from Vegetation import TreeCell
-from Firetruck import Firetruck
-from Rain import Rain
+from river import RiverCell
+from vegetation import TreeCell
+from firetruck import Firetruck
+from rain import Rain
 
 
 def forest_fire_portrayal(agent):
