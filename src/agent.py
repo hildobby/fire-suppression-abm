@@ -200,11 +200,11 @@ class Walker(Agent):
                 speed = self.max_truck_speed
             elif places_to_move_y > places_to_move_x:
                 speed = places_to_move_y
-            else: 
+            else:
                 speed = places_to_move_x
 
             # choose step
-            self.take_step(self,closest_neighbor, speed)
+            self.take_step(self, closest_neighbor, speed)
 
         # if fire not in the neighboorhood, do random move
         else:
