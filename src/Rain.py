@@ -16,9 +16,8 @@ from Vegetation import TreeCell
 class Rain(Agent):
     def __init__(self, model, unique_id, pos):
         '''
-        Create one cell of a river.
+        Create one cell of rain.
         Args:
-            pos: The tree's coordinates on the grid. Used as the unique_id
         '''
         super().__init__(unique_id, model)
         self.pos = pos
@@ -35,8 +34,8 @@ class Rain(Agent):
         neighbors = self.model.grid.get_neighbors(self.pos, moore=True)
         for neighbor in neighbors:
 
-            if isinstance(neighbor, TreeCell):
-                neighbor.life_bar += 60
+            if isinstance(neighbor, TreeCell) and neighbor.life_bar <= 80:
+                neighbor.life_bar += 20
                 if neighbor.condition == "Burned Out" or neighbor.condition == "On Fire":
                     neighbor.condition = "Fine"
 

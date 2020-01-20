@@ -186,11 +186,16 @@ class ForestFire(Model):
 
     def init_rain(self):
         '''
-        Creating trees
+        Creating rain
         '''
         x = random.randrange(self.width)
         y = random.randrange(self.height)
         self.new_agent(Rain, (x, y))
+        neighbors = self.grid.get_neighbors((x, y), moore=True)
+        print(neighbors)
+        for neighbor in neighbors:
+            print("Neigbour", neighbor.pos)
+            self.new_agent(Rain, neighbor.pos)
 
     def step(self):
         '''

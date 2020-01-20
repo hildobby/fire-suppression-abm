@@ -4,7 +4,7 @@ from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
 
-from Forestfiremodel_foundongithub import ForestFire
+from Forestfiremodel import ForestFire
 
 from River import RiverCell
 from Vegetation import TreeCell
@@ -32,13 +32,15 @@ def forest_fire_portrayal(agent):
               "Is Extinguished": "#c994c7",
               "Full": "#ffa500",
               "Plenty": "#0000ff",
-              "Rain": "#dd1c77"}
+              "Rain": "#636363"}
     if isinstance(agent, Firetruck):
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "arrowHead"
     portrayal["Color"] = colors[agent.condition]
     if isinstance(agent, Rain):
         portrayal["Layer"] = "1"
+        portrayal["w"] = "3"
+        portrayal["h"] = "3"
 
     # give a color to the fire depending on the life_bar
     if agent.condition == "On Fire" and agent.life_bar > 0:
