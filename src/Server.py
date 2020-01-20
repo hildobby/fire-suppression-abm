@@ -6,10 +6,10 @@ from mesa.visualization.UserParam import UserSettableParameter
 
 from main_model import ForestFire
 
-from river import RiverCell
-from vegetation import TreeCell
-from firetruck import Firetruck
-from rain import Rain
+from environment.river import RiverCell
+from environment.vegetation import TreeCell
+from agents.firetruck import Firetruck
+from environment.rain import Rain
 
 
 def forest_fire_portrayal(agent):

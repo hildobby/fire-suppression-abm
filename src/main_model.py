@@ -15,10 +15,10 @@ from mesa.batchrunner import BatchRunner
 from random import randint
 
 
-from river import RiverCell
-from vegetation import TreeCell
-from firetruck import Firetruck
-from rain import Rain
+from environment.river import RiverCell
+from environment.vegetation import TreeCell
+from agents.firetruck import Firetruck
+from environment.rain import Rain
 
 # defines the model
 
