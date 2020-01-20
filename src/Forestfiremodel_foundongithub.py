@@ -39,6 +39,7 @@ class ForestFire(Model):
             river_width,
             random_fires,
             num_firetruck,
+            truck_speed,
             vision,
             max_speed,
             wind_strength,
