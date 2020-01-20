@@ -10,7 +10,7 @@ from mesa import Model, Agent
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 # from mesa.datacollection import DataCollector
-from datacollector_v2 import DataCollector
+from Datacollector_v2 import DataCollector
 from mesa.batchrunner import BatchRunner
 from random import randint
 
@@ -193,9 +193,7 @@ class ForestFire(Model):
         y = random.randrange(self.height)
         self.new_agent(Rain, (x, y))
         neighbors = self.grid.get_neighbors((x, y), moore=True)
-        print(neighbors)
         for neighbor in neighbors:
-            print("Neigbour", neighbor.pos)
             self.new_agent(Rain, neighbor.pos)
 
     def step(self):
@@ -216,14 +214,12 @@ class ForestFire(Model):
 
         # Halt if no more fire
         if self.count_type(self, "On Fire") == 0:
-            print(self.count_type(self, "On Fire"))
             print(" \n \n Fire is gone ! \n \n")
             self.running = False
 
     @staticmethod
     def randomfire(self, randtree):
         if (random.random() < (math.exp(self.temperature / 10) / 300.0)):
-            print(math.exp(self.temperature / 10) / 300.0)
             self.agents[randtree].condition = "On Fire"
 
     @staticmethod

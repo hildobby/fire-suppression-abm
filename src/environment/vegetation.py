@@ -45,6 +45,7 @@ class TreeCell(Agent):
 
         self.veg_state = 0.4
         self.veg_density = 0.3
+        self.fireinitstep = None
 
         #
 
@@ -53,16 +54,19 @@ class TreeCell(Agent):
         If the tree is on fire, spread it to fine trees nearby.
         '''
         if self.condition == "On Fire":
-            neighbors = self.model.grid.get_neighbors(self.pos, moore=True)
+            neighbors = self.model.grid.get_neighbors(self.pos, moore=True, radius=1)
             for neighbor in neighbors:
 
-                if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine" \
-                        or neighbor.condition == "Is Extinguished" and neighbor.life_bar > 0:
+                if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine" and \
+                        neighbor.fireinitstep != self.model.current_step:
+                        #or neighbor.condition == "Is Extinguished" \
+                        #and neighbor.life_bar > 0 and neighbor.fireinitstep != self.model.current_step:
 
                     # probability of spreading
                     prob_sp = TreeCell.prob_of_spreading(self, neighbor, self.model.wind_dir, self.model.wind_strength)
                     if random.uniform(0, 1) < prob_sp:
                         neighbor.condition = "On Fire"
+                        neighbor.fireinitstep = self.model.current_step
 
             # if on fire reduce life_bar
             if self.life_bar != 0:
@@ -79,6 +83,8 @@ class TreeCell(Agent):
         p_veg = neighbour.veg_state
         p_den = neighbour.veg_density
         p_s = 1  # no elavation
+        a = 0.078
+        c1 = 0.045
         c2 = 0.131
         theta = 0  # in case wind_strength is zero
 
@@ -95,5 +101,4 @@ class TreeCell(Agent):
 
         p_burn = p_h * (1 + p_veg) * (1 + p_den) * p_w * p_s
 
-        print(p_burn)
         return p_burn

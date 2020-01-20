@@ -9,7 +9,7 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 """
 import random
 from mesa import Agent
-from river import RiverCell
+from eriver import RiverCell
 
 
 class Walker(Agent):
@@ -174,6 +174,7 @@ class Walker(Agent):
                     closest_neighbor = neighbor
                     fire_intheneighborhood = True
             if fire_intheneighborhood:
+                print("the vision of the truck", i)
                 break
 
         if i == 2:
