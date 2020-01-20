@@ -71,6 +71,7 @@ class ForestFire(Model):
         self.temperature = temperature
 
         self.n_agents = 0
+
         self.agents = []
         self.initial_tree = height * width * density - self.river_length * self.river_width - self.break_length * self.break_width
 
@@ -81,6 +82,7 @@ class ForestFire(Model):
         self.schedule_TreeCell = RandomActivation(self)
         self.schedule_FireTruck = RandomActivation(self)
         self.schedule = RandomActivation(self)
+        self.current_step = 0
 
         # Set the wind
         self.wind = wind_strength
@@ -237,20 +239,18 @@ class ForestFire(Model):
         y = random.randrange(self.height)
         self.new_agent(Rain, (x, y))
         neighbors = self.grid.get_neighbors((x, y), moore=True)
-        print(neighbors)
         for neighbor in neighbors:
-            print("Neigbour", neighbor.pos)
             self.new_agent(Rain, neighbor.pos)
 
     def step(self):
         '''
         Advance the model by one step.
         '''
-
         self.schedule_TreeCell.step()
         self.schedule_FireTruck.step()
 
         self.dc.collect(self, [TreeCell, Firetruck])
+        self.current_step += 1
 
         if self.random_fires:
             randtree = int(random.random() * len(self.agents))
@@ -259,14 +259,12 @@ class ForestFire(Model):
 
         # Halt if no more fire
         if self.count_type(self, "On Fire") == 0:
-            print(self.count_type(self, "On Fire"))
             print(" \n \n Fire is gone ! \n \n")
             self.running = False
 
     @staticmethod
     def randomfire(self, randtree):
         if (random.random() < (math.exp(self.temperature / 10) / 300.0)):
-            print(math.exp(self.temperature / 10) / 300.0)
             self.agents[randtree].condition = "On Fire"
 
     @staticmethod
@@ -378,6 +376,8 @@ break_number = 0
 river_number = 0
 river_width = 0
 random_fires = 1
+wind_strength = 8
+wind_dir = "N"
 # wind[0],wind[1]=[direction,speed]
 wind = [1, 2]
 fire = ForestFire(
@@ -391,13 +391,17 @@ fire = ForestFire(
     break_number,
     random_fires,
     num_firetruck,
-    wind,
     vision,
-    max_speed)
+    max_speed,
+    wind_strength,
+    wind_dir
+)
 fire.run_model()
 
 results = fire.dc.get_model_vars_dataframe()
 agent_variable = fire.dc.get_agent_vars_dataframe()
 results_firetrucks = fire.dc.get_model_vars_dataframe()
 
+print(agent_variable[0])
+print(agent_variable[1])
 '''

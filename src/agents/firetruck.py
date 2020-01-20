@@ -82,11 +82,11 @@ class Walker(Agent):
             neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
 
             # find closest fire
-            min_distance = limited_vision**2
+            min_distance = limited_vision ** 2
             min_life_bar = 0
             for neighbor in neighbors_list:
                 current_life_bar = neighbor.life_bar
-                distance = abs(neighbor.pos[0]**2 - self.pos[0]**2) + abs(neighbor.pos[1]**2 - self.pos[1]**2)
+                distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
                 if current_life_bar >= min_life_bar and distance <= min_distance:
                     min_distance = distance
                     min_life_bar = current_life_bar
@@ -116,9 +116,9 @@ class Walker(Agent):
             neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
 
             # find closest fire
-            min_distance = limited_vision**2
+            min_distance = limited_vision ** 2
             for neighbor in neighbors_list:
-                distance = abs(neighbor.pos[0]**2 - self.pos[0]**2) + abs(neighbor.pos[1]**2 - self.pos[1]**2)
+                distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
                 if distance < min_distance:
                     min_distance = distance
                     closest_neighbor = neighbor
@@ -153,6 +153,42 @@ class Walker(Agent):
         else:
             self.random_move()
 
+    def parallel_attack(self):
+        fire_intheneighborhood = False
+        for i in [2, 5, 15, 25, 50, 100]:
+            limited_vision = int(self.vision * i / 100.)
+
+            # find hot trees in neighborhood
+            neighbors_list = self.model.grid.get_neighbors(
+                self.pos, moore=True, radius=limited_vision)
+
+            neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
+
+            # find closest fire
+            min_distance = limited_vision ** 2
+            for neighbor in neighbors_list:
+                distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + abs(
+                    neighbor.pos[1] ** 2 - self.pos[1] ** 2)
+                if distance < min_distance:
+                    min_distance = distance
+                    closest_neighbor = neighbor
+                    fire_intheneighborhood = True
+            if fire_intheneighborhood:
+                print("the vision of the truck", i)
+                break
+
+        if i == 2:
+            neighbors_list_fire = self.model.grid.get_neighbors(closest_neighbor.pos, moore=False,
+                                                                radius=1)
+            for neighbor in neighbors_list_fire:
+                if neighbor.condition != "On Fire" and neighbor.pos[0] - self.pos[0] <= self.max_speed and \
+                        neighbor.pos[1] - self.pos[1] <= self.max_speed:
+                    closest_neighbor = neighbor
+                    break
+
+        if fire_intheneighborhood:
+            self.take_step(closest_neighbor)
+
 
 class Firetruck(Walker):
     def __init__(self, model, unique_id, pos, truck_strategy, vision, max_speed):
@@ -173,10 +209,12 @@ class Firetruck(Walker):
         This method should move the Sheep using the `random_move()`
         method implemented earlier, then conditionally reproduce.
         '''
-        if(self.truck_strategy == 'Goes to the closest fire'):
+        if (self.truck_strategy == 'Goes to the closest fire'):
             self.closestfire_move()
-        elif(self.truck_strategy == 'Goes to the biggest fire'):
+        elif (self.truck_strategy == 'Goes to the biggest fire'):
             self.biggestfire_move()
+        elif (self.truck_strategy == "Parallel attack"):
+            self.parallel_attack()
         else:
             self.random_move()
         self.extinguish()
