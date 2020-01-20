@@ -73,6 +73,7 @@ class ForestFire(Model):
         self.schedule_TreeCell = RandomActivation(self)
         self.schedule_FireTruck = RandomActivation(self)
         self.schedule = RandomActivation(self)
+        self.current_step = 0
 
         # Set the wind
         self.wind = wind_strength
@@ -201,11 +202,12 @@ class ForestFire(Model):
         '''
         Advance the model by one step.
         '''
-
         self.schedule_TreeCell.step()
         self.schedule_FireTruck.step()
 
         self.dc.collect(self, [TreeCell, Firetruck])
+        self.current_step += 1
+
 
         if self.random_fires:
             randtree = int(random.random() * len(self.agents))
@@ -307,7 +309,7 @@ class ForestFire(Model):
         self.agents.remove(agent)
 
 
-
+'''
 # To be used if you want to run the model without the visualiser:
 temperature = 20
 truck_strategy = 'Goes to the closest fire'
@@ -347,4 +349,4 @@ results_firetrucks = fire.dc.get_model_vars_dataframe()
 
 print(agent_variable[0])
 print(agent_variable[1])
-
+'''
