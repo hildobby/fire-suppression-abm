@@ -208,7 +208,6 @@ class ForestFire(Model):
         self.dc.collect(self, [TreeCell, Firetruck])
         self.current_step += 1
 
-
         if self.random_fires:
             randtree = int(random.random() * len(self.agents))
             if self.agents[randtree].condition == "Fine":
