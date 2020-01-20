@@ -59,8 +59,8 @@ class TreeCell(Agent):
 
                 if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine" and \
                         neighbor.fireinitstep != self.model.current_step:
-                        #or neighbor.condition == "Is Extinguished" \
-                        #and neighbor.life_bar > 0 and neighbor.fireinitstep != self.model.current_step:
+                    # or neighbor.condition == "Is Extinguished" \
+                    # and neighbor.life_bar > 0 and neighbor.fireinitstep != self.model.current_step:
 
                     # probability of spreading
                     prob_sp = TreeCell.prob_of_spreading(self, neighbor, self.model.wind_dir, self.model.wind_strength)
