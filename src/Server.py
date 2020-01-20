@@ -4,11 +4,12 @@ from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
 
-from Forestfiremodel_foundongithub import ForestFire
+from Forestfiremodel import ForestFire
 
 from River import RiverCell
 from Vegetation import TreeCell
 from Firetruck import Firetruck
+from Rain import Rain
 
 
 def forest_fire_portrayal(agent):
@@ -28,13 +29,18 @@ def forest_fire_portrayal(agent):
     colors = {"Fine": "#00AA00",
               "On Fire": "#880000",
               "Burned Out": "#000000",
-              "Is Extinguished": "#0000ff",
+              "Is Extinguished": "#c994c7",
               "Full": "#ffa500",
-              "Plenty": "#0000ff"}
+              "Plenty": "#0000ff",
+              "Rain": "#636363"}
     if isinstance(agent, Firetruck):
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "arrowHead"
     portrayal["Color"] = colors[agent.condition]
+    if isinstance(agent, Rain):
+        portrayal["Layer"] = "1"
+        portrayal["w"] = "3"
+        portrayal["h"] = "3"
 
     # give a color to the fire depending on the life_bar
     if agent.condition == "On Fire" and agent.life_bar > 0:
@@ -64,15 +70,16 @@ model_parameters = {
     'river_width': UserSettableParameter('slider', 'River width', 1, 0, 10, 1),
     'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 30, 0, 300, 1),
+    'truck_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 5, 1, 30, 1),  # Unused for now
     'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Goes to the biggest fire',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
                                                      'Random movements']),
     'text_settings': UserSettableParameter('static_text', value='Wind Settings'),
-    'wind_strength': UserSettableParameter('slider', 'Wind strength', 0.45, 0, 0.5, 0.01),
-    'wind_dir': UserSettableParameter('choice', 'Wind Direction', value=('N'),
-                                      choices=['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']),
-
-
+    'wind_strength': UserSettableParameter('slider', 'Wind strength', 10, 0, 80, 1),
+    'wind_dir': UserSettableParameter('choice', 'Wind Direction', value=('\u2B06 North'),
+                                      choices=["\u2B07 South", "\u2198 South/West", "\u27A1 West",
+                                               "\u2197 North/West", "\u2B06 North", "\u2196 North/East",
+                                               "\u2B05 East", "\u2199 South/East"]),
     'text_settings': UserSettableParameter('static_text', value='Other Settings'),
     'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=True),
     'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1),

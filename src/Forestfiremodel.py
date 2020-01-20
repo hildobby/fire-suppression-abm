@@ -18,6 +18,7 @@ from random import randint
 from River import RiverCell
 from Vegetation import TreeCell
 from Firetruck import Firetruck
+from Rain import Rain
 
 # defines the model
 
@@ -38,6 +39,7 @@ class ForestFire(Model):
             river_width,
             random_fires,
             num_firetruck,
+            truck_speed,
             vision,
             max_speed,
             wind_strength,
@@ -77,13 +79,15 @@ class ForestFire(Model):
         self.wind_dir = wind_dir
 
         # Translate the wind_dir string into vector
-        wind_vector = {"N": (0, 1), "NE": (1, 1), "E": (1, 0), "SE": (
-            1, -1), "S": (0, -1), "SW": (-1, -1), "W": (-1, 0), "NW": (-1, 1)}
+        wind_vector = {"\u2B07 South": (0, 1), "\u2198 South/West": (1, 1), "\u27A1 West": (1, 0),
+                       "\u2197 North/West": (1, -1), "\u2B06 North": (0, -1), "\u2196 North/East": (-1, -1),
+                       "\u2B05 East": (-1, 0), "\u2199 South/East": (-1, 1)}
         self.wind_dir = wind_vector[self.wind_dir]
 
         self.grid = MultiGrid(height, width, torus=False)
 
         self.init_river(self.river_size)
+        self.init_rain()
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
@@ -128,15 +132,18 @@ class ForestFire(Model):
         else:
             # initiating the river offgrid
             x = -1
-            y = random.randrange(self.height - 1)
+            y_init = random.randrange(self.height - 1)
 
             # increasing the length of the river
             for i in range(int(n)):
                 x += 1
-                y += random.randint(-1, 1)
+                y = y_init + random.randint(-1, 1)
+
                 while y < 0 or y >= self.height:
                     y += random.randint(-1, 1)
                 self.new_river(RiverCell, (x, y))
+
+                y_init = y
 
                 # increasing the width of the river
                 for j in range(self.river_width - 1):
@@ -166,9 +173,29 @@ class ForestFire(Model):
         for i in range(num_firetruck):
             x = random.randrange(self.width)
             y = random.randrange(self.height)
+            while self.grid.get_cell_list_contents((x, y)):
+                if isinstance(self.grid.get_cell_list_contents((x, y))[0], RiverCell):
+                    x = random.randrange(self.width)
+                    y = random.randrange(self.height)
+                else:
+                    break
+
             firetruck = self.new_firetruck(Firetruck, (x, y), truck_strategy, vision, max_speed)
             self.schedule_FireTruck.add(firetruck)
             self.schedule.add(firetruck)
+
+    def init_rain(self):
+        '''
+        Creating rain
+        '''
+        x = random.randrange(self.width)
+        y = random.randrange(self.height)
+        self.new_agent(Rain, (x, y))
+        neighbors = self.grid.get_neighbors((x, y), moore=True)
+        print(neighbors)
+        for neighbor in neighbors:
+            print("Neigbour", neighbor.pos)
+            self.new_agent(Rain, neighbor.pos)
 
     def step(self):
         '''
@@ -194,6 +221,7 @@ class ForestFire(Model):
     @staticmethod
     def randomfire(self, randtree):
         if (random.random() < (math.exp(self.temperature / 10) / 300.0)):
+            print(math.exp(self.temperature / 10) / 300.0)
             self.agents[randtree].condition = "On Fire"
 
     @staticmethod
