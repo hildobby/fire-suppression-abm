@@ -35,7 +35,7 @@ def forest_fire_portrayal(agent):
               "Rain": "#636363"}
 
     if isinstance(agent, Rain):
-        portrayal["Layer"] = "1"
+        portrayal["Layer"] = "3"
         portrayal["w"] = "3"
         portrayal["h"] = "3"
         portrayal["Filled"] = False
