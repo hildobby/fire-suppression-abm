@@ -27,8 +27,8 @@ problem = {
 
 # Set the repetitions, the amount of steps, and the amount of distinct
 # values per variable
-replicates = 4
-distinct_samples = 4
+replicates = 10
+distinct_samples = 10
 
 # Set the outputs
 

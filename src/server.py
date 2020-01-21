@@ -49,7 +49,7 @@ def forest_fire_portrayal(agent):
 
     if isinstance(agent, Firetruck):
         portrayal["Layer"] = "1"
-        portrayal["Shape"] = "arrowHead"
+        portrayal["Shape"] = "firetruck.png"
     portrayal["Color"] = colors[agent.condition]
     # give a color to the fire depending on the life_bar
     if agent.condition == "On Fire" and agent.life_bar > 0:
