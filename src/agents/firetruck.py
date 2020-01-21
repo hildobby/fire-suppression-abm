@@ -37,7 +37,7 @@ class Walker(Agent):
         self.model.grid.move_agent(self, new_pos)
 
     def take_step(self, closest_neighbor):
-        
+
         places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
         places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
 
