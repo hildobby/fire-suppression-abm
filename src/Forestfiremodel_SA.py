@@ -1,15 +1,17 @@
+"""
+Created on Wed Jan  8 15:30:03 2020
+
+This code was implemented by
+Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
+
+"""
+
 import random
-
-
 import math
-
-
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 from Datacollector_v2 import DataCollector
-
-
 from environment.river import RiverCell
 from environment.vegetation import TreeCell
 from agents.firetruck import Firetruck
