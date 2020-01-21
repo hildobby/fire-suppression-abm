@@ -140,7 +140,7 @@ class Walker(Agent):
         new_pos = cell_list[random.randint(0, len(cell_list) - 1)]
         self.model.grid.move_agent(self, new_pos)
 
-    def take_step(self, closest_neighbor):
+    def take_step(closest_neighbor, speed):
         # choose step
         places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
         places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
@@ -196,11 +196,15 @@ class Walker(Agent):
             if self.pos[0] == 1 or self.pos[0] == self.model.width - 2 or self.pos[1] == 1 or \
                     self.pos[1] == self.model.height - 2:
                 speed = 1
+            elif places_to_move_y > self.max_truck_speed or places_to_move_x > self.max_truck_speed:
+                speed = self.max_truck_speed
+            elif places_to_move_y > places_to_move_x:
+                speed = places_to_move_y
             else:
-                speed = self.max_speed
+                speed = places_to_move_x
 
             # choose step
-            self.take_step(closest_neighbor)
+            self.take_step(self, closest_neighbor, speed)
 
         # if fire not in the neighboorhood, do random move
         else:
@@ -259,10 +263,10 @@ class Walker(Agent):
                     self.pos[1] == self.model.height - 2:
                 speed = 1
             else:
-                speed = self.max_speed
+                speed = self.max_truck_speed
 
             # choose step
-            self.take_step(closest_neighbor)
+            self.take_step(self, closest_neighbor, speed)
 
         # if fire not in the neighboorhood, do random move
         else:
@@ -270,14 +274,15 @@ class Walker(Agent):
 
 
 class Firetruck(Walker):
-    def __init__(self, model, unique_id, pos, truck_strategy, vision, max_speed):
+    def __init__(self, model, unique_id, pos, max_truck_speed, truck_strategy, vision):
         super().__init__(unique_id, model, pos)
         self.unique_id = unique_id
         self.condition = "Full"
         self.extinguished = 0
+        self.max_truck_speed = max_truck_speed
         self.truck_strategy = truck_strategy
         self.vision = vision
-        self.max_speed = max_speed
+        self.max_truck_speed = max_truck_speed
         self.life_bar = -5
 
     def get_pos(self):

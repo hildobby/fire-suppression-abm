@@ -9,7 +9,7 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 """
 import random
 from mesa import Agent
-from eriver import RiverCell
+from environment.river import RiverCell
 
 
 class Walker(Agent):
@@ -44,8 +44,7 @@ class Walker(Agent):
         speed = self.max_speed
 
         if self.pos[0] == 1 or self.pos[0] == self.model.width - 2 or self.pos[1] == 1 or \
-                self.pos[1] == self.model.height - 2 or abs(places_to_move_y) <= 1 and \
-                abs(places_to_move_x) <= 1:
+                self.pos[1] == self.model.height - 2:
             speed = 1
 
         new_x, new_y = self.pos[0], self.pos[1]
@@ -62,7 +61,7 @@ class Walker(Agent):
         if self.model.grid.get_cell_list_contents((new_x, new_y)):
             if not isinstance(self.model.grid.get_cell_list_contents((new_x, new_y))[0], RiverCell):
                 self.model.grid.move_agent(self, (new_x, new_y))
-  
+
         else:
             self.model.grid.move_agent(self, (new_x, new_y))
 

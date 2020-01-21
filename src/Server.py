@@ -4,11 +4,13 @@ from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
 
-from Forestfiremodel_foundongithub import ForestFire
+from main_model import ForestFire
 
-from River import RiverCell
-from Vegetation import TreeCell
-from Firetruck import Firetruck
+from environment.river import RiverCell
+from environment.vegetation import TreeCell
+from agents.firetruck import Firetruck
+from environment.rain import Rain
+from environment.firebreak import BreakCell
 
 
 def forest_fire_portrayal(agent):
@@ -30,12 +32,30 @@ def forest_fire_portrayal(agent):
               "Burned Out": "#000000",
               "Is Extinguished": "#c994c7",
               "Full": "#ffa500",
-              "Plenty": "#0000ff"}
+              "Plenty": "#0000ff",
+<< << << < HEAD
+              "Rain": "#636363",
+              "Firebreak": "#bdbdbd"}
     if isinstance(agent, Firetruck):
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "arrowHead"
     portrayal["Color"] = colors[agent.condition]
 
+
+== == == =
+              "Rain": "#636363"}
+
+>> >>>> > b0ae295460e1810d0fdd2496b7701845619a10c5
+    if isinstance(agent, Rain):
+        portrayal["Layer"] = "3"
+        portrayal["w"] = "3"
+        portrayal["h"] = "3"
+        portrayal["Filled"] = False
+
+    if isinstance(agent, Firetruck):
+        portrayal["Layer"] = "1"
+        portrayal["Shape"] = "arrowHead"
+    portrayal["Color"] = colors[agent.condition]
     # give a color to the fire depending on the life_bar
     if agent.condition == "On Fire" and agent.life_bar > 0:
         portrayal["Color"] = "rgba(%d,14,14)" % (agent.life_bar + 166)
@@ -48,32 +68,35 @@ canvas_element = CanvasGrid(forest_fire_portrayal, 100, 100, 500, 500)
 tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
                           {"Label": "On Fire", "Color": "red"},
                           {"Label": "Burned Out", "Color": "black"}],
-                         data_collector_name='dc')
-extinguished_chart = ChartModule([{"Label": "Extinguished", "Color": "blue"}],
-                                 data_collector_name='dc')
+                         data_collector_name = 'dc')
+extinguished_chart=ChartModule([{"Label": "Extinguished", "Color": "blue"}],
+                                 data_collector_name = 'dc')
 
-model_parameters = {
+model_parameters={
     'height': 100,
     'width': 100,
     # 'wind': (3, 4),
     'vision': 100,
     'max_speed': 2,
     'text_environment': UserSettableParameter('static_text', value='Environment Generation Settings'),
-    'density': UserSettableParameter('slider', 'Tree density', 0.65, 0.01, 1.0, 0.01),
+    'density': UserSettableParameter('slider', 'Tree density', 0.99, 0.01, 1.0, 0.01),
     'river_number': UserSettableParameter('slider', 'Number of rivers', 0, 0, 10, 1),  # Unused for now
+    'break_number': UserSettableParameter('slider', 'Number of breaks', 0, 0, 10, 1),  # Unused for now
     'river_width': UserSettableParameter('slider', 'River width', 1, 0, 10, 1),
+    'break_width': UserSettableParameter('slider', 'Firebreak width', 5, 0, 20, 1),
     'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 30, 0, 300, 1),
-    'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Goes to the biggest fire',
+    'truck_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 5, 1, 30, 1),  # Unused for now
+    'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Parallel attack',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
-                                                     'Random movements']),
+                                                     'Random movements', 'Parallel attack']),
+    'text_other_settings': UserSettableParameter('static_text', value='Other Settings'),
     'text_settings': UserSettableParameter('static_text', value='Wind Settings'),
     'wind_strength': UserSettableParameter('slider', 'Wind strength', 10, 0, 80, 1),
-    'wind_dir': UserSettableParameter('choice', 'Wind Direction', value=('\u2B07 North'),
-                                      choices=["\u2B06 South", " \u2197 South/West", "\u27A1 West",
-                                               "\u2198North/West", "\u2B07 North", "\u2199 North/East",
-                                               "\u2B05 East", " \u2196South/East"]),
-    'text_settings': UserSettableParameter('static_text', value='Other Settings'),
+    'wind_dir': UserSettableParameter('choice', 'Wind Direction', value=('\u2B06 North'),
+                                      choices=["\u2B07 South", "\u2198 South/West", "\u27A1 West",
+                                               "\u2197 North/West", "\u2B06 North", "\u2196 North/East",
+                                               "\u2B05 East", "\u2199 South/East"]),
     'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=True),
     'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1),
 }
