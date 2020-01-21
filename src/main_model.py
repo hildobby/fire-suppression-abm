@@ -105,7 +105,7 @@ class ForestFire(Model):
             self.schedule.add(self.agents[i])
 
 
-        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
+        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed)
         self.init_rain()
 
         self.random_fires = random_fires

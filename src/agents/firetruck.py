@@ -41,7 +41,7 @@ class Walker(Agent):
         places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
         places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
 
-        speed = self.max_speed
+        speed = self.truck_max_speed
 
         if self.pos[0] == 1 or self.pos[0] == self.model.width - 2 or self.pos[1] == 1 or \
                 self.pos[1] == self.model.height - 2:
@@ -181,8 +181,8 @@ class Walker(Agent):
             neighbors_list_fire = self.model.grid.get_neighbors(closest_neighbor.pos, moore=False,
                                                                 radius=1)
             for neighbor in neighbors_list_fire:
-                if neighbor.condition != "On Fire" and neighbor.pos[0] - self.pos[0] <= self.max_speed and \
-                        neighbor.pos[1] - self.pos[1] <= self.max_speed:
+                if neighbor.condition != "On Fire" and neighbor.pos[0] - self.pos[0] <= self.truck_max_speed and \
+                        neighbor.pos[1] - self.pos[1] <= self.truck_max_speed:
                     closest_neighbor = neighbor
                     break
 
@@ -191,14 +191,14 @@ class Walker(Agent):
 
 
 class Firetruck(Walker):
-    def __init__(self, model, unique_id, pos, truck_strategy, vision, max_speed):
+    def __init__(self, model, unique_id, pos, truck_strategy, vision, truck_max_speed):
         super().__init__(unique_id, model, pos)
         self.unique_id = unique_id
         self.condition = "Full"
         self.extinguished = 0
         self.truck_strategy = truck_strategy
         self.vision = vision
-        self.max_speed = max_speed
+        self.truck_max_speed = truck_max_speed
         self.life_bar = -5
 
     def get_pos(self):
