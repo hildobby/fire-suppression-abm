@@ -41,7 +41,7 @@ def forest_fire_portrayal(agent):
         portrayal["Layer"] = "2"
         portrayal["w"] = "3"
         portrayal["h"] = "3"
-        #portrayal["Filled"] = False
+        # portrayal["Filled"] = False
 
     if isinstance(agent, Firetruck):
         portrayal["Layer"] = "1"
