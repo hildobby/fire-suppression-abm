@@ -21,7 +21,7 @@ notifications:
       on_success: never
       on_failure: always
       template:
-        - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) by %{author} the great failed miserably in %{duration}"
+        - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) by the fucking horrible %{author} failed miserably in %{duration}"
         - "Yo wtf dude, you high or smth? You clearly fucked up :eggplant: :-1:"
         - ":letter_y::letter_o::letter_u:  :letter_m::letter_i::letter_s::letter_e::letter_r::letter_a::letter_b::letter_l::letter_e:  :letter_p::letter_i::letter_e::letter_c::letter_e:  :letter_o::letter_f:  :letter_s::letter_h::letter_i::letter_t::exclamation:"
     - rooms:
@@ -32,6 +32,7 @@ notifications:
         - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) by %{author} the great fucking worked in %{duration}"
         - "Success, you successfully succeeded! :baby-yoda-soup: :aww_yeah: :success-kid:"
         - ":letter_g::letter_o::letter_o::letter_d:  :letter_j::letter_o::letter_b::grey_exclamation:"
+        - "Now go get Hildou's coffee please (and keep quiet while at it)"
 
 script:
     - git remote rm origin
