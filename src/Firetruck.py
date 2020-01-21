@@ -61,7 +61,7 @@ class Walker(Agent):
         if self.model.grid.get_cell_list_contents((new_x, new_y)):
             if not isinstance(self.model.grid.get_cell_list_contents((new_x, new_y))[0], RiverCell):
                 self.model.grid.move_agent(self, (new_x, new_y))
-
+  
         else:
             self.model.grid.move_agent(self, (new_x, new_y))
 
