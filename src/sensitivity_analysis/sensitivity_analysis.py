@@ -15,7 +15,7 @@ from mesa.batchrunner import BatchRunner
 import numpy as np
 import matplotlib.pyplot as plt
 
-from Forestfiremodel_SA import ForestFire
+from forestfiremodel_SA import ForestFire
 
 
 # Define which variable to change
