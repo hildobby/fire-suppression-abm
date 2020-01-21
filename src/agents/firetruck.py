@@ -37,20 +37,12 @@ class Walker(Agent):
         self.model.grid.move_agent(self, new_pos)
 
     def take_step(self, closest_neighbor):
-        # choose step
+
         places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
         places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
 
-        speedX, speedY = self.truck_max_speed, self.truck_max_speed
-
-        if self.pos[0] == 1 or self.pos[0] == self.model.width - 2 or self.pos[1] == 1 or \
-                self.pos[1] == self.model.height - 2:
-            speedX = 1
-            speedY = 1
-        if abs(places_to_move_y) == 1:
-            speedY = 1
-        if abs(places_to_move_x) == 1:
-            speedX = 1
+        speedX = min(self.truck_max_speed, abs(places_to_move_x))
+        speedY = min(self.truck_max_speed, abs(places_to_move_y))
 
         new_x, new_y = self.pos[0], self.pos[1]
 
