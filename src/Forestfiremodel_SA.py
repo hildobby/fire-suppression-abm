@@ -4,10 +4,9 @@ import random
 import math
 
 
-from mesa import Model, Agent
+from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
-# from mesa.datacollection import DataCollector
 from Datacollector_v2 import DataCollector
 
 
@@ -15,7 +14,6 @@ from environment.river import RiverCell
 from environment.vegetation import TreeCell
 from agents.firetruck import Firetruck
 from environment.rain import Rain
-from environment.firebreak import BreakCell
 
 # defines the model
 
