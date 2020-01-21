@@ -11,11 +11,11 @@ import math
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
-from Datacollector_v2 import DataCollector
-from environment.river import RiverCell
-from environment.vegetation import TreeCell
-from agents.firetruck import Firetruck
-from environment.rain import Rain
+from src.datacollector_v2 import DataCollector
+from src.environment.river import RiverCell
+from src.environment.vegetation import TreeCell
+from src.agents.firetruck import Firetruck
+from src.environment.rain import Rain
 
 # defines the model
 

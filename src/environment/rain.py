@@ -10,7 +10,7 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 import random
 from mesa import Agent
 
-from environment.vegetation import TreeCell
+from src.environment.vegetation import TreeCell
 
 
 class Rain(Agent):

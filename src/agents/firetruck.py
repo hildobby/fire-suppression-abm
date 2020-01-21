@@ -9,7 +9,7 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 """
 import random
 from mesa import Agent
-from environment.river import RiverCell
+from src.environment.river import RiverCell
 
 
 class Walker(Agent):
@@ -41,22 +41,27 @@ class Walker(Agent):
         places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
         places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
 
-        speed = self.truck_max_speed
+        speedX, speedY = self.truck_max_speed, self.truck_max_speed
 
         if self.pos[0] == 1 or self.pos[0] == self.model.width - 2 or self.pos[1] == 1 or \
                 self.pos[1] == self.model.height - 2:
-            speed = 1
+            speedX = 1
+            speedY = 1
+        if abs(places_to_move_y) == 1:
+            speedY = 1
+        if abs(places_to_move_x) == 1:
+            speedX = 1
 
         new_x, new_y = self.pos[0], self.pos[1]
 
         if places_to_move_x > 0:
-            new_x += speed
+            new_x += speedX
         if places_to_move_x < 0:
-            new_x -= speed
+            new_x -= speedX
         if places_to_move_y > 0:
-            new_y += speed
+            new_y += speedY
         if places_to_move_y < 0:
-            new_y -= speed
+            new_y -= speedY
 
         if self.model.grid.get_cell_list_contents((new_x, new_y)):
             if not isinstance(self.model.grid.get_cell_list_contents((new_x, new_y))[0], RiverCell):
@@ -165,26 +170,47 @@ class Walker(Agent):
             neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
 
             # find closest fire
-            min_distance = limited_vision ** 2
+            min_distance = 100000
+            max_life_bar = 0
             for neighbor in neighbors_list:
-                distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + abs(
-                    neighbor.pos[1] ** 2 - self.pos[1] ** 2)
-                if distance < min_distance:
+                print("New neighbour")
+                xposition = abs(neighbor.pos[0] - self.pos[0])
+                yposition = abs(neighbor.pos[1] - self.pos[1])
+                if xposition == 1 and yposition == 1:
+                    distance = 1
+                elif xposition == 2 and yposition == 2:
+                    distance = 2
+                else:
+                    distance = xposition + yposition
+
+                # distance = abs(neighbor.pos[0] - self.pos[0]) ** 2 + abs(
+                #     neighbor.pos[1] - self.pos[1]) ** 2
+                print("Distance:", distance)
+
+                life_bar = neighbor.life_bar
+                if distance <= min_distance and life_bar >= max_life_bar:
+                    max_life_bar = life_bar
                     min_distance = distance
                     closest_neighbor = neighbor
                     fire_intheneighborhood = True
             if fire_intheneighborhood:
-                print("the vision of the truck", i)
                 break
 
         if i == 2:
             neighbors_list_fire = self.model.grid.get_neighbors(closest_neighbor.pos, moore=False,
                                                                 radius=1)
+            max_distance = 0
             for neighbor in neighbors_list_fire:
-                if neighbor.condition != "On Fire" and neighbor.pos[0] - self.pos[0] <= self.truck_max_speed and \
-                        neighbor.pos[1] - self.pos[1] <= self.truck_max_speed:
+                positionx = abs(neighbor.pos[0] - self.pos[0])
+                positiony = abs(neighbor.pos[1] - self.pos[1])
+                newdistance = positionx + positiony
+
+                # print(neighbor.pos[0])
+                # print(neighbor.pos[1])
+                if neighbor.condition != "On Fire" and positionx <= self.truck_max_speed and \
+                        positiony <= self.truck_max_speed and newdistance > max_distance:
+                    max_distance = newdistance
                     closest_neighbor = neighbor
-                    break
 
         if fire_intheneighborhood:
             self.take_step(closest_neighbor)
