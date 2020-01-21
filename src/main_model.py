@@ -60,7 +60,6 @@ class ForestFire(Model):
         self.density = density
 
         self.river_length = width
-        # Will suck when set to higher than 2
         self.river_width = river_width
 
         self.break_length = width
@@ -75,8 +74,6 @@ class ForestFire(Model):
         self.initial_tree = height * width * density - \
             self.river_length * self.river_width
         self.initial_tree = self.initial_tree - self.break_length * self.break_width
-
-        self.river_size = width
 
         # Set up model objects
         self.schedule_TreeCell = RandomActivation(self)
@@ -96,9 +93,8 @@ class ForestFire(Model):
 
         self.grid = MultiGrid(height, width, torus=False)
 
-        self.init_river(self.river_size)
+        self.init_river()
         self.init_break(self.break_size)
-        self.init_rain()
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
@@ -108,12 +104,8 @@ class ForestFire(Model):
             self.schedule_TreeCell.add(self.agents[i])
             self.schedule.add(self.agents[i])
 
-        self.init_firefighters(
-            Firetruck,
-            num_firetruck,
-            truck_strategy,
-            vision,
-            truck_max_speed)
+        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
+        self.init_rain()
 
         self.random_fires = random_fires
         self.temperature = temperature
@@ -143,7 +135,7 @@ class ForestFire(Model):
         self.dc.collect(self, [TreeCell, Firetruck])
         self.wind_strength = wind_strength
 
-    def init_river(self, n):
+    def init_river(self):
         '''
         Creating a river
         '''
@@ -155,7 +147,7 @@ class ForestFire(Model):
             y_init = random.randrange(self.height - 1)
 
             # increasing the length of the river
-            for i in range(int(n)):
+            for i in range(int(self.river_length)):
                 x += 1
                 y = y_init + random.randint(-1, 1)
 
