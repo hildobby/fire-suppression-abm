@@ -33,6 +33,7 @@ def forest_fire_portrayal(agent):
               "Is Extinguished": "#c994c7",
               "Full": "#ffa500",
               "Plenty": "#0000ff",
+
               "Rain": "#636363",
               "Firebreak": "#bdbdbd"}
     if isinstance(agent, Firetruck):
@@ -69,9 +70,7 @@ extinguished_chart = ChartModule([{"Label": "Extinguished", "Color": "blue"}],
 model_parameters = {
     'height': 100,
     'width': 100,
-    # 'wind': (3, 4),
     'vision': 100,
-    'max_speed': 2,
     'text_environment': UserSettableParameter('static_text', value='Environment Generation Settings'),
     'density': UserSettableParameter('slider', 'Tree density', 0.99, 0.01, 1.0, 0.01),
     'river_number': UserSettableParameter('slider', 'Number of rivers', 0, 0, 10, 1),  # Unused for now
@@ -80,17 +79,17 @@ model_parameters = {
     'break_width': UserSettableParameter('slider', 'Firebreak width', 5, 0, 20, 1),
     'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 30, 0, 300, 1),
-    'truck_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 5, 1, 30, 1),  # Unused for now
+    'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 5, 1, 30, 1),  # Unused for now
     'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Parallel attack',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
                                                      'Random movements', 'Parallel attack']),
     'text_other_settings': UserSettableParameter('static_text', value='Other Settings'),
     'text_settings': UserSettableParameter('static_text', value='Wind Settings'),
     'wind_strength': UserSettableParameter('slider', 'Wind strength', 10, 0, 80, 1),
-    'wind_dir': UserSettableParameter('choice', 'Wind Direction', value=('\u2B06 North'),
-                                      choices=["\u2B07 South", "\u2198 South/West", "\u27A1 West",
-                                               "\u2197 North/West", "\u2B06 North", "\u2196 North/East",
-                                               "\u2B05 East", "\u2199 South/East"]),
+    'wind_dir': UserSettableParameter('choice', 'Wind Direction', value=('\u2B07 South'),
+                                      choices=["\u2B06  North", "\u2197 North/East", "\u27A1 East",
+                                               "\u2198 South/East", "\u2B07 North", "\u2199 South/West",
+                                               "\u2B05 West", "\u2196 North/West"]),
     'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=True),
     'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1),
 }

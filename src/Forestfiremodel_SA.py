@@ -1,25 +1,21 @@
+"""
+Created on Wed Jan  8 15:30:03 2020
+
+This code was implemented by
+Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
+
+"""
+
 import random
-
-import numpy as np
-
 import math
-
-import matplotlib.pyplot as plt
-
-from mesa import Model, Agent
+from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
-# from mesa.datacollection import DataCollector
-from datacollector_v2 import DataCollector
-from mesa.batchrunner import BatchRunner
-from random import randint
-
-
+from Datacollector_v2 import DataCollector
 from environment.river import RiverCell
 from environment.vegetation import TreeCell
 from agents.firetruck import Firetruck
 from environment.rain import Rain
-from environment.firebreak import BreakCell
 
 # defines the model
 
@@ -29,23 +25,35 @@ class ForestFire(Model):
     Simple Forest Fire model.
     '''
 
+    height = 100
+    width = 100
+    density = 0.6
+    temperature = 0
+    truck_strategy = 'Goes to the closest fire'
+    river_number = 0
+    river_width = 0
+    random_fires = 0
+    num_firetruck = 30
+    truck_max_speed = 2
+    vision = 100
+    wind_strength = 10
+    wind_dir = "\u2B06 North"
+
     def __init__(
             self,
-            height,
-            width,
-            density,
-            temperature,
-            truck_strategy,
-            river_number,
-            river_width,
-            break_number,
-            break_width,
-            random_fires,
-            num_firetruck,
-            vision,
-            truck_max_speed,
-            wind_strength,
-            wind_dir):
+            height=100,
+            width=100,
+            density=0.6,
+            temperature=0,
+            truck_strategy='Goes to the closest fire',
+            river_number=0,
+            river_width=0,
+            random_fires=0,
+            num_firetruck=30,
+            vision=100,
+            truck_max_speed=2,
+            wind_strength=10,
+            wind_dir="\u2B07 North"):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -60,20 +68,17 @@ class ForestFire(Model):
         self.density = density
 
         self.river_length = width
+        # Will suck when set to higher than 2
         self.river_width = river_width
-
-        self.break_length = width
-        self.break_width = break_width
-        self.break_size = width
 
         self.temperature = temperature
 
         self.n_agents = 0
-
         self.agents = []
         self.initial_tree = height * width * density - \
             self.river_length * self.river_width
-        self.initial_tree = self.initial_tree - self.break_length * self.break_width
+
+        self.river_size = width
 
         # Set up model objects
         self.schedule_TreeCell = RandomActivation(self)
@@ -86,27 +91,33 @@ class ForestFire(Model):
         self.wind_dir = wind_dir
 
         # Translate the wind_dir string into vector
-        wind_vector = {"\u2B06  North": (0, 1), "\u2197 North/East": (1, 1), "\u27A1 East": (1, 0),
-                       "\u2198 South/East": (1, -1), "\u2B07 South": (0, -1), "\u2199 South/West": (-1, -1),
-                       "\u2B05 West": (-1, 0), "\u2196 North/West": (-1, 1)}
+        wind_vector = {"\u2B06  South": (0, 1), "\u2198 South/West": (1, 1), "\u27A1 West": (1, 0),
+                       "\u2197 North/West": (1, -1), "\u2B07 North": (0, -1), "\u2196 North/East": (-1, -1),
+                       "\u2B05 East": (-1, 0), "\u2199 South/East": (-1, 1)}
         self.wind_dir = wind_vector[self.wind_dir]
 
         self.grid = MultiGrid(height, width, torus=False)
 
-        self.init_river()
-        self.init_break(self.break_size)
+        random.seed(1)
+        self.init_river(self.river_size)
+        self.init_rain()
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
+        random.seed(1)
         self.init_vegetation(TreeCell, self.initial_tree)
 
         for i in range(len(self.agents)):
             self.schedule_TreeCell.add(self.agents[i])
             self.schedule.add(self.agents[i])
 
-
-        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
-        self.init_rain()
+        random.seed(1)
+        self.init_firefighters(
+            Firetruck,
+            num_firetruck,
+            truck_strategy,
+            vision,
+            truck_max_speed)
 
         self.random_fires = random_fires
         self.temperature = temperature
@@ -136,7 +147,7 @@ class ForestFire(Model):
         self.dc.collect(self, [TreeCell, Firetruck])
         self.wind_strength = wind_strength
 
-    def init_river(self):
+    def init_river(self, n):
         '''
         Creating a river
         '''
@@ -148,7 +159,7 @@ class ForestFire(Model):
             y_init = random.randrange(self.height - 1)
 
             # increasing the length of the river
-            for i in range(int(self.river_length)):
+            for i in range(int(n)):
                 x += 1
                 y = y_init + random.randint(-1, 1)
 
@@ -169,40 +180,6 @@ class ForestFire(Model):
                             new_width = -new_width
                         y += new_width
                     self.new_river(RiverCell, (x, y))
-
-    def init_break(self, n):
-        '''
-        Creating a Firebreak (no fuel to burn on the designated area)
-        '''
-        if self.break_width == 0:
-            pass
-        else:
-            # initiating the break offgrid
-            x = -1
-            y_init = random.randrange(self.height - 1)
-
-            # increasing the length of the break
-            for i in range(int(n)):
-                x += 1
-                y = y_init + random.randint(-1, 1)
-
-                while y < 0 or y >= self.height:
-                    y += random.randint(-1, 1)
-                self.new_break(BreakCell, (x, y))
-
-                y_init = y
-
-                # increasing the width of the break
-                for j in range(self.break_width - 1):
-                    new_w = random.choice([-1, 1])
-                    if y + new_w < 0 or y + new_w == self.height:
-                        new_w = -new_w
-                    y += new_w
-                    while not self.grid.is_cell_empty((x, y)):
-                        if y + new_w < 0 or y + new_w == self.height:
-                            new_w = -new_w
-                        y += new_w
-                    self.new_break(BreakCell, (x, y))
 
     def init_vegetation(self, agent_type, n):
         '''
@@ -249,6 +226,7 @@ class ForestFire(Model):
         '''
         Advance the model by one step.
         '''
+
         self.schedule_TreeCell.step()
         self.schedule_FireTruck.step()
 
@@ -262,7 +240,6 @@ class ForestFire(Model):
 
         # Halt if no more fire
         if self.count_type(self, "On Fire") == 0:
-            print(" \n \n Fire is gone ! \n \n")
             self.running = False
 
     @staticmethod
@@ -347,18 +324,6 @@ class ForestFire(Model):
 
         return new_agent
 
-    def new_break(self, agent_type, pos):
-
-        # Create a new agent of the given type
-        new_agent = agent_type(self, self.n_agents, pos)
-
-        # Place the agent on the grid
-        self.grid.place_agent(new_agent, pos)
-
-        # And add the agent to the model so we can track it
-
-        return new_agent
-
     def remove_agent(self, agent):
         '''
         Method that enables us to remove passed agents.
@@ -370,47 +335,3 @@ class ForestFire(Model):
 
         # Remove agent from model
         self.agents.remove(agent)
-
-
-'''
-# To be used if you want to run the model without the visualiser:
-temperature = 20
-truck_strategy = 'Goes to the closest fire'
-density = 0.6
-width = 100
-height = 100
-num_firetruck = 30
-vision = 100
-break_number = 0
-river_number = 0
-river_width = 0
-random_fires = 1
-wind_strength = 8
-wind_dir = "N"
-# wind[0],wind[1]=[direction,speed]
-wind = [1, 2]
-fire = ForestFire(
-    height,
-    width,
-    density,
-    temperature,
-    truck_strategy,
-    river_number,
-    river_width,
-    break_number,
-    random_fires,
-    num_firetruck,
-    vision,
-    max_speed,
-    wind_strength,
-    wind_dir
-)
-fire.run_model()
-
-results = fire.dc.get_model_vars_dataframe()
-agent_variable = fire.dc.get_agent_vars_dataframe()
-results_firetrucks = fire.dc.get_model_vars_dataframe()
-
-print(agent_variable[0])
-print(agent_variable[1])
-'''
