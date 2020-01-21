@@ -19,6 +19,7 @@ from environment.river import RiverCell
 from environment.vegetation import TreeCell
 from agents.firetruck import Firetruck
 from environment.rain import Rain
+from environment.firebreak import BreakCell
 
 # defines the model
 
@@ -37,6 +38,8 @@ class ForestFire(Model):
             truck_strategy,
             river_number,
             river_width,
+            break_number,
+            break_width,
             random_fires,
             num_firetruck,
             truck_speed,
@@ -61,12 +64,16 @@ class ForestFire(Model):
         # Will suck when set to higher than 2
         self.river_width = river_width
 
+        self.break_length = width
+        self.break_width = break_width
+        self.break_size = width
+
         self.temperature = temperature
 
         self.n_agents = 0
 
         self.agents = []
-        self.initial_tree = height * width * density - self.river_length * self.river_width
+        self.initial_tree = height * width * density - self.river_length * self.river_width - self.break_length * self.break_width
 
         self.river_size = width
 
@@ -89,6 +96,7 @@ class ForestFire(Model):
         self.grid = MultiGrid(height, width, torus=False)
 
         self.init_river(self.river_size)
+        self.init_break(self.break_size)
         self.init_rain()
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
@@ -158,6 +166,40 @@ class ForestFire(Model):
                             new_width = -new_width
                         y += new_width
                     self.new_river(RiverCell, (x, y))
+
+    def init_break(self, n):
+        '''
+        Creating a Firebreak (no fuel to burn on the designated area)
+        '''
+        if self.break_width == 0:
+            pass
+        else:
+            # initiating the break offgrid
+            x = -1
+            y_init = random.randrange(self.height - 1)
+
+            # increasing the length of the break
+            for i in range(int(n)):
+                x += 1
+                y = y_init + random.randint(-1, 1)
+
+                while y < 0 or y >= self.height:
+                    y += random.randint(-1, 1)
+                self.new_break(BreakCell, (x, y))
+
+                y_init = y
+
+                # increasing the width of the break
+                for j in range(self.break_width - 1):
+                    new_w = random.choice([-1, 1])
+                    if y + new_w < 0 or y + new_w == self.height:
+                        new_w = -new_w
+                    y += new_w
+                    while not self.grid.is_cell_empty((x, y)):
+                        if y + new_w < 0 or y + new_w == self.height:
+                            new_w = -new_w
+                        y += new_w
+                    self.new_break(BreakCell, (x, y))
 
     def init_vegetation(self, agent_type, n):
         '''
@@ -292,6 +334,18 @@ class ForestFire(Model):
 
         return new_agent
 
+    def new_break(self, agent_type, pos):
+
+        # Create a new agent of the given type
+        new_agent = agent_type(self, self.n_agents, pos)
+
+        # Place the agent on the grid
+        self.grid.place_agent(new_agent, pos)
+
+        # And add the agent to the model so we can track it
+
+        return new_agent
+
     def remove_agent(self, agent):
         '''
         Method that enables us to remove passed agents.
@@ -315,6 +369,7 @@ height = 100
 num_firetruck = 30
 vision = 100
 max_speed = 2
+break_number = 0
 river_number = 0
 river_width = 0
 random_fires = 1
@@ -330,6 +385,7 @@ fire = ForestFire(
     truck_strategy,
     river_number,
     river_width,
+    break_number,
     random_fires,
     num_firetruck,
     vision,
