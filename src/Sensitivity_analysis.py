@@ -8,15 +8,15 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 
 """
 
-from SALib.sample import saltelli
+#from SALib.sample import saltelli
 from mesa.batchrunner import BatchRunner
-from SALib.analyze import sobol
-import pandas as pd
+#from SALib.analyze import sobol
+#import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from itertools import combinations
+#from itertools import combinations
 from Forestfiremodel_SA import ForestFire
-from IPython.display import clear_output
+#from IPython.display import clear_output
 
 
 
