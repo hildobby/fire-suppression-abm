@@ -42,7 +42,7 @@ def forest_fire_portrayal(agent):
     portrayal["Color"] = colors[agent.condition]
 
     if isinstance(agent, Rain):
-        portrayal["Layer"] = "3"
+        portrayal["Layer"] = "2"
         portrayal["w"] = "3"
         portrayal["h"] = "3"
         portrayal["Filled"] = False
@@ -78,8 +78,8 @@ model_parameters = {
     'river_width': UserSettableParameter('slider', 'River width', 1, 0, 10, 1),
     'break_width': UserSettableParameter('slider', 'Firebreak width', 5, 0, 20, 1),
     'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
-    'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 30, 0, 300, 1),
-    'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 5, 1, 30, 1),  # Unused for now
+    'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 15, 0, 300, 1),
+    'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 2, 1, 30, 1),  # Unused for now
     'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Parallel attack',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
                                                      'Random movements', 'Parallel attack']),
@@ -91,7 +91,7 @@ model_parameters = {
                                                "\u2198 South/East", "\u2B07 North", "\u2199 South/West",
                                                "\u2B05 West", "\u2196 North/West"]),
     'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=True),
-    'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1),
+    'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1)
 }
 
 server = ModularServer(ForestFire, [canvas_element, tree_chart, extinguished_chart], "Forest Fire", model_parameters)
