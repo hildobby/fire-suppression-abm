@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+ #!/usr/bin/env python3
 
 from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
@@ -47,9 +47,9 @@ def forest_fire_portrayal(agent):
         portrayal["h"] = "3"
         portrayal["Filled"] = False
 
-    if isinstance(agent, Firetruck):
-        portrayal["Layer"] = "1"
-        portrayal["Shape"] = "firetruck.png"
+    # if isinstance(agent, Firetruck):
+    #    portrayal["Layer"] = "1"
+    #    portrayal["Shape"] = "firetruck.png"
     portrayal["Color"] = colors[agent.condition]
     # give a color to the fire depending on the life_bar
     if agent.condition == "On Fire" and agent.life_bar > 0:
