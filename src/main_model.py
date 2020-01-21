@@ -104,7 +104,6 @@ class ForestFire(Model):
             self.schedule_TreeCell.add(self.agents[i])
             self.schedule.add(self.agents[i])
 
-
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, max_speed)
         self.init_rain()
 
