@@ -18,7 +18,6 @@ import matplotlib.pyplot as plt
 from Forestfiremodel_SA import ForestFire
 
 
-
 # Define which variable to change
 problem = {
     'num_vars': 2,
@@ -26,7 +25,8 @@ problem = {
     'bounds': [[0, 30], [0, 60]]
 }
 
-# Set the repetitions, the amount of steps, and the amount of distinct values per variable
+# Set the repetitions, the amount of steps, and the amount of distinct
+# values per variable
 replicates = 4
 distinct_samples = 4
 
@@ -38,12 +38,16 @@ model_reporters = {"On Fire": lambda m: m.count_type(m, "On Fire"),
 data = {}
 
 for i, var in enumerate(problem['names']):
-    # Get the bounds for this variable and get <distinct_samples> samples within this space (uniform)
+    # Get the bounds for this variable and get <distinct_samples> samples
+    # within this space (uniform)
     samples = np.linspace(*problem['bounds'][i], num=distinct_samples)
 
     # firetrucks need to be integers.
     if var == 'num_firetruck':
-        samples = np.linspace(*problem['bounds'][i], num=distinct_samples, dtype=int)
+        samples = np.linspace(
+            *problem['bounds'][i],
+            num=distinct_samples,
+            dtype=int)
 
     batch = BatchRunner(
         ForestFire,

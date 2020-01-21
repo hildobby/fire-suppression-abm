@@ -75,7 +75,8 @@ class ForestFire(Model):
 
         self.n_agents = 0
         self.agents = []
-        self.initial_tree = height * width * density - self.river_length * self.river_width
+        self.initial_tree = height * width * density - \
+            self.river_length * self.river_width
 
         self.river_size = width
 
@@ -111,7 +112,12 @@ class ForestFire(Model):
             self.schedule.add(self.agents[i])
 
         random.seed(1)
-        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed)
+        self.init_firefighters(
+            Firetruck,
+            num_firetruck,
+            truck_strategy,
+            vision,
+            truck_max_speed)
 
         self.random_fires = random_fires
         self.temperature = temperature
@@ -120,7 +126,8 @@ class ForestFire(Model):
 
         # Initialise fire in the middle otherwise del
         self.agents[10].condition = "On Fire"
-        self.grid.move_agent(self.agents[10], (int(width / 2), int(height / 2)))
+        self.grid.move_agent(
+            self.agents[10], (int(width / 2), int(height / 2)))
 
         # initiate the datacollector
         self.dc = DataCollector(self,
@@ -186,18 +193,21 @@ class ForestFire(Model):
                 y = random.randrange(self.height)
             self.new_agent(agent_type, (x, y))
 
-    def init_firefighters(self, agent_type, num_firetruck, truck_strategy, vision, truck_max_speed):
+    def init_firefighters(self, agent_type, num_firetruck,
+                          truck_strategy, vision, truck_max_speed):
         for i in range(num_firetruck):
             x = random.randrange(self.width)
             y = random.randrange(self.height)
             while self.grid.get_cell_list_contents((x, y)):
-                if isinstance(self.grid.get_cell_list_contents((x, y))[0], RiverCell):
+                if isinstance(self.grid.get_cell_list_contents(
+                        (x, y))[0], RiverCell):
                     x = random.randrange(self.width)
                     y = random.randrange(self.height)
                 else:
                     break
 
-            firetruck = self.new_firetruck(Firetruck, (x, y), truck_strategy, vision, truck_max_speed)
+            firetruck = self.new_firetruck(
+                Firetruck, (x, y), truck_strategy, vision, truck_max_speed)
             self.schedule_FireTruck.add(firetruck)
             self.schedule.add(firetruck)
 
@@ -279,14 +289,21 @@ class ForestFire(Model):
 
         return new_agent
 
-    def new_firetruck(self, agent_type, pos, truck_strategy, vision, truck_max_speed):
+    def new_firetruck(self, agent_type, pos, truck_strategy,
+                      vision, truck_max_speed):
         '''
         Method that enables us to add agents of a given type.
         '''
         self.n_agents += 1
 
         # Create a new agent of the given type
-        new_agent = agent_type(self, self.n_agents, pos, truck_strategy, vision, truck_max_speed)
+        new_agent = agent_type(
+            self,
+            self.n_agents,
+            pos,
+            truck_strategy,
+            vision,
+            truck_max_speed)
 
         # Place the agent on the grid
         self.grid.place_agent(new_agent, pos)
