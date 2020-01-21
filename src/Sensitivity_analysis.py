@@ -19,7 +19,6 @@ from Forestfiremodel_SA import ForestFire
 #from IPython.display import clear_output
 
 
-
 # Define which variable to change
 problem = {
     'num_vars': 2,
@@ -33,8 +32,8 @@ distinct_samples = 4
 
 # Set the outputs
 
-model_reporters={"On Fire": lambda m: m.count_type(m, "On Fire"),
-                 "Extinguished": lambda m: m.count_extinguished_fires(m)}
+model_reporters = {"On Fire": lambda m: m.count_type(m, "On Fire"),
+                   "Extinguished": lambda m: m.count_extinguished_fires(m)}
 
 data = {}
 
@@ -42,17 +41,16 @@ for i, var in enumerate(problem['names']):
     # Get the bounds for this variable and get <distinct_samples> samples within this space (uniform)
     samples = np.linspace(*problem['bounds'][i], num=distinct_samples)
 
-
     # firetrucks need to be integers.
     if var == 'num_firetruck':
         samples = np.linspace(*problem['bounds'][i], num=distinct_samples, dtype=int)
 
     batch = BatchRunner(
-            ForestFire,
-            iterations=replicates,
-            variable_parameters={var: samples},
-            model_reporters=model_reporters,
-            display_progress=True)
+        ForestFire,
+        iterations=replicates,
+        variable_parameters={var: samples},
+        model_reporters=model_reporters,
+        display_progress=True)
 
     batch.run_all()
 
@@ -98,6 +96,6 @@ def plot_all_vars(df, param):
         plot_param_var_conf(axs[i], data[var], var, param, i)
 
 
-for param in ("On Fire",  "Extinguished"):
+for param in ("On Fire", "Extinguished"):
     plot_all_vars(data, param)
     plt.show()

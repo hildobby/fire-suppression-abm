@@ -1,7 +1,6 @@
 import random
 
 
-
 import math
 
 
@@ -54,7 +53,7 @@ class ForestFire(Model):
             vision=100,
             truck_max_speed=2,
             wind_strength=10,
-            wind_dir= "\u2B07 North"):
+            wind_dir="\u2B07 North"):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -121,7 +120,7 @@ class ForestFire(Model):
 
         # Initialise fire in the middle otherwise del
         self.agents[10].condition = "On Fire"
-        self.grid.move_agent(self.agents[10],(int(width/2),int(height/2)))
+        self.grid.move_agent(self.agents[10], (int(width / 2), int(height / 2)))
 
         # initiate the datacollector
         self.dc = DataCollector(self,

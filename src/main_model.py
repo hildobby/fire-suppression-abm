@@ -95,20 +95,17 @@ class ForestFire(Model):
 
         self.grid = MultiGrid(height, width, torus=False)
 
-
         self.init_river(self.river_size)
         self.init_break(self.break_size)
         self.init_rain()
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
-
         self.init_vegetation(TreeCell, self.initial_tree)
 
         for i in range(len(self.agents)):
             self.schedule_TreeCell.add(self.agents[i])
             self.schedule.add(self.agents[i])
-
 
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed)
 
@@ -119,7 +116,7 @@ class ForestFire(Model):
 
         # Initialise fire in the middle otherwise del
         self.agents[10].condition = "On Fire"
-        self.grid.move_agent(self.agents[10],(int(width/2),int(height/2)))
+        self.grid.move_agent(self.agents[10], (int(width / 2), int(height / 2)))
 
         # initiate the datacollector
         self.dc = DataCollector(self,
