@@ -18,7 +18,6 @@ import matplotlib.pyplot as plt
 from Forestfiremodel_SA import ForestFire
 
 
-
 # Define which variable to change
 problem = {
     'num_vars': 2,
