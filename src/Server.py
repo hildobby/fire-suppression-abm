@@ -33,7 +33,6 @@ def forest_fire_portrayal(agent):
               "Is Extinguished": "#c994c7",
               "Full": "#ffa500",
               "Plenty": "#0000ff",
-<< << << < HEAD
               "Rain": "#636363",
               "Firebreak": "#bdbdbd"}
     if isinstance(agent, Firetruck):
@@ -41,11 +40,6 @@ def forest_fire_portrayal(agent):
         portrayal["Shape"] = "arrowHead"
     portrayal["Color"] = colors[agent.condition]
 
-
-== == == =
-              "Rain": "#636363"}
-
->> >>>> > b0ae295460e1810d0fdd2496b7701845619a10c5
     if isinstance(agent, Rain):
         portrayal["Layer"] = "3"
         portrayal["w"] = "3"
