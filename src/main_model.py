@@ -73,7 +73,8 @@ class ForestFire(Model):
         self.n_agents = 0
 
         self.agents = []
-        self.initial_tree = height * width * density - self.river_length * self.river_width - self.break_length * self.break_width
+        self.initial_tree = height * width * density - self.river_length * self.river_width 
+        self.initial_tree = self.initial_tree - self.break_length * self.break_width
 
         self.river_size = width
 
