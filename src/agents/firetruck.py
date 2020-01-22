@@ -9,6 +9,10 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 """
 import random
 from mesa import Agent
+
+
+import sys
+sys.path.append('../')
 from environment.river import RiverCell
 
 
@@ -185,7 +189,7 @@ class Walker(Agent):
             min_distance = 100000
             max_life_bar = 0
             for neighbor in neighbors_list:
-                print("New neighbour")
+
                 xposition = abs(neighbor.pos[0] - self.pos[0])
                 yposition = abs(neighbor.pos[1] - self.pos[1])
                 if xposition == 1 and yposition == 1:
@@ -197,7 +201,7 @@ class Walker(Agent):
 
                 # distance = abs(neighbor.pos[0] - self.pos[0]) ** 2 + abs(
                 #     neighbor.pos[1] - self.pos[1]) ** 2
-                print("Distance:", distance)
+
 
                 life_bar = neighbor.life_bar
                 if distance <= min_distance and life_bar >= max_life_bar:
@@ -217,8 +221,8 @@ class Walker(Agent):
                 positiony = abs(neighbor.pos[1] - self.pos[1])
                 newdistance = positionx + positiony
 
-                # print(neighbor.pos[0])
-                # print(neighbor.pos[1])
+
+
                 if neighbor.condition != "On Fire" and positionx <= self.truck_max_speed and \
                         positiony <= self.truck_max_speed and newdistance > max_distance:
                     max_distance = newdistance

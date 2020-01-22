@@ -6,16 +6,19 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 
 """
 
+
+import sys
+sys.path.append('../')
 import random
 import math
 from mesa import Model
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
-from src.datacollector_v2 import DataCollector
-from src.environment.river import RiverCell
-from src.environment.vegetation import TreeCell
-from src.agents.firetruck import Firetruck
-from src.environment.rain import Rain
+from datacollector_v2 import DataCollector
+from environment.river import RiverCell
+from environment.vegetation import TreeCell
+from agents.firetruck import Firetruck
+from environment.rain import Rain
 
 # defines the model
 
@@ -29,7 +32,7 @@ class ForestFire(Model):
     width = 100
     density = 0.6
     temperature = 0
-    truck_strategy = 'Goes to the closest fire'
+    truck_strategy = 1
     river_number = 0
     river_width = 0
     random_fires = 0
@@ -38,6 +41,8 @@ class ForestFire(Model):
     vision = 100
     wind_strength = 10
     wind_dir = "\u2B06 North"
+    break_width=0
+
 
     def __init__(
             self,
@@ -45,7 +50,7 @@ class ForestFire(Model):
             width=100,
             density=0.6,
             temperature=0,
-            truck_strategy='Goes to the closest fire',
+            truck_strategy=1,
             river_number=0,
             river_width=0,
             random_fires=0,
@@ -53,7 +58,8 @@ class ForestFire(Model):
             vision=100,
             truck_max_speed=2,
             wind_strength=10,
-            wind_dir="\u2B07 North"):
+            wind_dir="\u2B06  North",
+            break_width=0):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -68,17 +74,20 @@ class ForestFire(Model):
         self.density = density
 
         self.river_length = width
-        # Will suck when set to higher than 2
         self.river_width = river_width
+
+        self.break_length = width
+        self.break_width = break_width
+        self.break_size = width
 
         self.temperature = temperature
 
         self.n_agents = 0
+
         self.agents = []
         self.initial_tree = height * width * density - \
             self.river_length * self.river_width
-
-        self.river_size = width
+        self.initial_tree = self.initial_tree - self.break_length * self.break_width
 
         # Set up model objects
         self.schedule_TreeCell = RandomActivation(self)
@@ -91,16 +100,16 @@ class ForestFire(Model):
         self.wind_dir = wind_dir
 
         # Translate the wind_dir string into vector
-        wind_vector = {"\u2B06  South": (0, 1), "\u2198 South/West": (1, 1), "\u27A1 West": (1, 0),
-                       "\u2197 North/West": (1, -1), "\u2B07 North": (0, -1), "\u2196 North/East": (-1, -1),
-                       "\u2B05 East": (-1, 0), "\u2199 South/East": (-1, 1)}
+        wind_vector = {"\u2B06  North": (0, 1), "\u2197 North/East": (1, 1), "\u27A1 East": (1, 0),
+                       "\u2198 South/East": (1, -1), "\u2B07 South": (0, -1), "\u2199 South/West": (-1, -1),
+                       "\u2B05 West": (-1, 0), "\u2196 North/West": (-1, 1)}
         self.wind_dir = wind_vector[self.wind_dir]
 
         self.grid = MultiGrid(height, width, torus=False)
 
         random.seed(1)
-        self.init_river(self.river_size)
-        self.init_rain()
+        self.init_river()
+        self.init_break(self.break_size)
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
@@ -110,6 +119,16 @@ class ForestFire(Model):
         for i in range(len(self.agents)):
             self.schedule_TreeCell.add(self.agents[i])
             self.schedule.add(self.agents[i])
+
+
+
+        # Put int back to string
+        if truck_strategy==1:
+            truck_strategy='Goes to the closest fire'
+        elif truck_strategy==2:
+            truck_strategy='Goes to the biggest fire'
+        elif truck_strategy==3:
+            truck_strategy='Parallel attack'
 
         random.seed(1)
         self.init_firefighters(
@@ -129,6 +148,10 @@ class ForestFire(Model):
         self.grid.move_agent(
             self.agents[10], (int(width / 2), int(height / 2)))
 
+        # count number of fire took fire
+        self.count_total_fire = 0
+
+
         # initiate the datacollector
         self.dc = DataCollector(self,
                                 model_reporters={
@@ -147,7 +170,7 @@ class ForestFire(Model):
         self.dc.collect(self, [TreeCell, Firetruck])
         self.wind_strength = wind_strength
 
-    def init_river(self, n):
+    def init_river(self):
         '''
         Creating a river
         '''
@@ -159,7 +182,7 @@ class ForestFire(Model):
             y_init = random.randrange(self.height - 1)
 
             # increasing the length of the river
-            for i in range(int(n)):
+            for i in range(int(self.river_length)):
                 x += 1
                 y = y_init + random.randint(-1, 1)
 
@@ -180,6 +203,40 @@ class ForestFire(Model):
                             new_width = -new_width
                         y += new_width
                     self.new_river(RiverCell, (x, y))
+
+    def init_break(self, n):
+        '''
+        Creating a Firebreak (no fuel to burn on the designated area)
+        '''
+        if self.break_width == 0:
+            pass
+        else:
+            # initiating the break offgrid
+            x = -1
+            y_init = random.randrange(self.height - 1)
+
+            # increasing the length of the break
+            for i in range(int(n)):
+                x += 1
+                y = y_init + random.randint(-1, 1)
+
+                while y < 0 or y >= self.height:
+                    y += random.randint(-1, 1)
+                self.new_break(BreakCell, (x, y))
+
+                y_init = y
+
+                # increasing the width of the break
+                for j in range(self.break_width - 1):
+                    new_w = random.choice([-1, 1])
+                    if y + new_w < 0 or y + new_w == self.height:
+                        new_w = -new_w
+                    y += new_w
+                    while not self.grid.is_cell_empty((x, y)):
+                        if y + new_w < 0 or y + new_w == self.height:
+                            new_w = -new_w
+                        y += new_w
+                    self.new_break(BreakCell, (x, y))
 
     def init_vegetation(self, agent_type, n):
         '''
@@ -226,7 +283,6 @@ class ForestFire(Model):
         '''
         Advance the model by one step.
         '''
-
         self.schedule_TreeCell.step()
         self.schedule_FireTruck.step()
 
@@ -313,6 +369,18 @@ class ForestFire(Model):
         return new_agent
 
     def new_river(self, agent_type, pos):
+
+        # Create a new agent of the given type
+        new_agent = agent_type(self, self.n_agents, pos)
+
+        # Place the agent on the grid
+        self.grid.place_agent(new_agent, pos)
+
+        # And add the agent to the model so we can track it
+
+        return new_agent
+
+    def new_break(self, agent_type, pos):
 
         # Create a new agent of the given type
         new_agent = agent_type(self, self.n_agents, pos)

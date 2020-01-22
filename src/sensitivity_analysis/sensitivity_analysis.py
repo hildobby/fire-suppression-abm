@@ -8,39 +8,45 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 
 """
 
-
+import sys
+import os
+import pathos
+from mesa.batchrunner import BatchRunnerMP
 from mesa.batchrunner import BatchRunner
-
-
 import numpy as np
 import matplotlib.pyplot as plt
-
 from forestfiremodel_SA import ForestFire
+import pandas as pd
 
 
-# Define which variable to change
+
+
+
 problem = {
-    'num_vars': 2,
-    'names': ['wind_strength', 'num_firetruck'],
-    'bounds': [[0, 30], [0, 60]]
+    'num_vars': 3,
+    'names':    ['wind_strength', 'num_firetruck','truck_strategy'],
+    'bounds':  [[0, 30], [0, 60],'Goes to the closest fire','Goes to the biggest fire','Parallel attack']
 }
 
 # Set the repetitions, the amount of steps, and the amount of distinct
 # values per variable
-replicates = 10
-distinct_samples = 10
+replicates = 5
+distinct_samples = 5
 
 # Set the outputs
 
-model_reporters = {"On Fire": lambda m: m.count_type(m, "On Fire"),
-                   "Extinguished": lambda m: m.count_extinguished_fires(m)}
+model_reporters = {"On Fire": lambda m: m.count_total_fire,
+                   "Extinguished": lambda m: m.count_extinguished_fires(m),
+                    "Step": lambda m: m.current_step}
 
-data = {}
+
+data={}
 
 for i, var in enumerate(problem['names']):
     # Get the bounds for this variable and get <distinct_samples> samples
     # within this space (uniform)
-    samples = np.linspace(*problem['bounds'][i], num=distinct_samples)
+    if var != 'truck_strategy':
+        samples = np.linspace(*problem['bounds'][i], num=distinct_samples)
 
     # firetrucks need to be integers.
     if var == 'num_firetruck':
@@ -49,16 +55,26 @@ for i, var in enumerate(problem['names']):
             num=distinct_samples,
             dtype=int)
 
-    batch = BatchRunner(
+    if var == 'truck_strategy':
+        samples =np.linspace(1,3,3)
+
+    batch = BatchRunnerMP(
         ForestFire,
         iterations=replicates,
         variable_parameters={var: samples},
         model_reporters=model_reporters,
-        display_progress=True)
+        display_progress=True,nr_processes=2)
+
+
 
     batch.run_all()
 
-    data[var] = batch.get_model_vars_dataframe()
+    data[var]= batch.get_model_vars_dataframe()
+
+
+   # directory = os.chdir("data/")
+   # name="{}___repli_{}__dist_samp_{}.pkl".format(problem["names"][0],replicates,distinct_samples)
+   # data.to_pickle(name)
 
 
 def plot_param_var_conf(ax, df, var, param, i):
@@ -94,12 +110,14 @@ def plot_all_vars(df, param):
         param: the parameter to be plotted
     """
 
-    f, axs = plt.subplots(3, figsize=(7, 10))
+    f, axs = plt.subplots(3)
 
     for i, var in enumerate(problem['names']):
         plot_param_var_conf(axs[i], data[var], var, param, i)
 
 
-for param in ("On Fire", "Extinguished"):
+for param in ("On Fire", "Extinguished","Step"):
     plot_all_vars(data, param)
     plt.show()
+
+

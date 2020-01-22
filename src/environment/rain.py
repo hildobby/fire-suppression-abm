@@ -10,6 +10,8 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 import random
 from mesa import Agent
 
+import sys
+sys.path.append('../')
 from environment.vegetation import TreeCell
 
 
