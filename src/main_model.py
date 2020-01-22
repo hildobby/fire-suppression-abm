@@ -108,7 +108,7 @@ class ForestFire(Model):
         self.temperature = temperature
         self.num_firetruck = num_firetruck
         self.truck_strategy = truck_strategy
-        
+
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed)
         self.init_rain()
 
@@ -210,13 +210,13 @@ class ForestFire(Model):
         '''
         x = random.randrange(self.width)
         y = random.randrange(self.height)
-        
+
         if self.river_width == 0 and self.break_width == 0:
             self.new_agent(agent_type, (int(self.width / 2), int(self.height / 2)))
         else:
             self.new_agent(agent_type, (x, y))
-            
-        for i in range(int(n-1)):
+
+        for i in range(int(n - 1)):
             while not self.grid.is_cell_empty((x, y)):
                 x = random.randrange(self.width)
                 y = random.randrange(self.height)
