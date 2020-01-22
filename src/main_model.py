@@ -1,25 +1,24 @@
-import random
+"""
+Created on Wed Jan  8 15:30:03 2020
 
-import numpy as np
+This code was implemented by
+Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
-import math
+"""
 
-import matplotlib.pyplot as plt
-
+import sys
+sys.path.append('../')
 from mesa import Model, Agent
 from mesa.time import RandomActivation
 from space_v2 import MultiGrid
-# from mesa.datacollection import DataCollector
 from datacollector_v2 import DataCollector
-from mesa.batchrunner import BatchRunner
-from random import randint
-
-
 from environment.river import RiverCell
 from environment.vegetation import TreeCell
 from agents.firetruck import Firetruck
 from environment.rain import Rain
 from environment.firebreak import BreakCell
+import math
+import random
 
 # defines the model
 
@@ -93,11 +92,13 @@ class ForestFire(Model):
 
         self.grid = MultiGrid(height, width, torus=False)
 
+        random.seed(1)
         self.init_river()
         self.init_break(self.break_size)
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
+        random.seed(1)
         self.init_vegetation(TreeCell, self.initial_tree)
 
         for i in range(len(self.agents)):

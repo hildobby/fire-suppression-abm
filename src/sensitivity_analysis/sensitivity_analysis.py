@@ -7,17 +7,21 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
-
 import sys
-import os
-import pathos
+sys.path.append('../')
 from mesa.batchrunner import BatchRunnerMP
-from mesa.batchrunner import BatchRunner
 import numpy as np
 import matplotlib.pyplot as plt
 from forestfiremodel_SA import ForestFire
-import pandas as pd
 
+try:
+    import pathos
+except:
+    print("Nanana that's what i though ! You need to install pathos")
+    raise
+
+# set the number of cores
+n_cores=2
 problem = {
     'num_vars': 3,
     'names': ['wind_strength', 'num_firetruck', 'truck_strategy'],
@@ -59,7 +63,7 @@ for i, var in enumerate(problem['names']):
         iterations=replicates,
         variable_parameters={var: samples},
         model_reporters=model_reporters,
-        display_progress=True, nr_processes=2)
+        display_progress=True, nr_processes=n_cores)
 
     batch.run_all()
 
