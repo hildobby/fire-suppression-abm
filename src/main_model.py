@@ -104,18 +104,16 @@ class ForestFire(Model):
             self.schedule_TreeCell.add(self.agents[i])
             self.schedule.add(self.agents[i])
 
-        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed)
-        self.init_rain()
-
         self.random_fires = random_fires
         self.temperature = temperature
         self.num_firetruck = num_firetruck
         self.truck_strategy = truck_strategy
+        
+        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed)
+        self.init_rain()
 
-        # Initialise fire in the middle otherwise del
-        self.agents[10].condition = "On Fire"
-        self.grid.move_agent(
-            self.agents[10], (int(width / 2), int(height / 2)))
+        # Initialise fire in the middle if possible otherwise random
+        self.agents[0].condition = "On Fire"
 
         # initiate the datacollector
         self.dc = DataCollector(self,
@@ -207,9 +205,15 @@ class ForestFire(Model):
         '''
         Creating trees
         '''
-        for i in range(int(n)):
-            x = random.randrange(self.width)
-            y = random.randrange(self.height)
+        x = random.randrange(self.width)
+        y = random.randrange(self.height)
+        
+        if self.river_width == 0 and self.break_width == 0:
+            self.new_agent(agent_type, (int(self.width / 2), int(self.height / 2)))
+        else:
+            self.new_agent(agent_type, (x, y))
+            
+        for i in range(int(n-1)):
             while not self.grid.is_cell_empty((x, y)):
                 x = random.randrange(self.width)
                 y = random.randrange(self.height)

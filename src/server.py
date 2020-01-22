@@ -72,8 +72,8 @@ model_parameters = {
     'density': UserSettableParameter('slider', 'Tree density', 0.99, 0.01, 1.0, 0.01),
     'river_number': UserSettableParameter('slider', 'Number of rivers', 0, 0, 10, 1),  # Unused for now
     'break_number': UserSettableParameter('slider', 'Number of breaks', 0, 0, 10, 1),  # Unused for now
-    'river_width': UserSettableParameter('slider', 'River width', 1, 0, 10, 1),
-    'break_width': UserSettableParameter('slider', 'Firebreak width', 5, 0, 20, 1),
+    'river_width': UserSettableParameter('slider', 'River width', 0, 0, 10, 1),
+    'break_width': UserSettableParameter('slider', 'Firebreak width', 0, 0, 20, 1),
     'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 15, 0, 300, 1),
     'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 2, 1, 30, 1),  # Unused for now
