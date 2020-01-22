@@ -7,13 +7,13 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+from environment.river import RiverCell
 import random
 from mesa import Agent
 
 
 import sys
 sys.path.append('../')
-from environment.river import RiverCell
 
 
 class Walker(Agent):
@@ -202,7 +202,6 @@ class Walker(Agent):
                 # distance = abs(neighbor.pos[0] - self.pos[0]) ** 2 + abs(
                 #     neighbor.pos[1] - self.pos[1]) ** 2
 
-
                 life_bar = neighbor.life_bar
                 if distance <= min_distance and life_bar >= max_life_bar:
                     max_life_bar = life_bar
@@ -220,8 +219,6 @@ class Walker(Agent):
                 positionx = abs(neighbor.pos[0] - self.pos[0])
                 positiony = abs(neighbor.pos[1] - self.pos[1])
                 newdistance = positionx + positiony
-
-
 
                 if neighbor.condition != "On Fire" and positionx <= self.truck_max_speed and \
                         positiony <= self.truck_max_speed and newdistance > max_distance:
