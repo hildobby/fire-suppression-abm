@@ -695,8 +695,8 @@ class ContinuousSpace:
     def out_of_bounds(self, pos):
         """ Check if a point is out of bounds. """
         x, y = pos
-        return (x < self.x_min or x >= self.x_max or
-                y < self.y_min or y >= self.y_max)
+        return (x < self.x_min or x >= self.x_max
+                or y < self.y_min or y >= self.y_max)
 
 
 class NetworkGrid:
