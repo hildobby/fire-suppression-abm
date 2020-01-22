@@ -75,7 +75,7 @@ class Walker(Agent):
 
             limited_vision = int(self.vision * limited_vision_list[i] / 100.)
             if i > 0:
-                inner_radius = int(self.vision * limited_vision_list[i-1] / 100.)
+                inner_radius = int(self.vision * limited_vision_list[i - 1] / 100.)
             else:
                 inner_radius = 0
 
@@ -110,7 +110,7 @@ class Walker(Agent):
     # Makes the firetruck move towards the fire
     def closestfire_move(self):
         fire_intheneighborhood = False
-        limited_vision_list =  [5, 15, 25, 50, 100]
+        limited_vision_list = [5, 15, 25, 50, 100]
 
         for i in range(len(limited_vision_list)):
             limited_vision = int(self.vision * limited_vision_list[i] / 100.)
