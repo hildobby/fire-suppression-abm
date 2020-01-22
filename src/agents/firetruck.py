@@ -70,11 +70,18 @@ class Walker(Agent):
         '''
         # find hot trees in neighborhood
         fire_intheneighborhood = False
-        for i in [25, 50, 100]:
-            limited_vision = int(self.vision * i / 100.)
+        limited_vision_list = [25, 50, 100]
+        for i in range(len(limited_vision_list)):
+
+            limited_vision = int(self.vision * limited_vision_list[i] / 100.)
+            if i > 0:
+                inner_radius = int(self.vision * limited_vision_list[i-1] / 100.)
+            else:
+                inner_radius = 0
+
             # find hot trees in neighborhood
             neighbors_list = self.model.grid.get_neighbors(
-                self.pos, moore=True, radius=limited_vision)
+                self.pos, moore=True, radius=limited_vision, inner_radius=inner_radius)
 
             neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
 
@@ -103,12 +110,19 @@ class Walker(Agent):
     # Makes the firetruck move towards the fire
     def closestfire_move(self):
         fire_intheneighborhood = False
-        for i in [5, 15, 25, 50, 100]:
-            limited_vision = int(self.vision * i / 100.)
+        limited_vision_list =  [5, 15, 25, 50, 100]
+
+        for i in range(len(limited_vision_list)):
+            limited_vision = int(self.vision * limited_vision_list[i] / 100.)
+
+            if i > 0:
+                inner_radius = int(self.vision * limited_vision_list[i - 1] / 100.)
+            else:
+                inner_radius = 0
 
             # find hot trees in neighborhood
             neighbors_list = self.model.grid.get_neighbors(
-                self.pos, moore=True, radius=limited_vision)
+                self.pos, moore=True, radius=limited_vision, inner_radius=inner_radius)
 
             neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
 
@@ -152,12 +166,18 @@ class Walker(Agent):
 
     def parallel_attack(self):
         fire_intheneighborhood = False
-        for i in [2, 5, 15, 25, 50, 100]:
-            limited_vision = int(self.vision * i / 100.)
+        limited_vision_list = [2, 5, 15, 25, 50, 100]
+        for i in range(len(limited_vision_list)):
+            limited_vision = int(self.vision * limited_vision_list[i] / 100.)
+
+            if i > 0:
+                inner_radius = int(self.vision * limited_vision_list[i - 1] / 100.)
+            else:
+                inner_radius = 0
 
             # find hot trees in neighborhood
             neighbors_list = self.model.grid.get_neighbors(
-                self.pos, moore=True, radius=limited_vision)
+                self.pos, moore=True, radius=limited_vision, inner_radius=inner_radius)
 
             neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
 

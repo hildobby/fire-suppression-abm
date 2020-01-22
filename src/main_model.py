@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 from mesa import Model, Agent
 from mesa.time import RandomActivation
-from mesa.space import MultiGrid
+from space_v2 import MultiGrid
 # from mesa.datacollection import DataCollector
 from datacollector_v2 import DataCollector
 from mesa.batchrunner import BatchRunner
