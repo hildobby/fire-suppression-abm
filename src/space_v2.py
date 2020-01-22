@@ -320,7 +320,7 @@ class Grid:
               "`random` instead of the model-level random-number generator. "
               "Consider replacing it with having a model or agent object "
               "explicitly pick one of the grid's list of empty cells."),
-            DeprecationWarning)
+             DeprecationWarning)
 
         if self.exists_empty_cells():
             pos = random.choice(sorted(self.empties))
