@@ -7,10 +7,12 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+from environment.vegetation import TreeCell
 import random
 from mesa import Agent
 
-from environment.vegetation import TreeCell
+import sys
+sys.path.append('../')
 
 
 class Rain(Agent):

@@ -7,9 +7,13 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+from environment.river import RiverCell
 import random
 from mesa import Agent
-from environment.river import RiverCell
+
+
+import sys
+sys.path.append('../')
 
 
 class Walker(Agent):
@@ -70,11 +74,18 @@ class Walker(Agent):
         '''
         # find hot trees in neighborhood
         fire_intheneighborhood = False
-        for i in [25, 50, 100]:
-            limited_vision = int(self.vision * i / 100.)
+        limited_vision_list = [25, 50, 100]
+        for i in range(len(limited_vision_list)):
+
+            limited_vision = int(self.vision * limited_vision_list[i] / 100.)
+            if i > 0:
+                inner_radius = int(self.vision * limited_vision_list[i - 1] / 100.)
+            else:
+                inner_radius = 0
+
             # find hot trees in neighborhood
             neighbors_list = self.model.grid.get_neighbors(
-                self.pos, moore=True, radius=limited_vision)
+                self.pos, moore=True, radius=limited_vision, inner_radius=inner_radius)
 
             neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
 
@@ -103,12 +114,19 @@ class Walker(Agent):
     # Makes the firetruck move towards the fire
     def closestfire_move(self):
         fire_intheneighborhood = False
-        for i in [5, 15, 25, 50, 100]:
-            limited_vision = int(self.vision * i / 100.)
+        limited_vision_list = [5, 15, 25, 50, 100]
+
+        for i in range(len(limited_vision_list)):
+            limited_vision = int(self.vision * limited_vision_list[i] / 100.)
+
+            if i > 0:
+                inner_radius = int(self.vision * limited_vision_list[i - 1] / 100.)
+            else:
+                inner_radius = 0
 
             # find hot trees in neighborhood
             neighbors_list = self.model.grid.get_neighbors(
-                self.pos, moore=True, radius=limited_vision)
+                self.pos, moore=True, radius=limited_vision, inner_radius=inner_radius)
 
             neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
 
@@ -152,12 +170,18 @@ class Walker(Agent):
 
     def parallel_attack(self):
         fire_intheneighborhood = False
-        for i in [2, 5, 15, 25, 50, 100]:
-            limited_vision = int(self.vision * i / 100.)
+        limited_vision_list = [2, 5, 15, 25, 50, 100]
+        for i in range(len(limited_vision_list)):
+            limited_vision = int(self.vision * limited_vision_list[i] / 100.)
+
+            if i > 0:
+                inner_radius = int(self.vision * limited_vision_list[i - 1] / 100.)
+            else:
+                inner_radius = 0
 
             # find hot trees in neighborhood
             neighbors_list = self.model.grid.get_neighbors(
-                self.pos, moore=True, radius=limited_vision)
+                self.pos, moore=True, radius=limited_vision, inner_radius=inner_radius)
 
             neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
 
@@ -165,7 +189,7 @@ class Walker(Agent):
             min_distance = 100000
             max_life_bar = 0
             for neighbor in neighbors_list:
-                print("New neighbour")
+
                 xposition = abs(neighbor.pos[0] - self.pos[0])
                 yposition = abs(neighbor.pos[1] - self.pos[1])
                 if xposition == 1 and yposition == 1:
@@ -177,7 +201,6 @@ class Walker(Agent):
 
                 # distance = abs(neighbor.pos[0] - self.pos[0]) ** 2 + abs(
                 #     neighbor.pos[1] - self.pos[1]) ** 2
-                print("Distance:", distance)
 
                 life_bar = neighbor.life_bar
                 if distance <= min_distance and life_bar >= max_life_bar:
@@ -197,8 +220,6 @@ class Walker(Agent):
                 positiony = abs(neighbor.pos[1] - self.pos[1])
                 newdistance = positionx + positiony
 
-                # print(neighbor.pos[0])
-                # print(neighbor.pos[1])
                 if neighbor.condition != "On Fire" and positionx <= self.truck_max_speed and \
                         positiony <= self.truck_max_speed and newdistance > max_distance:
                     max_distance = newdistance

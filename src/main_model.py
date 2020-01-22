@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 from mesa import Model, Agent
 from mesa.time import RandomActivation
-from mesa.space import MultiGrid
+from space_v2 import MultiGrid
 # from mesa.datacollection import DataCollector
 from datacollector_v2 import DataCollector
 from mesa.batchrunner import BatchRunner
@@ -114,6 +114,9 @@ class ForestFire(Model):
 
         # Initialise fire in the middle if possible otherwise random
         self.agents[0].condition = "On Fire"
+
+        # count number of fire took fire
+        self.count_total_fire = 0
 
         # initiate the datacollector
         self.dc = DataCollector(self,
