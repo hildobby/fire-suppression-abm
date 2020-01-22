@@ -1,6 +1,6 @@
 *src/__pycache__
-*src/.DS_store
+*src/.DS_Store
 *.idea
-*.DS_store
-*__pychache__
+*.DS_Store
+*__pycache__
 *.pyc
