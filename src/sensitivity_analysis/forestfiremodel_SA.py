@@ -5,19 +5,18 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+import math
+from mesa import Model
+from mesa.time import RandomActivation
+from space_v2 import MultiGrid
+from datacollector_v2 import DataCollector
+from environment.river import RiverCell
+from environment.vegetation import TreeCell
+from agents.firetruck import Firetruck
+from environment.rain import Rain
 import random
 import sys
 sys.path.append('../')
-
-from environment.rain import Rain
-from agents.firetruck import Firetruck
-from environment.vegetation import TreeCell
-from environment.river import RiverCell
-from datacollector_v2 import DataCollector
-from space_v2 import MultiGrid
-from mesa.time import RandomActivation
-from mesa import Model
-import math
 
 
 # defines the model
@@ -126,9 +125,6 @@ class ForestFire(Model):
             truck_strategy = 'Goes to the biggest fire'
         elif truck_strategy == 3:
             truck_strategy = 'Parallel attack'
-
-
-
 
         self.random_fires = random_fires
         self.temperature = temperature

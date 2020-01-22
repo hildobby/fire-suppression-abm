@@ -7,21 +7,21 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+from forestfiremodel_SA import ForestFire
+import matplotlib.pyplot as plt
+import numpy as np
+from mesa.batchrunner import BatchRunnerMP
 import sys
 sys.path.append('../')
-from mesa.batchrunner import BatchRunnerMP
-import numpy as np
-import matplotlib.pyplot as plt
-from forestfiremodel_SA import ForestFire
 
 try:
     import pathos
-except:
+except BaseException:
     print("Nanana that's what i though ! You need to install pathos")
     raise
 
 # set the number of cores
-n_cores=2
+n_cores = 2
 problem = {
     'num_vars': 3,
     'names': ['wind_strength', 'num_firetruck', 'truck_strategy'],
