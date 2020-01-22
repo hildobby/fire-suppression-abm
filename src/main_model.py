@@ -117,10 +117,8 @@ class ForestFire(Model):
         self.grid.move_agent(
             self.agents[10], (int(width / 2), int(height / 2)))
 
-
         # count number of fire took fire
         self.count_total_fire = 0
-
 
         # initiate the datacollector
         self.dc = DataCollector(self,

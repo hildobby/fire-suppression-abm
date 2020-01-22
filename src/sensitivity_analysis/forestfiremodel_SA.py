@@ -7,18 +7,18 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 """
 
 
+from environment.rain import Rain
+from agents.firetruck import Firetruck
+from environment.vegetation import TreeCell
+from environment.river import RiverCell
+from datacollector_v2 import DataCollector
+from mesa.space import MultiGrid
+from mesa.time import RandomActivation
+from mesa import Model
+import math
+import random
 import sys
 sys.path.append('../')
-import random
-import math
-from mesa import Model
-from mesa.time import RandomActivation
-from mesa.space import MultiGrid
-from datacollector_v2 import DataCollector
-from environment.river import RiverCell
-from environment.vegetation import TreeCell
-from agents.firetruck import Firetruck
-from environment.rain import Rain
 
 # defines the model
 
@@ -41,8 +41,7 @@ class ForestFire(Model):
     vision = 100
     wind_strength = 10
     wind_dir = "\u2B06 North"
-    break_width=0
-
+    break_width = 0
 
     def __init__(
             self,
@@ -120,15 +119,13 @@ class ForestFire(Model):
             self.schedule_TreeCell.add(self.agents[i])
             self.schedule.add(self.agents[i])
 
-
-
         # Put int back to string
-        if truck_strategy==1:
-            truck_strategy='Goes to the closest fire'
-        elif truck_strategy==2:
-            truck_strategy='Goes to the biggest fire'
-        elif truck_strategy==3:
-            truck_strategy='Parallel attack'
+        if truck_strategy == 1:
+            truck_strategy = 'Goes to the closest fire'
+        elif truck_strategy == 2:
+            truck_strategy = 'Goes to the biggest fire'
+        elif truck_strategy == 3:
+            truck_strategy = 'Parallel attack'
 
         random.seed(1)
         self.init_firefighters(
@@ -150,7 +147,6 @@ class ForestFire(Model):
 
         # count number of fire took fire
         self.count_total_fire = 0
-
 
         # initiate the datacollector
         self.dc = DataCollector(self,
