@@ -23,7 +23,12 @@ except BaseException:
     raise
 
 # set the number of cores
-n_cores = 2
+n_cores = 3
+
+# Set the repetitions, the amount of steps, and the amount of distinct
+# values per variable
+replicates = 5
+distinct_samples = 5
 
 
 ##########################################################################
@@ -37,11 +42,6 @@ problem = {
     'names': ['wind_strength', 'num_firetruck', 'truck_strategy'],
     'bounds': [[0, 30], [0, 60], [truck_strategy]]
 }
-
-# Set the repetitions, the amount of steps, and the amount of distinct
-# values per variable
-replicates = 2
-distinct_samples = 2
 
 # Set the outputs
 
@@ -81,7 +81,7 @@ for i, var in enumerate(problem['names']):
 
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
-    name = "ofat_{}_{}___repli_{}__dist_samp_{}.csv".format(
+    name = "ofat_{}_{}___repli_{}__dist_samp_{}.csv".format(\
         truck_strategy, var, replicates, distinct_samples)
     data[var].to_csv(name)
 
@@ -100,8 +100,6 @@ problem = {
 
 # Set the repetitions, the amount of steps, and the amount of distinct
 # values per variable
-replicates = 2
-distinct_samples = 2
 
 # Set the outputs
 
@@ -141,7 +139,7 @@ for i, var in enumerate(problem['names']):
 
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
-    name = "ofat_{}_{}___repli_{}__dist_samp_{}.csv".format(
+    name = "ofat_{}_{}___repli_{}__dist_samp_{}.csv".format(\
         truck_strategy, var, replicates, distinct_samples)
     data[var].to_csv(name)
 
@@ -160,8 +158,6 @@ problem = {
 
 # Set the repetitions, the amount of steps, and the amount of distinct
 # values per variable
-replicates = 2
-distinct_samples = 2
 
 # Set the outputs
 
@@ -201,6 +197,6 @@ for i, var in enumerate(problem['names']):
 
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
-    name = "ofat_{}_{}___repli_{}__dist_samp_{}.csv".format(
+    name = "ofat_{}_{}___repli_{}__dist_samp_{}.csv".format(\
         truck_strategy, var, replicates, distinct_samples)
     data[var].to_csv(name)
