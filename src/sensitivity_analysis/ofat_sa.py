@@ -7,6 +7,7 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+
 import os
 from mesa.batchrunner import BatchRunnerMP
 import numpy as np
