@@ -44,13 +44,13 @@ for var in list_var:
     # number of strategies
     for i in range(1, 4):
         globals()['x_{}_%s'.format(var) % i] = eval("data_" + str(i))["ofat_{}_{}___repli_{}__dist_samp_{}"
-                                                                      .format(i, var, rep, dist)].groupby(var).mean()\
-            .reset_index()[var]
+                                                                      .format(i, var, rep, dist)].groupby(var)\
+            .mean().reset_index()[var]
 
         param = "On Fire"
         globals()['y_{}_on_fire_%s'.format(var) % i] = eval("data_" + str(i))["ofat_{}_{}___repli_{}__dist_samp_{}"
-                                                                              .format(i, var, rep, dist)].groupby(var)\
-            .mean()[param]
+                                                                              .format(i, var, rep, dist)]\
+            .groupby(var).mean()[param]
         globals()['err_{}_fire_%s'.format(var) % i] = (1.96 * eval("data_" + str(i))
                                                        ["ofat_{}_{}___repli_{}__dist_samp_{}"
                                                         .format(i, var, rep, dist)]
@@ -77,56 +77,34 @@ for var in list_var:
     f, ax = plt.subplots(3, figsize=(7, 10))
     for i in range(1, 4):
         ax[0].plot(
-            globals()[
-                'x_{}_%s'.format(var) %
-                i], globals()[
-                ('y_{}_on_fire_%s'.format(var) %
-                 i)], label=i)
+            globals()['x_{}_%s'.format(var) % i], globals()[('y_{}_on_fire_%s'.format(var) % i)], label=i)
         ax[0].fill_between(globals()['x_{}_%s'.format(var) % i],
                            globals()[('y_{}_on_fire_%s'.format(var) % i)] -
-                           globals()[
-            'err_{}_fire_%s'.format(var) %
-            i], globals()[
-            ('y_{}_on_fire_%s'.format(var) %
-             i)]
-            + globals()['err_{}_fire_%s'.format(var) % i], alpha=0.7)
+                           globals()['err_{}_fire_%s'.format(var) % i],
+                           globals()[('y_{}_on_fire_%s'.format(var) % i)] +
+                           globals()['err_{}_fire_%s'.format(var) % i], alpha=0.7)
         ax[0].set_xlabel(var)
         ax[0].set_ylabel("On Fire")
-
         ax[0].legend()
 
         ax[1].plot(
-            globals()[
-                'x_{}_%s'.format(var) %
-                i], globals()[
-                ('y_{}_step_%s'.format(var) %
-                 i)], label=i)
+            globals()['x_{}_%s'.format(var) % i], globals()[('y_{}_step_%s'.format(var) % i)], label=i)
         ax[1].fill_between(globals()['x_{}_%s'.format(var) % i],
                            globals()[('y_{}_step_%s'.format(var) % i)] -
-                           globals()[
-            'err_{}_step_%s'.format(var) %
-            i], globals()[
-            ('y_{}_step_%s'.format(var) %
-             i)]
-            + globals()['err_{}_step_%s'.format(var) % i], alpha=0.7)
+                           globals()['err_{}_step_%s'.format(var) % i],
+                           globals()[('y_{}_step_%s'.format(var) % i)] +
+                           globals()['err_{}_step_%s'.format(var) % i], alpha=0.7)
         ax[1].set_xlabel(var)
         ax[1].set_ylabel("Step")
         ax[1].legend()
 
         ax[2].plot(
-            globals()[
-                'x_{}_%s'.format(var) %
-                i], globals()[
-                ('y_{}_extinguish_%s'.format(var) %
-                 i)], label=i)
+            globals()['x_{}_%s'.format(var) % i], globals()[('y_{}_extinguish_%s'.format(var) % i)], label=i)
         ax[2].fill_between(globals()['x_{}_%s'.format(var) % i],
                            globals()[('y_{}_extinguish_%s'.format(var) % i)] -
-                           globals()[
-            'err_{}_extinguish_%s'.format(var) %
-            i], globals()[
-            ('y_{}_extinguish_%s'.format(var) %
-             i)]
-            + globals()['err_{}_extinguish_%s'.format(var) % i], alpha=0.7)
+                           globals()['err_{}_extinguish_%s'.format(var) % i],
+                           globals()[('y_{}_extinguish_%s'.format(var) % i)] +
+                           globals()['err_{}_extinguish_%s'.format(var) % i], alpha=0.7)
         ax[2].set_xlabel(var)
         ax[2].set_ylabel("Extinguished")
         ax[2].legend()
