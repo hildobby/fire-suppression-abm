@@ -81,7 +81,7 @@ for i, var in enumerate(problem['names']):
 
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
-    name = "ofat_{}_{}___repli_{}__dist_samp_{}.csv".format(\
+    name = "ofat_{}_{}___repli_{}__dist_samp_{}.csv".format(
         truck_strategy, var, replicates, distinct_samples)
     data[var].to_csv(name)
 
@@ -139,7 +139,7 @@ for i, var in enumerate(problem['names']):
 
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
-    name = "ofat_{}_{}___repli_{}__dist_samp_{}.csv".format(\
+    name = "ofat_{}_{}___repli_{}__dist_samp_{}.csv".format(
         truck_strategy, var, replicates, distinct_samples)
     data[var].to_csv(name)
 
@@ -197,6 +197,6 @@ for i, var in enumerate(problem['names']):
 
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
-    name = "ofat_{}_{}___repli_{}__dist_samp_{}.csv".format(\
+    name = "ofat_{}_{}___repli_{}__dist_samp_{}.csv".format(
         truck_strategy, var, replicates, distinct_samples)
     data[var].to_csv(name)
