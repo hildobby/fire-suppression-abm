@@ -83,7 +83,7 @@ class Walker(Agent):
             else:
                 inner_radius = 0
 
-            print("MMhhhh")
+
             # find hot trees in neighborhood
             neighbors_list = self.model.grid.get_neighbors(
                 self.pos, moore=True, radius=limited_vision, inner_radius=inner_radius)
