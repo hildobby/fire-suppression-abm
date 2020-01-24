@@ -45,7 +45,8 @@ class ForestFire(Model):
             vision,
             truck_max_speed,
             wind_strength,
-            wind_dir):
+            wind_dir,
+            sparse_ratio):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -74,6 +75,8 @@ class ForestFire(Model):
         self.initial_tree = height * width * density - \
             self.river_length * self.river_width
         self.initial_tree = self.initial_tree - self.break_length * self.break_width
+        
+        self.sparse_ratio = sparse_ratio
 
         # Set up model objects
         self.schedule_TreeCell = RandomActivation(self)
@@ -213,14 +216,30 @@ class ForestFire(Model):
         
         if self.river_width == 0 and self.break_width == 0:
             self.new_agent(agent_type, (int(self.width / 2), int(self.height / 2)))
-        else:
-            self.new_agent(agent_type, (x, y))
             
         for i in range(int(n-1)):
             while not self.grid.is_cell_empty((x, y)):
                 x = random.randrange(self.width)
                 y = random.randrange(self.height)
             self.new_agent(agent_type, (x, y))
+
+        
+        '''    
+        5x FASTER METHOD BUT CREATES SAME "RANDOM" SPREAD EVERY INITIALIZATION
+        
+        if self.river_width == 0 and self.break_width == 0:
+            self.new_agent(agent_type, (int(self.width / 2), int(self.height / 2)))
+        else:
+            x = random.randrange(self.width)
+            y = random.randrange(self.height)
+            while not self.grid.is_cell_empty((x, y)):
+                x = random.randrange(self.width)
+                y = random.randrange(self.height)
+            self.new_agent(agent_type, (x, y))
+        
+        while len(self.grid.empties) > self.width * self.height - self.initial_tree:
+            self.new_agent(agent_type, self.grid.empties.pop())
+        '''
 
     def init_firefighters(self, agent_type, num_firetruck,
                           truck_strategy, vision, truck_max_speed):

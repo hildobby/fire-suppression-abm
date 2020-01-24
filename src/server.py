@@ -27,7 +27,10 @@ def forest_fire_portrayal(agent):
     portrayal["y"] = y
 
     # define colour of the components
-    colors = {"Fine": "#00AA00",
+    colors = {-0.4: "#77bd98",   # Sparse
+              0 : "#00bf00",    # Normal
+              0.3 : "#008000",  # Dense
+              
               "On Fire": "#880000",
               "Burned Out": "#000000",
               "Is Extinguished": "#c994c7",
@@ -47,7 +50,12 @@ def forest_fire_portrayal(agent):
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "rect"
         portrayal["Filled"] = "true"
-    portrayal["Color"] = colors[agent.condition]
+    
+    if isinstance(agent, TreeCell) and agent.condition == "Fine":
+        portrayal["Color"] = colors[agent.veg_density]
+    
+    else:
+        portrayal["Color"] = colors[agent.condition]
     # give a color to the fire depending on the life_bar
     if agent.condition == "On Fire" and agent.life_bar > 0:
         portrayal["Color"] = "rgba(%d,14,14)" % (agent.life_bar + 166)
@@ -70,6 +78,7 @@ model_parameters = {
     'vision': 100,
     'text_environment': UserSettableParameter('static_text', value='Environment Generation Settings'),
     'density': UserSettableParameter('slider', 'Tree density', 0.99, 0.01, 1.0, 0.01),
+    'sparse_ratio': UserSettableParameter('slider', 'Ratio of sparse vegetations', 0, 0, 1.0, 0.1),
     'river_number': UserSettableParameter('slider', 'Number of rivers', 0, 0, 10, 1),  # Unused for now
     'break_number': UserSettableParameter('slider', 'Number of breaks', 0, 0, 10, 1),  # Unused for now
     'river_width': UserSettableParameter('slider', 'River width', 0, 0, 10, 1),
