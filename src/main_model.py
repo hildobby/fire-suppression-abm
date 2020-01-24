@@ -36,7 +36,6 @@ class ForestFire(Model):
             temperature,
             truck_strategy,
             river_width,
-            break_number,
             break_width,
             random_fires,
             num_firetruck,
