@@ -10,6 +10,7 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 import matplotlib.pyplot as plt
 import os
 import pandas as pd
+import numpy as np
 
 directory = os.chdir("data/")
 
@@ -18,6 +19,10 @@ directory = os.chdir("data/")
 data_1 = {}
 data_2 = {}
 data_3 = {}
+
+list_var = ['wind_strength', 'num_firetruck']
+rep = 5
+dist = 5
 
 # Load the files into dict
 for filename in os.listdir('.'):
@@ -34,45 +39,70 @@ for filename in os.listdir('.'):
         data_3[filename.split('.csv')[0]] = pd.read_csv(filename)
 
 
-def plot_param_var_conf(ax, df, var, param, i):
-    """
-    Helper function for plot_all_vars. Plots the individual parameter vs
-    variables passed.
+for var in list_var:
 
-    Args:
-        ax: the axis to plot to
-        df: dataframe that holds the data to be plotted
-        var: variables to be taken from the dataframe
-        param: which output variable to plot
-    """
-    x = df.groupby(var).mean().reset_index()[var]
-    y = df.groupby(var).mean()[param]
+    # number of strategies
+    for i in range(1, 4):
+        globals()['x_{}_%s'.format(var) % i] = eval("data_" + str(i))["ofat_{}_{}___repli_{}__dist_samp_{}"
+                                                                      .format(i, var, rep, dist)].groupby(var)\
+            .mean().reset_index()[var]
 
-    replicates = df.groupby(var)[param].count()
-    err = (1.96 * df.groupby(var)[param].std()) / np.sqrt(replicates)
+        param = "On Fire"
+        globals()['y_{}_on_fire_%s'.format(var) % i] = eval("data_" + str(i))["ofat_{}_{}___repli_{}__dist_samp_{}"
+                                                                              .format(i, var, rep, dist)]\
+            .groupby(var).mean()[param]
+        globals()['err_{}_fire_%s'.format(var) % i] = (1.96 * eval("data_" + str(i))
+                                                       ["ofat_{}_{}___repli_{}__dist_samp_{}"
+                                                        .format(i, var, rep, dist)]
+                                                       .groupby(var)[param].std()) / np.sqrt(rep)
 
-    ax.plot(x, y, c='k')
-    ax.fill_between(x, y - err, y + err)
+        param = "Step"
+        globals()['y_{}_step_%s'.format(var) % i] = eval("data_" + str(i))["ofat_{}_{}___repli_{}__dist_samp_{}"
+                                                                           .format(i, var, rep, dist)]\
+            .groupby(var).mean()[param]
+        globals()['err_{}_step_%s'.format(var) % i] = (1.96 * eval("data_" + str(i))
+                                                       ["ofat_{}_{}___repli_{}__dist_samp_{}"
+                                                        .format(i, var, rep, dist)]
+                                                       .groupby(var)[param].std()) / np.sqrt(rep)
 
-    ax.set_xlabel(var)
-    ax.set_ylabel(param)
+        param = "Extinguished"
+        globals()['y_{}_extinguish_%s'.format(var) % i] = eval("data_" + str(i))["ofat_{}_{}___repli_{}__dist_samp_{}"
+                                                                                 .format(i, var, rep, dist)]\
+            .groupby(var).mean()[param]
+        globals()['err_{}_extinguish_%s'.format(var) % i] = (1.96 * eval("data_" + str(i))
+                                                             ["ofat_{}_{}___repli_{}__dist_samp_{}"
+                                                              .format(i, var, rep, dist)]
+                                                             .groupby(var)[param].std()) / np.sqrt(rep)
 
+    f, ax = plt.subplots(3, figsize=(7, 10))
+    for i in range(1, 4):
+        ax[0].plot(
+            globals()['x_{}_%s'.format(var) % i], globals()[('y_{}_on_fire_%s'.format(var) % i)], label=i)
+        ax[0].fill_between(
+            globals()['x_{}_%s'.format(var) % i],
+            globals()[('y_{}_on_fire_%s'.format(var) % i)] - globals()['err_{}_fire_%s'.format(var) % i],
+            globals()[('y_{}_on_fire_%s'.format(var) % i)] + globals()['err_{}_fire_%s'.format(var) % i], alpha=0.7)
+        ax[0].set_xlabel(var)
+        ax[0].set_ylabel("On Fire")
+        ax[0].legend()
 
-def plot_all_vars(df, param):
-    """
-    Plots the parameters passed vs each of the output variables.
+        ax[1].plot(
+            globals()['x_{}_%s'.format(var) % i], globals()[('y_{}_step_%s'.format(var) % i)], label=i)
+        ax[1].fill_between(
+            globals()['x_{}_%s'.format(var) % i],
+            globals()[('y_{}_step_%s'.format(var) % i)] - globals()['err_{}_step_%s'.format(var) % i],
+            globals()[('y_{}_step_%s'.format(var) % i)] + globals()['err_{}_step_%s'.format(var) % i], alpha=0.7)
+        ax[1].set_xlabel(var)
+        ax[1].set_ylabel("Step")
+        ax[1].legend()
 
-    Args:
-        df: dataframe that holds all data
-        param: the parameter to be plotted
-    """
-
-    f, axs = plt.subplots(3)
-
-    for i, var in enumerate(problem['names']):
-        plot_param_var_conf(axs[i], data[var], var, param, i)
-
-
-for param in ("On Fire", "Extinguished", "Step"):
-    plot_all_vars(data, param)
-    plt.show()
+        ax[2].plot(
+            globals()['x_{}_%s'.format(var) % i], globals()[('y_{}_extinguish_%s'.format(var) % i)], label=i)
+        ax[2].fill_between(
+            globals()['x_{}_%s'.format(var) % i],
+            globals()[('y_{}_extinguish_%s'.format(var) % i)] - globals()['err_{}_extinguish_%s'.format(var) % i],
+            globals()[('y_{}_extinguish_%s'.format(var) % i)] + globals()['err_{}_extinguish_%s'.format(var) % i],
+            alpha=0.7)
+        ax[2].set_xlabel(var)
+        ax[2].set_ylabel("Extinguished")
+        ax[2].legend()

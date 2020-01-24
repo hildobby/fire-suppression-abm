@@ -35,7 +35,6 @@ class ForestFire(Model):
             density,
             temperature,
             truck_strategy,
-            river_number,
             river_width,
             break_number,
             break_width,
@@ -274,7 +273,7 @@ class ForestFire(Model):
 
     @staticmethod
     def randomfire(self, randtree):
-        if (random.random() < (math.exp(self.temperature / 10) / 300.0)):
+        if (random.random() < (math.exp(self.temperature / 15) / 300.0)):
             self.agents[randtree].condition = "On Fire"
 
     @staticmethod
