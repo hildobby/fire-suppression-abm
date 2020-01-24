@@ -35,7 +35,6 @@ class ForestFire(Model):
             density,
             temperature,
             truck_strategy,
-            river_number,
             river_width,
             break_number,
             break_width,
