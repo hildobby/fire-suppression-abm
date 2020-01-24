@@ -44,7 +44,7 @@ class TreeCell(Agent):
         self.burning_rate = 20   # need to change that as well
 
         self.veg_state = 0.4
-        
+
         if random.uniform(0, 1) < self.model.sparse_ratio:
             self.veg_density = -0.4
         else:
