@@ -12,8 +12,7 @@ import os
 from mesa.batchrunner import BatchRunnerMP
 import numpy as np
 from forestfiremodel_SA import ForestFire
-import sys
-sys.path.append('../')
+import time
 
 
 try:
@@ -23,8 +22,9 @@ except BaseException:
     raise
 
 # set the number of cores
-n_cores = 2
+n_cores = 24
 
+begin = time.time()
 
 ##########################################################################
 ##########################################################################
@@ -40,8 +40,8 @@ problem = {
 
 # Set the repetitions, the amount of steps, and the amount of distinct
 # values per variable
-replicates = 2
-distinct_samples = 2
+replicates = 50
+distinct_samples = 50
 
 # Set the outputs
 
@@ -204,3 +204,7 @@ for i, var in enumerate(problem['names']):
     name = "ofat_{}_{}___repli_{}__dist_samp_{}.csv".format(
         truck_strategy, var, replicates, distinct_samples)
     data[var].to_csv(name)
+
+end = time.time()
+
+print("This is the time it takes: {}".format(end-begin))

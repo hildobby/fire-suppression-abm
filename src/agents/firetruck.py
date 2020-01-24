@@ -74,7 +74,7 @@ class Walker(Agent):
         '''
         # find hot trees in neighborhood
         fire_intheneighborhood = False
-        limited_vision_list = [25, 50, 100]
+        limited_vision_list = [i for i in range(2, 100, 2)]
         for i in range(len(limited_vision_list)):
 
             limited_vision = int(self.vision * limited_vision_list[i] / 100.)
@@ -114,7 +114,7 @@ class Walker(Agent):
     # Makes the firetruck move towards the fire
     def closestfire_move(self):
         fire_intheneighborhood = False
-        limited_vision_list = [5, 15, 25, 50, 100]
+        limited_vision_list = [i for i in range(2, 100, 2)]
 
         for i in range(len(limited_vision_list)):
             limited_vision = int(self.vision * limited_vision_list[i] / 100.)
@@ -170,7 +170,7 @@ class Walker(Agent):
 
     def parallel_attack(self):
         fire_intheneighborhood = False
-        limited_vision_list = [2, 5, 15, 25, 50, 100]
+        limited_vision_list = [i for i in range(2, 100, 2)]
         for i in range(len(limited_vision_list)):
             limited_vision = int(self.vision * limited_vision_list[i] / 100.)
 
