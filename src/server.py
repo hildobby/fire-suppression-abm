@@ -75,7 +75,7 @@ model_parameters = {
     'break_width': UserSettableParameter('slider', 'Firebreak width', 0, 0, 20, 1),
     'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 15, 0, 300, 1),
-    'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 2, 1, 30, 1),  # Unused for now
+    'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 2, 1, 30, 1),
     'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Parallel attack',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
                                                      'Random movements', 'Parallel attack']),
@@ -85,7 +85,7 @@ model_parameters = {
                                       choices=["\u2B06  North", "\u2197 North/East", "\u27A1 East",
                                                "\u2198 South/East", "\u2B07 North", "\u2199 South/West",
                                                "\u2B05 West", "\u2196 North/West"]),
-    'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=True),
+    'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=False),
     'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1)
 }
 

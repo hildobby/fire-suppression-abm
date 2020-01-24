@@ -273,7 +273,7 @@ class ForestFire(Model):
 
     @staticmethod
     def randomfire(self, randtree):
-        if (random.random() < (math.exp(self.temperature / 10) / 300.0)):
+        if (random.random() < (math.exp(self.temperature / 15) / 300.0)):
             self.agents[randtree].condition = "On Fire"
 
     @staticmethod
