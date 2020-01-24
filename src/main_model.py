@@ -1,25 +1,24 @@
+"""
+Created on Wed Jan  8 15:30:03 2020
+
+This code was implemented by
+Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
+
+"""
+
 import random
-
-import numpy as np
-
 import math
-
-import matplotlib.pyplot as plt
-
-from mesa import Model, Agent
-from mesa.time import RandomActivation
-from space_v2 import MultiGrid
-# from mesa.datacollection import DataCollector
-from datacollector_v2 import DataCollector
-from mesa.batchrunner import BatchRunner
-from random import randint
-
-
-from environment.river import RiverCell
-from environment.vegetation import TreeCell
-from agents.firetruck import Firetruck
-from environment.rain import Rain
 from environment.firebreak import BreakCell
+from environment.rain import Rain
+from agents.firetruck import Firetruck
+from environment.vegetation import TreeCell
+from environment.river import RiverCell
+from datacollector_v2 import DataCollector
+from space_v2 import MultiGrid
+from mesa.time import RandomActivation
+from mesa import Model, Agent
+import sys
+sys.path.append('../')
 
 # defines the model
 
@@ -36,9 +35,7 @@ class ForestFire(Model):
             density,
             temperature,
             truck_strategy,
-            river_number,
             river_width,
-            break_number,
             break_width,
             random_fires,
             num_firetruck,
@@ -96,11 +93,13 @@ class ForestFire(Model):
 
         self.grid = MultiGrid(height, width, torus=False)
 
+        random.seed(1)
         self.init_river()
         self.init_break(self.break_size)
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
+        random.seed(1)
         self.init_vegetation(TreeCell, self.initial_tree)
 
         for i in range(len(self.agents)):
@@ -111,7 +110,7 @@ class ForestFire(Model):
         self.temperature = temperature
         self.num_firetruck = num_firetruck
         self.truck_strategy = truck_strategy
-        
+
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed)
         self.init_rain()
 
@@ -213,11 +212,14 @@ class ForestFire(Model):
         '''
         x = random.randrange(self.width)
         y = random.randrange(self.height)
-        
+
         if self.river_width == 0 and self.break_width == 0:
             self.new_agent(agent_type, (int(self.width / 2), int(self.height / 2)))
-            
-        for i in range(int(n-1)):
+
+        else:
+            self.new_agent(agent_type, (x, y))
+
+        for i in range(int(n - 1)):
             while not self.grid.is_cell_empty((x, y)):
                 x = random.randrange(self.width)
                 y = random.randrange(self.height)
@@ -292,7 +294,7 @@ class ForestFire(Model):
 
     @staticmethod
     def randomfire(self, randtree):
-        if (random.random() < (math.exp(self.temperature / 10) / 300.0)):
+        if (random.random() < (math.exp(self.temperature / 15) / 300.0)):
             self.agents[randtree].condition = "On Fire"
 
     @staticmethod

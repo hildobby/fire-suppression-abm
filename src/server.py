@@ -79,13 +79,11 @@ model_parameters = {
     'text_environment': UserSettableParameter('static_text', value='Environment Generation Settings'),
     'density': UserSettableParameter('slider', 'Tree density', 0.99, 0.01, 1.0, 0.01),
     'sparse_ratio': UserSettableParameter('slider', 'Ratio of sparse vegetations', 0, 0, 1.0, 0.1),
-    'river_number': UserSettableParameter('slider', 'Number of rivers', 0, 0, 10, 1),  # Unused for now
-    'break_number': UserSettableParameter('slider', 'Number of breaks', 0, 0, 10, 1),  # Unused for now
     'river_width': UserSettableParameter('slider', 'River width', 0, 0, 10, 1),
     'break_width': UserSettableParameter('slider', 'Firebreak width', 0, 0, 20, 1),
     'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 15, 0, 300, 1),
-    'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 2, 1, 30, 1),  # Unused for now
+    'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 2, 1, 30, 1),
     'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Parallel attack',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
                                                      'Random movements', 'Parallel attack']),
@@ -95,7 +93,7 @@ model_parameters = {
                                       choices=["\u2B06  North", "\u2197 North/East", "\u27A1 East",
                                                "\u2198 South/East", "\u2B07 North", "\u2199 South/West",
                                                "\u2B05 West", "\u2196 North/West"]),
-    'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=True),
+    'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=False),
     'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1)
 }
 
