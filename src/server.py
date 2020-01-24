@@ -78,7 +78,7 @@ model_parameters = {
     'vision': 100,
     'text_environment': UserSettableParameter('static_text', value='Environment Generation Settings'),
     'density': UserSettableParameter('slider', 'Tree density', 0.99, 0.01, 1.0, 0.01),
-    'sparse_ratio': UserSettableParameter('slider', 'Ratio of sparse vegetations', 0, 0, 1.0, 0.1),
+    'sparse_ratio': UserSettableParameter('slider', 'Ratio of sparse vegetations', 0.5, 0, 1.0, 0.1),
     'river_width': UserSettableParameter('slider', 'River width', 0, 0, 10, 1),
     'break_width': UserSettableParameter('slider', 'Firebreak width', 0, 0, 20, 1),
     'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
