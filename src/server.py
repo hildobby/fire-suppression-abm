@@ -28,9 +28,9 @@ def forest_fire_portrayal(agent):
 
     # define colour of the components
     colors = {-0.4: "#77bd98",   # Sparse
-              0 : "#00bf00",    # Normal
-              0.3 : "#008000",  # Dense
-              
+              0: "#00bf00",    # Normal
+              0.3: "#008000",  # Dense
+
               "On Fire": "#880000",
               "Burned Out": "#000000",
               "Is Extinguished": "#c994c7",
@@ -50,10 +50,10 @@ def forest_fire_portrayal(agent):
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "rect"
         portrayal["Filled"] = "true"
-    
+
     if isinstance(agent, TreeCell) and agent.condition == "Fine":
         portrayal["Color"] = colors[agent.veg_density]
-    
+
     else:
         portrayal["Color"] = colors[agent.condition]
     # give a color to the fire depending on the life_bar
