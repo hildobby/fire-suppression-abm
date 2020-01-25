@@ -246,19 +246,19 @@ class ForestFire(Model):
                           truck_strategy, vision, truck_max_speed):
         if num_firetruck == 0:
             pass
-        else: 
+        else:
             init_positions = self.equal_spread()
-        
+
             for i in range(num_firetruck):
                 my_pos = init_positions.pop()
                 firetruck = self.new_firetruck(
                     Firetruck, my_pos, truck_strategy, vision, truck_max_speed)
                 self.schedule_FireTruck.add(firetruck)
                 self.schedule.add(firetruck)
-            
+
         '''
         METHOD TO PLACE FIREFIGHTERS RANDOMLY OVER GRID
-        
+
         for i in range(num_firetruck):
             x = random.randrange(self.width)
             y = random.randrange(self.height)
@@ -412,64 +412,62 @@ class ForestFire(Model):
 
         # Remove agent from model
         self.agents.remove(agent)
-        
+
     def equal_spread(self):
-    
+
         edge_len = self.height - 1
         total_edge = 4 * edge_len
-        
+
         x = 0
         y = 0
-        
-        start_pos = [(x,y)]
+
+        start_pos = [(x, y)]
         spacing = total_edge / self.num_firetruck
         total_edge -= spacing
         step = 0
-        
+
         while total_edge > 0:
-            
-            fill_x = edge_len - x  
+
+            fill_x = edge_len - x
             fill_y = edge_len - y
-    
-            
+
             if spacing > edge_len:
                 if x == 0:
                     x += edge_len
                     y += spacing - edge_len
-                
+
                 else:
                     x -= spacing - edge_len
                     y = edge_len
-            
+
             else:
-                
+
                 # Increasing x
                 if y == 0 and x + spacing <= edge_len and step < 2:
                     x += spacing
                     step = 1
-                
+
                 # x maxxed, increasing y
                 elif x + spacing > edge_len and y + (spacing - fill_x) < edge_len and step < 3:
                     x += fill_x
-                    y += spacing - fill_x 
-                    step = 2                  
-                
+                    y += spacing - fill_x
+                    step = 2
+
                 # x&y maxxed, decreasing x
                 elif x - (spacing - fill_y) >= 0 and y + fill_y >= edge_len and step < 4:
                     x -= (spacing - fill_y)
                     y += fill_y
                     step = 3
-                
+
                 # x emptied, decreasing y
-                elif x - spacing < 0 and step < 5:    
+                elif x - spacing < 0 and step < 5:
                     y -= (spacing - x)
                     x = 0
                     step = 4
-            
+
             start_pos += [(round(x), round(y))]
             total_edge -= spacing
-            
-        
+
         return start_pos
 
 
