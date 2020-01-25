@@ -456,7 +456,6 @@ class ForestFire(Model):
                 
                 # x&y maxxed, decreasing x
                 elif x - (spacing - fill_y) >= 0 and y + fill_y >= edge_len and step < 4:
-                    #print((spacing - fill_y), fill_y)
                     x -= (spacing - fill_y)
                     y += fill_y
                     step = 3
