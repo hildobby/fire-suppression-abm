@@ -437,9 +437,8 @@ class ForestFire(Model):
                     y += spacing - edge_len
 
                 else:
-                    x -= spacing - edge_len
-                    y = edge_len
-
+                    x, y = y, x
+                    
             else:
 
                 # Increasing x
