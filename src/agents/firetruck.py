@@ -7,13 +7,9 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
-from environment.river import RiverCell
 import random
 from mesa import Agent
-
-
-import sys
-sys.path.append('../')
+from environment.river import RiverCell
 
 
 class Walker(Agent):
@@ -44,20 +40,21 @@ class Walker(Agent):
 
         places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
         places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
+        closest_neighbor.claimed = True
 
-        speedX = min(self.truck_max_speed, abs(places_to_move_x))
-        speedY = min(self.truck_max_speed, abs(places_to_move_y))
+        speed_x = min(self.truck_max_speed, abs(places_to_move_x))
+        speed_y = min(self.truck_max_speed, abs(places_to_move_y))
 
         new_x, new_y = self.pos[0], self.pos[1]
 
         if places_to_move_x > 0:
-            new_x += speedX
+            new_x += speed_x
         if places_to_move_x < 0:
-            new_x -= speedX
+            new_x -= speed_x
         if places_to_move_y > 0:
-            new_y += speedY
+            new_y += speed_y
         if places_to_move_y < 0:
-            new_y -= speedY
+            new_y -= speed_y
 
         if self.model.grid.get_cell_list_contents((new_x, new_y)):
             if not isinstance(self.model.grid.get_cell_list_contents((new_x, new_y))[0], RiverCell):
@@ -93,13 +90,14 @@ class Walker(Agent):
             min_distance = limited_vision ** 2
             min_life_bar = 0
             for neighbor in neighbors_list:
-                current_life_bar = neighbor.life_bar
-                distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
-                if current_life_bar >= min_life_bar and distance <= min_distance:
-                    min_distance = distance
-                    min_life_bar = current_life_bar
-                    closest_neighbor = neighbor
-                    fire_intheneighborhood = True
+                if neighbor.claimed == False:
+                    current_life_bar = neighbor.life_bar
+                    distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
+                    if current_life_bar >= min_life_bar and distance <= min_distance:
+                        min_distance = distance
+                        min_life_bar = current_life_bar
+                        closest_neighbor = neighbor
+                        fire_intheneighborhood = True
             if fire_intheneighborhood:
                 break
 
@@ -133,11 +131,12 @@ class Walker(Agent):
             # find closest fire
             min_distance = limited_vision ** 2
             for neighbor in neighbors_list:
-                distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
-                if distance < min_distance:
-                    min_distance = distance
-                    closest_neighbor = neighbor
-                    fire_intheneighborhood = True
+                if neighbor.claimed == False:
+                    distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
+                    if distance < min_distance:
+                        min_distance = distance
+                        closest_neighbor = neighbor
+                        fire_intheneighborhood = True
             if fire_intheneighborhood:
                 break
 
@@ -189,25 +188,26 @@ class Walker(Agent):
             min_distance = 100000
             max_life_bar = 0
             for neighbor in neighbors_list:
+                if neighbor.claimed == False:
 
-                xposition = abs(neighbor.pos[0] - self.pos[0])
-                yposition = abs(neighbor.pos[1] - self.pos[1])
-                if xposition == 1 and yposition == 1:
-                    distance = 1
-                elif xposition == 2 and yposition == 2:
-                    distance = 2
-                else:
-                    distance = xposition + yposition
+                    x_position = abs(neighbor.pos[0] - self.pos[0])
+                    y_position = abs(neighbor.pos[1] - self.pos[1])
+                    if x_position == 1 and y_position == 1:
+                        distance = 1
+                    elif x_position == 2 and y_position == 2:
+                        distance = 2
+                    else:
+                        distance = x_position + y_position
 
-                # distance = abs(neighbor.pos[0] - self.pos[0]) ** 2 + abs(
-                #     neighbor.pos[1] - self.pos[1]) ** 2
+                    # distance = abs(neighbor.pos[0] - self.pos[0]) ** 2 + abs(
+                    #     neighbor.pos[1] - self.pos[1]) ** 2
 
-                life_bar = neighbor.life_bar
-                if distance <= min_distance and life_bar >= max_life_bar:
-                    max_life_bar = life_bar
-                    min_distance = distance
-                    closest_neighbor = neighbor
-                    fire_intheneighborhood = True
+                    life_bar = neighbor.life_bar
+                    if distance <= min_distance and life_bar >= max_life_bar:
+                        max_life_bar = life_bar
+                        min_distance = distance
+                        closest_neighbor = neighbor
+                        fire_intheneighborhood = True
             if fire_intheneighborhood:
                 break
 
@@ -216,17 +216,19 @@ class Walker(Agent):
                                                                 radius=1)
             max_distance = 0
             for neighbor in neighbors_list_fire:
-                positionx = abs(neighbor.pos[0] - self.pos[0])
-                positiony = abs(neighbor.pos[1] - self.pos[1])
-                newdistance = positionx + positiony
+                position_x = abs(neighbor.pos[0] - self.pos[0])
+                position_y = abs(neighbor.pos[1] - self.pos[1])
+                new_distance = position_x + position_y
 
-                if neighbor.condition != "On Fire" and positionx <= self.truck_max_speed and \
-                        positiony <= self.truck_max_speed and newdistance > max_distance:
-                    max_distance = newdistance
+                if neighbor.condition != "On Fire" and position_x <= self.truck_max_speed and \
+                        position_y <= self.truck_max_speed and new_distance > max_distance:
+                    max_distance = new_distance
                     closest_neighbor = neighbor
 
         if fire_intheneighborhood:
             self.take_step(closest_neighbor)
+        else:
+            self.random_move()
 
 
 class Firetruck(Walker):
