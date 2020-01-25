@@ -194,10 +194,8 @@ class Walker(Agent):
 
                     x_position = abs(neighbor.pos[0] - self.pos[0])
                     y_position = abs(neighbor.pos[1] - self.pos[1])
-                    if x_position == 1 and y_position == 1:
-                        distance = 1
-                    elif x_position == 2 and y_position == 2:
-                        distance = 2
+                    if x_position == y_position:
+                        distance = x_position
                     else:
                         distance = x_position + y_position
 
