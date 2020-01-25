@@ -90,9 +90,10 @@ class Walker(Agent):
             min_distance = limited_vision ** 2
             min_life_bar = 0
             for neighbor in neighbors_list:
-                if neighbor.claimed == False:
+                if not neighbor.claimed:
                     current_life_bar = neighbor.life_bar
-                    distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
+                    distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + \
+                        abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
                     if current_life_bar >= min_life_bar and distance <= min_distance:
                         min_distance = distance
                         min_life_bar = current_life_bar
@@ -131,8 +132,9 @@ class Walker(Agent):
             # find closest fire
             min_distance = limited_vision ** 2
             for neighbor in neighbors_list:
-                if neighbor.claimed == False:
-                    distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
+                if not neighbor.claimed:
+                    distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + \
+                        abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
                     if distance < min_distance:
                         min_distance = distance
                         closest_neighbor = neighbor
@@ -188,7 +190,7 @@ class Walker(Agent):
             min_distance = 100000
             max_life_bar = 0
             for neighbor in neighbors_list:
-                if neighbor.claimed == False:
+                if not neighbor.claimed:
 
                     x_position = abs(neighbor.pos[0] - self.pos[0])
                     y_position = abs(neighbor.pos[1] - self.pos[1])
