@@ -40,12 +40,15 @@ def forest_fire_portrayal(agent):
               "Rain": "#636363",
               "Firebreak": "#bdbdbd"}
 
-    if isinstance(agent, Rain):
-        portrayal["Layer"] = "2"
-        portrayal["w"] = "3"
-        portrayal["h"] = "3"
-        # portrayal["Filled"] = False
-
+    # if isinstance(agent, Rain):
+    #     portrayal = {"w": 3,
+    #                  "h": 3,
+    #                  "Filled": "False",
+    #                  "Shape": "circle",
+    #                  "r": 2.5,
+    #                  "Scale": 2.5,
+    #                  "Layer": 1}
+    # portrayal = {"Filled": "false", "h": 3, "w": 3, "Layer": 2}
     if isinstance(agent, Firetruck):
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "rect"

@@ -69,6 +69,7 @@ class ForestFire(Model):
         self.n_agents = 0
 
         self.agents = []
+        self.firefighters_lists = []
         self.initial_tree = height * width * density - \
             self.river_length * self.river_width
         self.initial_tree = self.initial_tree - self.break_length * self.break_width
@@ -255,6 +256,7 @@ class ForestFire(Model):
                     Firetruck, my_pos, truck_strategy, vision, truck_max_speed)
                 self.schedule_FireTruck.add(firetruck)
                 self.schedule.add(firetruck)
+                self.firefighters_lists.append(firetruck)
 
         '''
         METHOD TO PLACE FIREFIGHTERS RANDOMLY OVER GRID
