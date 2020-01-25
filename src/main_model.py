@@ -440,7 +440,7 @@ class ForestFire(Model):
 
                 else:
                     x, y = y, x
-                    
+
             else:
 
                 # Increasing x
