@@ -5,20 +5,19 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+from mesa import Model, Agent
+from mesa.time import RandomActivation
+from space_v2 import MultiGrid
+from datacollector_v2 import DataCollector
+from environment.river import RiverCell
+from environment.vegetation import TreeCell
+from agents.firetruck import Firetruck
+from environment.rain import Rain
+from environment.firebreak import BreakCell
+import math
+import random
 import sys
 sys.path.append('../')
-
-import random
-import math
-from environment.firebreak import BreakCell
-from environment.rain import Rain
-from agents.firetruck import Firetruck
-from environment.vegetation import TreeCell
-from environment.river import RiverCell
-from datacollector_v2 import DataCollector
-from space_v2 import MultiGrid
-from mesa.time import RandomActivation
-from mesa import Model, Agent
 
 
 # defines the model
