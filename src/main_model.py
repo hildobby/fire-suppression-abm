@@ -10,6 +10,7 @@ sys.path.append('../')
 
 import random
 import math
+import numpy as np
 from environment.firebreak import BreakCell
 from environment.rain import Rain
 from agents.firetruck import Firetruck
@@ -297,6 +298,9 @@ class ForestFire(Model):
         '''
         self.trees_on_fire = 0
         self.schedule_TreeCell.step()
+
+        self.compute_distances((self.list_tree_by_type(self, "On Fire")), self.firefighters_lists)
+
         self.schedule_FireTruck.step()
 
         self.dc.collect(self, [TreeCell, Firetruck])
@@ -328,6 +332,24 @@ class ForestFire(Model):
             if tree.condition == tree_condition:
                 count += 1
         return count
+
+    def compute_distances(self, tree_list, truck_list):
+        distances = np.zeros((len(tree_list),len(truck_list)))
+        for i in range(len(tree_list)):
+            for j in range(len(truck_list)):
+                distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2 
+        return distances
+
+    @staticmethod
+    def list_tree_by_type(model, tree_condition):
+        '''
+        Helper method to count trees in a given condition in a given model.
+        '''
+        tree_list = []
+        for tree in model.schedule_TreeCell.agents:
+            if tree.condition == tree_condition:
+                tree_list.append(tree)
+        return tree_list
 
     @staticmethod
     def count_extinguished_fires(model):
