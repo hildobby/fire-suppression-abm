@@ -21,7 +21,6 @@ from mesa.time import RandomActivation
 from mesa import Model, Agent
 
 
-
 # defines the model
 
 

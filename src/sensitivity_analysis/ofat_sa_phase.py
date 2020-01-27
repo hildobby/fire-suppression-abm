@@ -17,7 +17,6 @@ from forestfiremodel_SA_phase import ForestFire
 import matplotlib.pyplot as plt
 
 
-
 try:
     import pathos
 except BaseException:

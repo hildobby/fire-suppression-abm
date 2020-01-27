@@ -20,7 +20,6 @@ from mesa import Model
 import math
 
 
-
 # defines the model
 
 
