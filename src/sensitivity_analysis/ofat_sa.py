@@ -7,13 +7,13 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+import sys
+sys.path.append('../')
 
 import os
 from mesa.batchrunner import BatchRunnerMP
 import numpy as np
 from forestfiremodel_SA import ForestFire
-import sys
-sys.path.append('../')
 
 
 try:
@@ -23,12 +23,12 @@ except BaseException:
     raise
 
 # set the number of cores
-n_cores = 3
+n_cores = 2
 
 # Set the repetitions, the amount of steps, and the amount of distinct
 # values per variable
-replicates = 5
-distinct_samples = 5
+replicates = 2
+distinct_samples = 2
 
 
 ##########################################################################

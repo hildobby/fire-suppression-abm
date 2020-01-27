@@ -28,21 +28,6 @@ class ForestFire(Model):
     Simple Forest Fire model.
     '''
 
-    height = 100
-    width = 100
-    density = 0.6
-    temperature = 0
-    truck_strategy = 1
-    river_number = 0
-    river_width = 0
-    random_fires = 0
-    num_firetruck = 30
-    truck_max_speed = 2
-    vision = 100
-    wind_strength = 10
-    wind_dir = "\u2B06 North"
-    break_width = 0
-    sparse_ratio=0.4
 
     def __init__(
             self,
@@ -54,13 +39,13 @@ class ForestFire(Model):
             river_number=0,
             river_width=0,
             random_fires=0,
-            num_firetruck=30,
+            num_firetruck=0,
             vision=100,
             truck_max_speed=2,
             wind_strength=10,
             wind_dir="\u2B06  North",
             break_width=0,
-            sparse_ratio=0.4):
+            sparse_ratio=0.5):
         super().__init__()
         '''
         Create a new forest fire model.
