@@ -110,7 +110,7 @@ class Walker(Agent):
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
             self.take_step(closest_neighbor)
-            closest_neighbor.trees_claimed +=1
+            closest_neighbor.trees_claimed += 1
 
         # if fire not in the neighbourhood, do random move
         else:
@@ -171,7 +171,7 @@ class Walker(Agent):
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
             self.take_step(closest_neighbor)
-            closest_neighbor.trees_claimed +=1
+            closest_neighbor.trees_claimed += 1
 
         # if fire not in the neighboorhood, do random move
         else:

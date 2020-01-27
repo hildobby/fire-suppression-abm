@@ -69,13 +69,13 @@ class TreeCell(Agent):
                         # or neighbor.condition == "Is Extinguished" \
                         # and neighbor.life_bar > 0 and neighbor.fireinitstep != self.model.current_step:
 
-
                         # probability of spreading
                         prob_sp = self.prob_of_spreading(neighbor, self.model.wind_dir, self.model.wind_strength)
                         if random.uniform(0, 1) < prob_sp:
                             neighbor.condition = "On Fire"
                             neighbor.fireinitstep = self.model.current_step
-                            self.model.count_total_fire += 1 / (self.model.height * self.model.width * self.model.density)
+                            self.model.count_total_fire += 1 / \
+                                (self.model.height * self.model.width * self.model.density)
 
                 # if on fire reduce life_bar
                 if self.life_bar != 0:
