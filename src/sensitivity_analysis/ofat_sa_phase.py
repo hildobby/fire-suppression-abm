@@ -7,13 +7,15 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+
+import sys
+sys.path.append('../')
 import os
 from mesa.batchrunner import BatchRunnerMP
 import numpy as np
 from forestfiremodel_SA_phase import ForestFire
 import matplotlib.pyplot as plt
-import sys
-sys.path.append('../')
+
 
 
 try:

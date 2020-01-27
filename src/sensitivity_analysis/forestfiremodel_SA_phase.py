@@ -5,6 +5,9 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+import sys
+sys.path.append('../')
+
 import math
 from mesa import Model
 from mesa.time import RandomActivation
@@ -15,9 +18,6 @@ from environment.vegetation import TreeCell
 from agents.firetruck import Firetruck
 from environment.rain import Rain
 import random
-import sys
-sys.path.append('../')
-
 
 # defines the model
 
