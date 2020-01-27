@@ -54,7 +54,7 @@ script:
     - git config --global user.name "Travis"
     - git checkout $TRAVIS_BRANCH
 
-    - find . -name \*.py -exec autopep8 --max-line-length=120 --recursive --aggressive --aggressive --in-place {} +
+    - find . -name \*.py -exec autopep8 --max-line-length=120 --ignore=E402 --recursive --aggressive --aggressive --in-place {} +
     - num_errors_after=`find . -name \*.py -exec pycodestyle --max-line-length=120 --ignore=E402  {} + | wc -l`
     - echo $num_errors_after
 
