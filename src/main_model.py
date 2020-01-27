@@ -44,7 +44,8 @@ class ForestFire(Model):
             truck_max_speed,
             wind_strength,
             wind_dir,
-            sparse_ratio):
+            sparse_ratio,
+            tree_seek_type):
         super().__init__()
         '''
         Create a new forest fire model.

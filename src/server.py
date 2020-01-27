@@ -97,6 +97,7 @@ model_parameters = {
                                                "\u2198 South/East", "\u2B07 North", "\u2199 South/West",
                                                "\u2B05 West", "\u2196 North/West"]),
     'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=False),
+    'tree_seek_type': UserSettableParameter('checkbox', 'Vision = OFF, Array = ON', value=False),
     'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1)
 }
 
