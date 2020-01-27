@@ -61,27 +61,27 @@ class TreeCell(Agent):
         self.trees_claimed = 0
         if self.condition == "On Fire":
             self.model.trees_on_fire += 1
-        if self.condition == "On Fire" and self.fireinitstep != self.model.current_step:
-            self.claimed = False
-            neighbors = self.model.grid.get_neighbors(self.pos, moore=True, radius=1)
-            for neighbor in neighbors:
+            if self.fireinitstep != self.model.current_step:
+                neighbors = self.model.grid.get_neighbors(self.pos, moore=True, radius=1)
+                for neighbor in neighbors:
 
-                if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine":
-                    # or neighbor.condition == "Is Extinguished" \
-                    # and neighbor.life_bar > 0 and neighbor.fireinitstep != self.model.current_step:
+                    if isinstance(neighbor, TreeCell) and neighbor.condition == "Fine":
+                        # or neighbor.condition == "Is Extinguished" \
+                        # and neighbor.life_bar > 0 and neighbor.fireinitstep != self.model.current_step:
 
-                    # probability of spreading
-                    prob_sp = self.prob_of_spreading(neighbor, self.model.wind_dir, self.model.wind_strength)
-                    if random.uniform(0, 1) < prob_sp:
-                        neighbor.condition = "On Fire"
-                        neighbor.fireinitstep = self.model.current_step
-                        self.model.count_total_fire += 1 / (self.model.height * self.model.width * self.model.density)
+                        # probability of spreading
+                        prob_sp = self.prob_of_spreading(neighbor, self.model.wind_dir, self.model.wind_strength)
+                        if random.uniform(0, 1) < prob_sp:
+                            neighbor.condition = "On Fire"
+                            neighbor.fireinitstep = self.model.current_step
+                            self.model.count_total_fire += 1 / \
+                                (self.model.height * self.model.width * self.model.density)
 
-            # if on fire reduce life_bar
-            if self.life_bar != 0:
-                self.life_bar -= self.burning_rate
-            else:
-                self.condition = "Burned Out"
+                # if on fire reduce life_bar
+                if self.life_bar != 0:
+                    self.life_bar -= self.burning_rate
+                else:
+                    self.condition = "Burned Out"
 
     def get_pos(self):
         return self.pos

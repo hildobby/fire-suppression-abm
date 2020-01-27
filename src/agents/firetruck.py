@@ -45,7 +45,6 @@ class Walker(Agent):
 
         places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
         places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
-        closest_neighbor.claimed = True
 
         speed_x = min(self.truck_max_speed, abs(places_to_move_x))
         speed_y = min(self.truck_max_speed, abs(places_to_move_y))
@@ -75,6 +74,7 @@ class Walker(Agent):
         It also checks if the position is closeby, otherwise it does not go there
         '''
         # find hot trees in neighborhood
+        ratio = self.firefighters_tree_ratio(self.model.num_firetruck, self.model.trees_on_fire)
         fire_intheneighborhood = False
         limited_vision_list = [i for i in range(2, 100, 2)]
         for i in range(len(limited_vision_list)):
@@ -95,7 +95,7 @@ class Walker(Agent):
             min_distance = limited_vision ** 2
             min_life_bar = 0
             for neighbor in neighbors_list:
-                if not neighbor.claimed:
+                if neighbor.trees_claimed < ratio:
                     current_life_bar = neighbor.life_bar
                     distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + \
                         abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
@@ -110,6 +110,7 @@ class Walker(Agent):
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
             self.take_step(closest_neighbor)
+            closest_neighbor.trees_claimed += 1
 
         # if fire not in the neighbourhood, do random move
         else:
@@ -117,6 +118,7 @@ class Walker(Agent):
 
     # Makes the firetruck move towards the fire
     def closestfire_move(self):
+        ratio = self.firefighters_tree_ratio(self.model.num_firetruck, self.model.trees_on_fire)
         fire_intheneighborhood = False
         limited_vision_list = [i for i in range(2, 100, 2)]
 
@@ -137,7 +139,7 @@ class Walker(Agent):
             # find closest fire
             min_distance = limited_vision ** 2
             for neighbor in neighbors_list:
-                if not neighbor.claimed:
+                if neighbor.trees_claimed < ratio:
                     distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + \
                         abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
                     if distance < min_distance:
@@ -169,6 +171,7 @@ class Walker(Agent):
         # move toward fire if it is actually in the neighborhood
         if fire_intheneighborhood:
             self.take_step(closest_neighbor)
+            closest_neighbor.trees_claimed += 1
 
         # if fire not in the neighboorhood, do random move
         else:
@@ -176,7 +179,6 @@ class Walker(Agent):
 
     def parallel_attack(self):
         ratio = self.firefighters_tree_ratio(self.model.num_firetruck, self.model.trees_on_fire)
-        print(ratio)
         fire_intheneighborhood = False
         limited_vision_list = [i for i in range(2, 100, 2)]
         for i in range(len(limited_vision_list)):
@@ -198,7 +200,6 @@ class Walker(Agent):
             max_life_bar = 0
             for neighbor in neighbors_list:
                 if neighbor.trees_claimed < ratio:
-                    # if not neighbor.claimed:
 
                     x_position = abs(neighbor.pos[0] - self.pos[0])
                     y_position = abs(neighbor.pos[1] - self.pos[1])
