@@ -334,10 +334,11 @@ class ForestFire(Model):
         return count
 
     def compute_distances(self, tree_list, truck_list):
-        distances = np.zeros((len(tree_list),len(truck_list)))
+        distances = np.zeros((len(tree_list), len(truck_list)))
         for i in range(len(tree_list)):
             for j in range(len(truck_list)):
-                distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2 
+                distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
+                    (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2
         return distances
 
     @staticmethod
