@@ -5,6 +5,8 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+import sys
+sys.path.append('../')
 
 import random
 import math
@@ -17,8 +19,7 @@ from datacollector_v2 import DataCollector
 from space_v2 import MultiGrid
 from mesa.time import RandomActivation
 from mesa import Model, Agent
-import sys
-sys.path.append('../')
+
 
 # defines the model
 

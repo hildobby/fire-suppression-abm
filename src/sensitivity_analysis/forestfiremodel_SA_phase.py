@@ -69,6 +69,7 @@ class ForestFire(Model):
         self.n_agents = 0
 
         self.agents = []
+        self.firefighters_lists = []
         self.initial_tree = height * width * density - \
             self.river_length * self.river_width
         self.initial_tree = self.initial_tree - self.break_length * self.break_width
@@ -93,13 +94,13 @@ class ForestFire(Model):
 
         self.grid = MultiGrid(height, width, torus=False)
 
-        random.seed(1)
+
         self.init_river()
         self.init_break(self.break_size)
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
-        random.seed(1)
+        #random.seed(1)
         self.init_vegetation(TreeCell, self.initial_tree)
 
         for i in range(len(self.agents)):
@@ -119,9 +120,9 @@ class ForestFire(Model):
         self.num_firetruck = num_firetruck
         self.truck_strategy = truck_strategy
 
-        random.seed(1)
+        #random.seed(1)
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed)
-        self.init_rain()
+        # self.init_rain()
 
         # Initialise fire in the middle if possible otherwise random
         self.agents[0].condition = "On Fire"
@@ -252,6 +253,22 @@ class ForestFire(Model):
 
     def init_firefighters(self, agent_type, num_firetruck,
                           truck_strategy, vision, truck_max_speed):
+        if num_firetruck == 0:
+            pass
+        else:
+            init_positions = self.equal_spread()
+
+            for i in range(num_firetruck):
+                my_pos = init_positions.pop()
+                firetruck = self.new_firetruck(
+                    Firetruck, my_pos, truck_strategy, vision, truck_max_speed)
+                self.schedule_FireTruck.add(firetruck)
+                self.schedule.add(firetruck)
+                self.firefighters_lists.append(firetruck)
+
+        '''
+        METHOD TO PLACE FIREFIGHTERS RANDOMLY OVER GRID
+
         for i in range(num_firetruck):
             x = random.randrange(self.width)
             y = random.randrange(self.height)
@@ -267,6 +284,7 @@ class ForestFire(Model):
                 Firetruck, (x, y), truck_strategy, vision, truck_max_speed)
             self.schedule_FireTruck.add(firetruck)
             self.schedule.add(firetruck)
+        '''
 
     def init_rain(self):
         '''
@@ -283,6 +301,7 @@ class ForestFire(Model):
         '''
         Advance the model by one step.
         '''
+        self.trees_on_fire = 0
         self.schedule_TreeCell.step()
         self.schedule_FireTruck.step()
 
@@ -403,3 +422,103 @@ class ForestFire(Model):
 
         # Remove agent from model
         self.agents.remove(agent)
+
+    def equal_spread(self):
+
+        edge_len = self.height - 1
+        total_edge = 4 * edge_len
+
+        x = 0
+        y = 0
+
+        start_pos = [(x, y)]
+        spacing = total_edge / self.num_firetruck
+        total_edge -= spacing
+        step = 0
+
+        while total_edge > 0:
+
+            fill_x = edge_len - x
+            fill_y = edge_len - y
+
+            if spacing > edge_len:
+                if x == 0:
+                    x += edge_len
+                    y += spacing - edge_len
+
+                else:
+                    x, y = y, x
+
+            else:
+
+                # Increasing x
+                if y == 0 and x + spacing <= edge_len and step < 2:
+                    x += spacing
+                    step = 1
+
+                # x maxxed, increasing y
+                elif x + spacing > edge_len and y + (spacing - fill_x) < edge_len and step < 3:
+                    x += fill_x
+                    y += spacing - fill_x
+                    step = 2
+
+                # x&y maxxed, decreasing x
+                elif x - (spacing - fill_y) >= 0 and y + fill_y >= edge_len and step < 4:
+                    x -= (spacing - fill_y)
+                    y += fill_y
+                    step = 3
+
+                # x emptied, decreasing y
+                elif x - spacing < 0 and step < 5:
+                    y -= (spacing - x)
+                    x = 0
+                    step = 4
+
+            start_pos += [(round(x), round(y))]
+            total_edge -= spacing
+
+        return start_pos
+
+
+'''
+# To be used if you want to run the model without the visualiser:
+temperature = 20
+truck_strategy = 'Goes to the closest fire'
+density = 0.6
+width = 100
+height = 100
+num_firetruck = 30
+vision = 100
+break_number = 0
+river_number = 0
+river_width = 0
+random_fires = 1
+wind_strength = 8
+wind_dir = "N"
+# wind[0],wind[1]=[direction,speed]
+wind = [1, 2]
+fire = ForestFire(
+    height,
+    width,
+    density,
+    temperature,
+    truck_strategy,
+    river_number,
+    river_width,
+    break_number,
+    random_fires,
+    num_firetruck,
+    vision,
+    max_speed,
+    wind_strength,
+    wind_dir
+)
+fire.run_model()
+
+results = fire.dc.get_model_vars_dataframe()
+agent_variable = fire.dc.get_agent_vars_dataframe()
+results_firetrucks = fire.dc.get_model_vars_dataframe()
+
+print(agent_variable[0])
+print(agent_variable[1])
+'''
