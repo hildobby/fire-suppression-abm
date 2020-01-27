@@ -13,7 +13,6 @@ from mesa import Agent
 from environment.river import RiverCell
 from environment.vegetation import TreeCell
 
-
 class Walker(Agent):
     def __init__(self, unique_id, model, pos):
         super().__init__(unique_id, model)
@@ -22,7 +21,9 @@ class Walker(Agent):
         self.unique_id = unique_id
 
     def firefighters_tree_ratio(self, number_of_firefighters, trees_on_fire):
-        return int(math.ceil(number_of_firefighters / trees_on_fire))
+        if trees_on_fire > 0:
+            return int(math.ceil(number_of_firefighters / trees_on_fire))
+        return 1
 
     def random_move(self):
         '''
@@ -178,7 +179,7 @@ class Walker(Agent):
             self.random_move()
 
     def parallel_attack(self):
-        ratio = self.firefighters_tree_ratio(self.model.num_firetruck, self.model.trees_on_fire)
+        ratio = self.firefighters_tree_ratio(self.model.num_firetruck, self.model.count_type(self.model,"On Fire"))
         fire_intheneighborhood = False
         limited_vision_list = [i for i in range(2, 100, 2)]
         for i in range(len(limited_vision_list)):
