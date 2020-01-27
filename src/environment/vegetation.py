@@ -75,8 +75,7 @@ class TreeCell(Agent):
                     if random.uniform(0, 1) < prob_sp:
                         neighbor.condition = "On Fire"
                         neighbor.fireinitstep = self.model.current_step
-                        self.model.count_total_fire += 1/(self.model.height * self.model.width * self.model.density)
-
+                        self.model.count_total_fire += 1 / (self.model.height * self.model.width * self.model.density)
 
             # if on fire reduce life_bar
             if self.life_bar != 0:

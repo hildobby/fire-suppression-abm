@@ -7,14 +7,13 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+import os
+from mesa.batchrunner import BatchRunnerMP
+import numpy as np
+from forestfiremodel_SA_phase import ForestFire
+import matplotlib.pyplot as plt
 import sys
 sys.path.append('../')
-import matplotlib.pyplot as plt
-from forestfiremodel_SA_phase import ForestFire
-import numpy as np
-from mesa.batchrunner import BatchRunnerMP
-import os
-
 
 
 try:
@@ -83,8 +82,8 @@ for i, var in enumerate(problem['names']):
     axs.plot(x, y, c='k')
     axs.fill_between(x, y - err, y + err, color='grey')
 
-    axs.set_xlabel(var.capitalize(),fontweight='bold')
-    axs.set_ylabel(param[0].capitalize(),fontweight='bold')
+    axs.set_xlabel(var.capitalize(), fontweight='bold')
+    axs.set_ylabel(param[0].capitalize(), fontweight='bold')
 
 
 plt.show()
