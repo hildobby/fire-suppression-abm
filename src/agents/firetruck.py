@@ -22,7 +22,7 @@ class Walker(Agent):
         self.unique_id = unique_id
 
     def firefighters_tree_ratio(self, number_of_firefighters, trees_on_fire):
-        return int(math.ceil(number_of_firefighters/trees_on_fire))
+        return int(math.ceil(number_of_firefighters / trees_on_fire))
 
     def random_move(self):
         '''
@@ -235,7 +235,7 @@ class Walker(Agent):
 
         if fire_intheneighborhood:
             self.take_step(closest_neighbor)
-            closest_neighbor.trees_claimed +=1
+            closest_neighbor.trees_claimed += 1
         else:
             self.random_move()
 
