@@ -8,8 +8,10 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 
 """
 import random
+import math
 from mesa import Agent
 from environment.river import RiverCell
+from environment.vegetation import TreeCell
 
 
 class Walker(Agent):
@@ -18,6 +20,9 @@ class Walker(Agent):
 
         self.pos = pos
         self.unique_id = unique_id
+
+    def firefighters_tree_ratio(self, number_of_firefighters, trees_on_fire):
+        return int(math.ceil(number_of_firefighters/trees_on_fire))
 
     def random_move(self):
         '''
@@ -170,6 +175,8 @@ class Walker(Agent):
             self.random_move()
 
     def parallel_attack(self):
+        ratio = self.firefighters_tree_ratio(self.model.num_firetruck, self.model.trees_on_fire)
+        print(ratio)
         fire_intheneighborhood = False
         limited_vision_list = [i for i in range(2, 100, 2)]
         for i in range(len(limited_vision_list)):
@@ -190,7 +197,8 @@ class Walker(Agent):
             min_distance = 100000
             max_life_bar = 0
             for neighbor in neighbors_list:
-                if not neighbor.claimed:
+                if neighbor.trees_claimed < ratio:
+                    # if not neighbor.claimed:
 
                     x_position = abs(neighbor.pos[0] - self.pos[0])
                     y_position = abs(neighbor.pos[1] - self.pos[1])
@@ -227,6 +235,7 @@ class Walker(Agent):
 
         if fire_intheneighborhood:
             self.take_step(closest_neighbor)
+            closest_neighbor.trees_claimed +=1
         else:
             self.random_move()
 

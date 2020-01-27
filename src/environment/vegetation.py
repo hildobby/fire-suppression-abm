@@ -42,7 +42,7 @@ class TreeCell(Agent):
         self.condition = "Fine"
         self.life_bar = 100       # give the tree a life bar
         self.burning_rate = 20   # need to change that as well
-        self.claimed = False
+        self.trees_claimed = 0
 
         self.veg_state = 0.4
 
@@ -58,6 +58,9 @@ class TreeCell(Agent):
         '''
         If the tree is on fire, spread it to fine trees nearby.
         '''
+        self.trees_claimed = 0
+        if self.condition == "On Fire":
+            self.model.trees_on_fire += 1
         if self.condition == "On Fire" and self.fireinitstep != self.model.current_step:
             self.claimed = False
             neighbors = self.model.grid.get_neighbors(self.pos, moore=True, radius=1)

@@ -113,7 +113,7 @@ class ForestFire(Model):
         self.truck_strategy = truck_strategy
 
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed)
-        self.init_rain()
+        # self.init_rain()
 
         # Initialise fire in the middle if possible otherwise random
         self.agents[0].condition = "On Fire"
@@ -293,6 +293,7 @@ class ForestFire(Model):
         '''
         Advance the model by one step.
         '''
+        self.trees_on_fire = 0
         self.schedule_TreeCell.step()
         self.schedule_FireTruck.step()
 
