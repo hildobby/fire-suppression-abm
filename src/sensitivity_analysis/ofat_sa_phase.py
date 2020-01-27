@@ -7,14 +7,13 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+import matplotlib.pyplot as plt
+from forestfiremodel_SA_phase import ForestFire
+import numpy as np
+from mesa.batchrunner import BatchRunnerMP
+import os
 import sys
 sys.path.append('../')
-
-import os
-from mesa.batchrunner import BatchRunnerMP
-import numpy as np
-from forestfiremodel_SA_phase import ForestFire
-import matplotlib.pyplot as plt
 
 
 try:
@@ -58,7 +57,6 @@ for i, var in enumerate(problem['names']):
     if var != 'truck_strategy':
         samples = np.linspace(*problem['bounds'][i], num=distinct_samples)
 
-
     batch = BatchRunnerMP(
         ForestFire,
         iterations=replicates,
@@ -71,8 +69,7 @@ for i, var in enumerate(problem['names']):
     data[var] = batch.get_model_vars_dataframe()
 
 
-
-param=['On Fire', 'Step']
+param = ['On Fire', 'Step']
 
 for i, var in enumerate(problem['names']):
     f, axs = plt.subplots(1, figsize=(7, 10))
@@ -92,10 +89,8 @@ for i, var in enumerate(problem['names']):
 plt.show()
 
 
-
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
     name = "ofat_{}___repli_{}__dist_samp_{}.csv".format(
-        var,replicates,distinct_samples)
+        var, replicates, distinct_samples)
     data[var].to_csv(name)
-

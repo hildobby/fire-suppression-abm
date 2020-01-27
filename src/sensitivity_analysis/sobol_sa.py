@@ -8,18 +8,18 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 
 """
 
+from IPython.display import clear_output
+from itertools import combinations
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from SALib.analyze import sobol
+from mesa.batchrunner import BatchRunnerMP
+from forestfiremodel_SA import ForestFire
+from SALib.sample import saltelli
 import sys
 sys.path.append('../')
 
-from SALib.sample import saltelli
-from forestfiremodel_SA import ForestFire
-from mesa.batchrunner import BatchRunnerMP
-from SALib.analyze import sobol
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from itertools import combinations
-from IPython.display import clear_output
 
 # Set the repetitions, the amount of steps, and the amount of distinct values per variable
 replicates = 10
@@ -38,7 +38,6 @@ problem = {
 }
 
 
-
 model_reporters = {"On Fire": lambda m: m.count_total_fire,
                    "Extinguished": lambda m: m.count_extinguished_fires(m),
                    "Step": lambda m: m.current_step}
@@ -52,9 +51,8 @@ param_values = saltelli.sample(problem, distinct_samples)
 
 # READ NOTE BELOW CODE
 batch = BatchRunnerMP(ForestFire,
-                    variable_parameters={name: [] for name in problem['names']},
-                    model_reporters=model_reporters,nr_processes=2)
-
+                      variable_parameters={name: [] for name in problem['names']},
+                      model_reporters=model_reporters, nr_processes=2)
 
 
 count = 0
