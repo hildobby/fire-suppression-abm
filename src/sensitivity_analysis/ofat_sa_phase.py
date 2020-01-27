@@ -7,13 +7,14 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+import sys
+sys.path.append('../')
 import matplotlib.pyplot as plt
 from forestfiremodel_SA_phase import ForestFire
 import numpy as np
 from mesa.batchrunner import BatchRunnerMP
 import os
-import sys
-sys.path.append('../')
+
 
 
 try:
@@ -27,8 +28,8 @@ n_cores = 3
 
 # Set the repetitions, the amount of steps, and the amount of distinct
 # values per variable
-replicates = 20
-distinct_samples = 20
+replicates = 4
+distinct_samples = 4
 
 
 ##########################################################################
@@ -69,21 +70,21 @@ for i, var in enumerate(problem['names']):
     data[var] = batch.get_model_vars_dataframe()
 
 
-param = ['On Fire', 'Step']
+param = ['On Fire']
+
 
 for i, var in enumerate(problem['names']):
-    f, axs = plt.subplots(1, figsize=(7, 10))
+    f, axs = plt.subplots(1, figsize=(10, 7))
     x = data[var].groupby(var).mean().reset_index()[var]
     y = data[var].groupby(var).mean()[param[0]]
 
-    replicates = data[var].groupby(var)[param[0]].count()
     err = (1.96 * data[var].groupby(var)[param[0]].std()) / np.sqrt(replicates)
 
     axs.plot(x, y, c='k')
-    axs.fill_between(x, y - err, y + err)
+    axs.fill_between(x, y - err, y + err, color='grey')
 
-    axs.set_xlabel(var)
-    axs.set_ylabel(param[0])
+    axs.set_xlabel(var.capitalize(),fontweight='bold')
+    axs.set_ylabel(param[0].capitalize(),fontweight='bold')
 
 
 plt.show()
@@ -91,6 +92,5 @@ plt.show()
 
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
-    name = "ofat_{}___repli_{}__dist_samp_{}.csv".format(
-        var, replicates, distinct_samples)
+    name = "ofat_{}___repli_{}__dist_samp_{}.csv".format(var, replicates, distinct_samples)
     data[var].to_csv(name)
