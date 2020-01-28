@@ -101,7 +101,7 @@ class Walker(Agent):
                 if neighbor.trees_claimed < ratio:
                     current_life_bar = neighbor.life_bar
                     distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + \
-                               abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
+                        abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
                     if current_life_bar >= min_life_bar and distance <= min_distance:
                         min_distance = distance
                         min_life_bar = current_life_bar
@@ -144,7 +144,7 @@ class Walker(Agent):
             for neighbor in neighbors_list:
                 if neighbor.trees_claimed < ratio:
                     distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + \
-                               abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
+                        abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
                     if distance < min_distance:
                         min_distance = distance
                         closest_neighbor = neighbor
