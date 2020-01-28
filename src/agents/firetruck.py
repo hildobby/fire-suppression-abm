@@ -258,7 +258,7 @@ class Firetruck(Walker):
         return self.pos
 
     def step(self):
-        
+
         if (self.truck_strategy == 'Goes to the closest fire'):
             self.closestfire_move()
         elif (self.truck_strategy == 'Goes to the biggest fire'):
