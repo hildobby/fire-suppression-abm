@@ -255,10 +255,9 @@ class Walker(Agent):
         else:
             self.random_move()
 
-
     def indirect_attack(self):
 
-        fire_is_close=False
+        fire_is_close = False
 
         neighbor_list = self.model.grid.get_neighbors(
             self.pos, moore=True, radius=40, include_center=True)
@@ -321,7 +320,6 @@ class Walker(Agent):
         else:
 
             self.optimized_closest_fire()
-
 
 
 class Firetruck(Walker):
