@@ -351,7 +351,6 @@ class ForestFire(Model):
         while np.isin(0, assigned_trucks):
             curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
             if assigned_trucks[curr_smallest_pos[1]] == 0 and tree_list[curr_smallest_pos[0]].trees_claimed < ratio:
-                print("Trees claimed:", tree_list[curr_smallest_pos[0]].trees_claimed)
                 assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
                 tree_list[curr_smallest_pos[0]].trees_claimed += 1
             matrix[curr_smallest_pos] = 10000000000

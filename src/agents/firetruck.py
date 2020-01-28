@@ -21,7 +21,6 @@ class Walker(Agent):
 
         self.pos = pos
         self.unique_id = unique_id
-        self.position_claimed = False
 
     def firefighters_tree_ratio(self, number_of_firefighters, trees_on_fire):
         if trees_on_fire > 0:
