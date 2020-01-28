@@ -258,10 +258,7 @@ class Firetruck(Walker):
         return self.pos
 
     def step(self):
-        '''
-        This method should move the Sheep using the `random_move()`
-        method implemented earlier, then conditionally reproduce.
-        '''
+
         if (self.truck_strategy == 'Goes to the closest fire'):
             self.closestfire_move()
         elif (self.truck_strategy == 'Goes to the biggest fire'):
