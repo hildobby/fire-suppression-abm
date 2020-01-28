@@ -302,8 +302,14 @@ class ForestFire(Model):
         self.schedule_TreeCell.step()
 
         self.tree_list = self.list_tree_by_type(self, "On Fire")
-        self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list, self.firefighters_lists),
-                                                 self.tree_list)
+
+        if (self.truck_strategy == "Parallel attack"):
+            self.assigned_list = self.assign_parallel(self.compute_distances(self.tree_list, self.firefighters_lists),
+                                                      self.tree_list)
+        else:
+            self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list, self.firefighters_lists),
+                                                     self.tree_list)
+
         self.schedule_FireTruck.step()
 
         self.dc.collect(self, [TreeCell, Firetruck])
@@ -346,11 +352,24 @@ class ForestFire(Model):
         return distances
 
     def assign_closest(self, matrix, tree_list):
-        assigned_trucks = np.zeros(15, dtype=TreeCell)
+        assigned_trucks = np.zeros(self.num_firetruck, dtype=TreeCell)
         ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
         while np.isin(0, assigned_trucks):
             curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
             if assigned_trucks[curr_smallest_pos[1]] == 0 and tree_list[curr_smallest_pos[0]].trees_claimed < ratio:
+                assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
+                tree_list[curr_smallest_pos[0]].trees_claimed += 1
+            matrix[curr_smallest_pos] = 10000000000
+        return assigned_trucks
+
+    def assign_parallel(self, matrix, tree_list):
+        assigned_trucks = np.zeros(self.num_firetruck, dtype=TreeCell)
+        ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
+        while np.isin(0, assigned_trucks):
+            curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
+            if assigned_trucks[curr_smallest_pos[1]] == 0 and tree_list[curr_smallest_pos[0]].trees_claimed < ratio \
+                and tree_list[curr_smallest_pos[0]].life_bar >= 60:
+                # Not working yet, life_bar is not correct
                 assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
                 tree_list[curr_smallest_pos[0]].trees_claimed += 1
             matrix[curr_smallest_pos] = 10000000000

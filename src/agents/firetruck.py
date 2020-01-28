@@ -33,12 +33,11 @@ class Walker(Agent):
         select one, and move the agent to this cell.
         '''
 
-        cell_list = self.model.grid.get_neighborhood(self.pos, moore=True)
+        cell_list = self.model.grid.get_neighborhood(self.pos, moore=True, radius=self.truck_max_speed)
 
         for cell in cell_list:
             if self.model.grid.get_cell_list_contents(cell):
-                if isinstance(self.model.grid.get_cell_list_contents(
-                        cell)[0], RiverCell):
+                if isinstance(self.model.grid.get_cell_list_contents(cell)[0], RiverCell):
                     cell_list.remove(cell)
 
         new_pos = cell_list[random.randint(0, len(cell_list) - 1)]
@@ -201,6 +200,30 @@ class Walker(Agent):
         self.take_step(closest_neighbor)
         closest_neighbor.trees_claimed += 1
 
+    def optimized_parallel_fire(self):
+        attr = np.array([o.unique_id for o in self.model.firefighters_lists])
+        # print(attr)
+        # print(self.unique_id)
+        # print(np.where(attr == self.unique_id))
+        closest_neighbor = self.model.assigned_list[np.where(attr == self.unique_id)[0][0]]
+
+        neighbors_list_fire = self.model.grid.get_neighbors(closest_neighbor.pos, moore=False,
+                                                            radius=1)
+        max_distance = 0
+        for neighbor in neighbors_list_fire:
+            position_x = abs(neighbor.pos[0] - self.pos[0])
+            position_y = abs(neighbor.pos[1] - self.pos[1])
+            new_distance = position_x + position_y
+
+            if neighbor.condition != "On Fire" and position_x <= self.truck_max_speed and \
+                    position_y <= self.truck_max_speed and new_distance > max_distance and \
+                    isinstance(neighbor, TreeCell):
+                max_distance = new_distance
+                closest_neighbor = neighbor
+
+        self.take_step(closest_neighbor)
+        closest_neighbor.trees_claimed += 1
+
     def parallel_attack(self):
         ratio = self.firefighters_tree_ratio(
             self.model.num_firetruck, self.model.count_type(
@@ -228,8 +251,6 @@ class Walker(Agent):
             max_life_bar = 0
             for neighbor in neighbors_list:
                 if neighbor.trees_claimed < ratio:
-                    print("Ratio:", ratio)
-                    print("Trees claimed:", neighbor.trees_claimed)
 
                     x_position = abs(neighbor.pos[0] - self.pos[0])
                     y_position = abs(neighbor.pos[1] - self.pos[1])
@@ -360,11 +381,9 @@ class Firetruck(Walker):
         elif (self.truck_strategy == 'Goes to the biggest fire'):
             self.biggestfire_move()
         elif (self.truck_strategy == "Parallel attack"):
-            self.parallel_attack()
-
+            self.optimized_parallel_fire()
         elif (self.truck_strategy == "Optimized"):
             self.optimized_closest_fire()
-
         elif (self.truck_strategy == 'Indirect attack'):
             self.indirect_attack()
         else:

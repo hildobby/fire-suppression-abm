@@ -78,7 +78,7 @@ extinguished_chart = ChartModule([{"Label": "Extinguished", "Color": "blue"}],
 model_parameters = {
     'height': 200,
     'width': 200,
-    'vision': 100,
+    'vision': 200,
     'text_environment': UserSettableParameter(
         'static_text',
         value='Environment Generation Settings'),
@@ -123,7 +123,7 @@ model_parameters = {
     'truck_max_speed': UserSettableParameter(
         'slider',
         'Speed of Firetrucks',
-        2,
+        23,
         1,
         30,
         1),
