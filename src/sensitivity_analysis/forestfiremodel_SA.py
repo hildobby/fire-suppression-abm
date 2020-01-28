@@ -111,13 +111,13 @@ class ForestFire(Model):
 
         self.grid = MultiGrid(height, width, torus=False)
 
-        #random.seed(1)
+        # random.seed(1)
         self.init_river()
         self.init_break(self.break_size)
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
-        #random.seed(1)
+        # random.seed(1)
         self.init_vegetation(TreeCell, self.initial_tree)
 
         for i in range(len(self.agents)):
@@ -137,9 +137,9 @@ class ForestFire(Model):
         self.num_firetruck = num_firetruck
         self.truck_strategy = truck_strategy
 
-        #random.seed(1)
+        # random.seed(1)
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed)
-        #self.init_rain()
+        # self.init_rain()
 
         # Initialise fire in the middle if possible otherwise random
         self.agents[0].condition = "On Fire"
