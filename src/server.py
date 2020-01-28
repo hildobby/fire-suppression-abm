@@ -66,7 +66,7 @@ def forest_fire_portrayal(agent):
     return portrayal
 
 
-canvas_element = CanvasGrid(forest_fire_portrayal, 100, 100, 500, 500)
+canvas_element = CanvasGrid(forest_fire_portrayal, 200, 200, 1000, 1000)
 # create line graph
 tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
                           {"Label": "On Fire", "Color": "red"},
@@ -76,8 +76,8 @@ extinguished_chart = ChartModule([{"Label": "Extinguished", "Color": "blue"}],
                                  data_collector_name='dc')
 
 model_parameters = {
-    'height': 100,
-    'width': 100,
+    'height': 200,
+    'width': 200,
     'vision': 100,
     'text_environment': UserSettableParameter('static_text', value='Environment Generation Settings'),
     'density': UserSettableParameter('slider', 'Tree density', 0.99, 0.01, 1.0, 0.01),
@@ -87,9 +87,9 @@ model_parameters = {
     'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 15, 0, 50, 1),
     'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 2, 1, 30, 1),
-    'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Parallel attack',
+    'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Optimized',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
-                                                     'Random movements', 'Parallel attack']),
+                                                     'Random movements', 'Parallel attack', 'Optimized']),
     'text_other_settings': UserSettableParameter('static_text', value='Other Settings'),
     'wind_strength': UserSettableParameter('slider', 'Wind strength', 10, 0, 80, 1),
     'wind_dir': UserSettableParameter('choice', 'Wind Direction', value=('\u2B07 South'),

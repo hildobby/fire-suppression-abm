@@ -9,6 +9,7 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 """
 import random
 import math
+import numpy as np
 from mesa import Agent
 from environment.river import RiverCell
 from environment.vegetation import TreeCell
@@ -179,6 +180,16 @@ class Walker(Agent):
         else:
             self.random_move()
 
+    def optimized_closest_fire(self):
+        attr = np.array([o.unique_id for o in self.model.firefighters_lists])
+        print(attr)
+        print(self.unique_id)
+        print(np.where(attr == self.unique_id))
+        closest_neighbor = self.model.assigned_list[np.where(attr == self.unique_id)[0][0]]
+
+        self.take_step(closest_neighbor)
+        closest_neighbor.trees_claimed += 1
+
     def parallel_attack(self):
         ratio = self.firefighters_tree_ratio(self.model.num_firetruck, self.model.count_type(self.model, "On Fire"))
         fire_intheneighborhood = False
@@ -258,15 +269,19 @@ class Firetruck(Walker):
         return self.pos
 
     def step(self):
-
+        # set step according to strategy
         if (self.truck_strategy == 'Goes to the closest fire'):
             self.closestfire_move()
         elif (self.truck_strategy == 'Goes to the biggest fire'):
             self.biggestfire_move()
         elif (self.truck_strategy == "Parallel attack"):
             self.parallel_attack()
+        elif (self.truck_strategy == "Optimized"):
+            self.optimized_closest_fire()
         else:
             self.random_move()
+
+        # extinguish the trees around it
         self.extinguish()
 
     def extinguish(self):

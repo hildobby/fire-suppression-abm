@@ -301,8 +301,8 @@ class ForestFire(Model):
         self.schedule_TreeCell.step()
 
         self.tree_list = self.list_tree_by_type(self, "On Fire")
-        self.assign_closest(self.compute_distances(self.tree_list, self.firefighters_lists), self.tree_list)
-
+        self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list, self.firefighters_lists),
+                                                 self.tree_list)
         self.schedule_FireTruck.step()
 
         self.dc.collect(self, [TreeCell, Firetruck])
@@ -337,6 +337,7 @@ class ForestFire(Model):
 
     def compute_distances(self, tree_list, truck_list):
         distances = np.zeros((len(tree_list), len(truck_list)))
+
         for i in range(len(tree_list)):
             for j in range(len(truck_list)):
                 distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
@@ -357,10 +358,8 @@ class ForestFire(Model):
         '''
         Helper method to count trees in a given condition in a given model.
         '''
-        tree_list = []
-        for tree in model.schedule_TreeCell.agents:
-            if tree.condition == tree_condition:
-                tree_list.append(tree)
+        tree_list = [tree for tree in model.schedule_TreeCell.agents if tree.condition == tree_condition]
+
         return tree_list
 
     @staticmethod
