@@ -95,7 +95,7 @@ class TreeCell(Agent):
         p_den = neighbour.veg_density
         p_s = 1  # no elavation
         c2 = 0.131
-        c1 =0.045
+        c1 = 0.045
         theta = 0  # in case wind_strength is zero
 
         # if wind actually exists
@@ -107,7 +107,7 @@ class TreeCell(Agent):
             dot_product = np.dot(neighbour_vec, wind_vec)
             theta = math.acos((dot_product / (LA.norm(neighbour_vec) * LA.norm(wind_vec))))
 
-        p_w = math.exp(c1*wind_strength)*math.exp(c2 * wind_strength * (math.cos(theta) - 1))
+        p_w = math.exp(c1 * wind_strength) * math.exp(c2 * wind_strength * (math.cos(theta) - 1))
 
         p_burn = p_h * (1 + p_veg) * (1 + p_den) * p_w * p_s
 
