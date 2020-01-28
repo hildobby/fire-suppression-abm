@@ -21,6 +21,7 @@ class Walker(Agent):
 
         self.pos = pos
         self.unique_id = unique_id
+        self.position_claimed = False
 
     def firefighters_tree_ratio(self, number_of_firefighters, trees_on_fire):
         if trees_on_fire > 0:
@@ -77,7 +78,7 @@ class Walker(Agent):
         It also checks if the position is closeby, otherwise it does not go there
         '''
         # find hot trees in neighborhood
-        ratio = self.firefighters_tree_ratio(self.model.num_firetruck, self.model.trees_on_fire)
+        ratio = self.firefighters_tree_ratio(self.model.num_firetruck, self.model.count_type(self.model, "On Fire"))
         fire_intheneighborhood = False
         limited_vision_list = [i for i in range(2, 100, 2)]
         for i in range(len(limited_vision_list)):
@@ -121,7 +122,7 @@ class Walker(Agent):
 
     # Makes the firetruck move towards the fire
     def closestfire_move(self):
-        ratio = self.firefighters_tree_ratio(self.model.num_firetruck, self.model.trees_on_fire)
+        ratio = self.firefighters_tree_ratio(self.model.num_firetruck, self.model.count_type(self.model, "On Fire"))
         fire_intheneighborhood = False
         limited_vision_list = [i for i in range(2, 100, 2)]
 
@@ -182,9 +183,9 @@ class Walker(Agent):
 
     def optimized_closest_fire(self):
         attr = np.array([o.unique_id for o in self.model.firefighters_lists])
-        print(attr)
-        print(self.unique_id)
-        print(np.where(attr == self.unique_id))
+        # print(attr)
+        # print(self.unique_id)
+        # print(np.where(attr == self.unique_id))
         closest_neighbor = self.model.assigned_list[np.where(attr == self.unique_id)[0][0]]
 
         self.take_step(closest_neighbor)
@@ -213,6 +214,8 @@ class Walker(Agent):
             max_life_bar = 0
             for neighbor in neighbors_list:
                 if neighbor.trees_claimed < ratio:
+                    print("Ratio:", ratio)
+                    print("Trees claimed:", neighbor.trees_claimed)
 
                     x_position = abs(neighbor.pos[0] - self.pos[0])
                     y_position = abs(neighbor.pos[1] - self.pos[1])

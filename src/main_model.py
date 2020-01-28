@@ -14,6 +14,7 @@ import numpy as np
 from environment.firebreak import BreakCell
 from environment.rain import Rain
 from agents.firetruck import Firetruck
+from agents.firetruck import Walker
 from environment.vegetation import TreeCell
 from environment.river import RiverCell
 from datacollector_v2 import DataCollector
@@ -346,10 +347,13 @@ class ForestFire(Model):
 
     def assign_closest(self, matrix, tree_list):
         assigned_trucks = np.zeros(15, dtype=TreeCell)
+        ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
         while np.isin(0, assigned_trucks):
             curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
-            if assigned_trucks[curr_smallest_pos[1]] == 0:
+            if assigned_trucks[curr_smallest_pos[1]] == 0 and tree_list[curr_smallest_pos[0]].trees_claimed < ratio:
+                print("Trees claimed:", tree_list[curr_smallest_pos[0]].trees_claimed)
                 assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
+                tree_list[curr_smallest_pos[0]].trees_claimed += 1
             matrix[curr_smallest_pos] = 10000000000
         return assigned_trucks
 
