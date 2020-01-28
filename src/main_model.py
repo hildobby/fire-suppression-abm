@@ -300,8 +300,6 @@ class ForestFire(Model):
         self.schedule_TreeCell.step()
 
         self.tree_list = self.list_tree_by_type(self, "On Fire")
-
-        print(self.compute_distances(self.tree_list, self.firefighters_lists))
         self.assign_closest(self.compute_distances(self.tree_list, self.firefighters_lists), self.tree_list)
 
         self.schedule_FireTruck.step()
