@@ -43,6 +43,7 @@ class TreeCell(Agent):
         self.life_bar = 100       # give the tree a life bar
         self.burning_rate = 20   # need to change that as well
         self.trees_claimed = 0
+        self.fire_bar = 0
 
         self.veg_state = 0.4
 
@@ -73,6 +74,7 @@ class TreeCell(Agent):
                         prob_sp = self.prob_of_spreading(neighbor, self.model.wind_dir, self.model.wind_strength)
                         if random.uniform(0, 1) < prob_sp:
                             neighbor.condition = "On Fire"
+                            neighbor.fire_bar = self.model.steps_to_extinguishment
                             neighbor.fireinitstep = self.model.current_step
                             self.model.count_total_fire += 1 / \
                                 (self.model.height * self.model.width * self.model.density)

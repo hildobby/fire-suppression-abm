@@ -21,8 +21,8 @@ data_2 = {}
 data_3 = {}
 
 list_var = ['wind_strength', 'num_firetruck']
-rep = 5
-dist = 5
+rep = 50
+dist = 50
 
 # Load the files into dict
 for filename in os.listdir('.'):

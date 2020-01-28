@@ -46,7 +46,8 @@ class ForestFire(Model):
             wind_strength,
             wind_dir,
             sparse_ratio,
-            tree_seek_type):
+            tree_seek_type,
+            steps_to_extinguishment):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -68,7 +69,7 @@ class ForestFire(Model):
         self.break_size = width
 
         self.temperature = temperature
-
+        self.steps_to_extinguishment = steps_to_extinguishment
         self.n_agents = 0
 
         self.agents = []

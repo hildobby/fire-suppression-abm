@@ -274,6 +274,7 @@ class Firetruck(Walker):
             self.pos, moore=True, radius=1, include_center=True)
         for tree in neighbors_list:
             if tree.condition == "On Fire":
-                tree.condition = "Is Extinguished"
-                self.extinguished += 1
-                self.life_bar -= 5
+                tree.fire_bar -= 1
+                if tree.fire_bar == 0:
+                    tree.condition = "Is Extinguished"
+                    self.extinguished += 1

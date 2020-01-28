@@ -98,7 +98,8 @@ model_parameters = {
                                                "\u2B05 West", "\u2196 North/West"]),
     'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=False),
     'tree_seek_type': UserSettableParameter('checkbox', 'Vision = OFF, Array = ON', value=False),
-    'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1)
+    'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1,),
+    'steps_to_extinguishment': 6
 }
 
 server = ModularServer(ForestFire, [canvas_element, tree_chart, extinguished_chart], "Forest Fire", model_parameters)

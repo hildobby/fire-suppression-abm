@@ -31,7 +31,7 @@ class ForestFire(Model):
             self,
             height=100,
             width=100,
-            density=0.6,
+            density=0.63,
             temperature=0,
             truck_strategy=1,
             river_number=0,
