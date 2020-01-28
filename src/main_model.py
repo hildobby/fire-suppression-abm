@@ -342,16 +342,14 @@ class ForestFire(Model):
                     (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2
         return distances
 
-
     def assign_closest(self, matrix, tree_list):
         assigned_trucks = np.zeros(15, dtype=TreeCell)
-        while np.isin(0,assigned_trucks):
+        while np.isin(0, assigned_trucks):
             curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
             if assigned_trucks[curr_smallest_pos[1]] == 0:
                 assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
             matrix[curr_smallest_pos] = 10000000000
         return assigned_trucks
-
 
     @staticmethod
     def list_tree_by_type(model, tree_condition):
