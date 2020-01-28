@@ -101,7 +101,7 @@ class Walker(Agent):
                 if neighbor.trees_claimed < ratio:
                     current_life_bar = neighbor.life_bar
                     distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + \
-                        abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
+                               abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
                     if current_life_bar >= min_life_bar and distance <= min_distance:
                         min_distance = distance
                         min_life_bar = current_life_bar
@@ -144,7 +144,7 @@ class Walker(Agent):
             for neighbor in neighbors_list:
                 if neighbor.trees_claimed < ratio:
                     distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + \
-                        abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
+                               abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
                     if distance < min_distance:
                         min_distance = distance
                         closest_neighbor = neighbor
@@ -255,10 +255,9 @@ class Walker(Agent):
         else:
             self.random_move()
 
-
     def indirect_attack(self):
 
-        fire_is_close=False
+        fire_is_close = False
 
         neighbor_list = self.model.grid.get_neighbors(
             self.pos, moore=True, radius=40, include_center=True)
@@ -284,44 +283,36 @@ class Walker(Agent):
 
                         elif (self.pos[0] <= min(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
                               self.pos[1] <= min(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
-
                             self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
 
                         elif (self.pos[0] <= min(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
                               self.pos[1] >= max(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
-
                             self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
 
                         elif (self.pos[0] >= max(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
                               self.pos[1] <= min(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
-
                             self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
-                        # in between
+
                         elif (self.pos[0] <= min(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
                               self.pos[1] < max(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
-
                             self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
 
                         elif (self.pos[0] < max(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
                               self.pos[1] >= max(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
-
                             self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
 
                         elif (self.pos[0] >= max(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
                               self.pos[1] < max(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
-
                             self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
 
                         elif (self.pos[0] < max(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
                               self.pos[1] <= min(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
-
                             self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
+
                         # in case the agent is not in the square to put it back
 
         else:
-
             self.optimized_closest_fire()
-
 
 
 class Firetruck(Walker):
@@ -350,7 +341,7 @@ class Firetruck(Walker):
         elif (self.truck_strategy == "Optimized"):
             self.optimized_closest_fire()
 
-        elif(self.truck_strategy == 'Indirect attack'):
+        elif (self.truck_strategy == 'Indirect attack'):
             self.indirect_attack()
         else:
             self.random_move()
