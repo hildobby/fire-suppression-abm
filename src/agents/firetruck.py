@@ -261,10 +261,10 @@ class Walker(Agent):
         fire_is_close=False
 
         neighbor_list = self.model.grid.get_neighbors(
-                self.pos, moore=True, radius=40, include_center=True)
+            self.pos, moore=True, radius=40, include_center=True)
 
         for neighbor in neighbor_list:
-            if neighbor.condition=='On Fire':
+            if neighbor.condition == 'On Fire':
                 fire_is_close = True
 
         if fire_is_close:
@@ -350,7 +350,7 @@ class Firetruck(Walker):
         elif (self.truck_strategy == "Optimized"):
             self.optimized_closest_fire()
 
-        elif(self.truck_strategy== 'Indirect attack'):
+        elif(self.truck_strategy == 'Indirect attack'):
             self.indirect_attack()
         else:
             self.random_move()
