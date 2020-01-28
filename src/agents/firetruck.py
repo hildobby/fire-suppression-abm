@@ -37,7 +37,8 @@ class Walker(Agent):
 
         for cell in cell_list:
             if self.model.grid.get_cell_list_contents(cell):
-                if isinstance(self.model.grid.get_cell_list_contents(cell)[0], RiverCell):
+                if isinstance(self.model.grid.get_cell_list_contents(
+                        cell)[0], RiverCell):
                     cell_list.remove(cell)
 
         new_pos = cell_list[random.randint(0, len(cell_list) - 1)]
@@ -64,7 +65,8 @@ class Walker(Agent):
             new_y -= speed_y
 
         if self.model.grid.get_cell_list_contents((new_x, new_y)):
-            if not isinstance(self.model.grid.get_cell_list_contents((new_x, new_y))[0], RiverCell):
+            if not isinstance(self.model.grid.get_cell_list_contents(
+                    (new_x, new_y))[0], RiverCell):
                 self.model.grid.move_agent(self, (new_x, new_y))
 
         else:
@@ -77,14 +79,17 @@ class Walker(Agent):
         It also checks if the position is closeby, otherwise it does not go there
         '''
         # find hot trees in neighborhood
-        ratio = self.firefighters_tree_ratio(self.model.num_firetruck, self.model.count_type(self.model, "On Fire"))
+        ratio = self.firefighters_tree_ratio(
+            self.model.num_firetruck, self.model.count_type(
+                self.model, "On Fire"))
         fire_intheneighborhood = False
         limited_vision_list = [i for i in range(2, 100, 2)]
         for i in range(len(limited_vision_list)):
 
             limited_vision = int(self.vision * limited_vision_list[i] / 100.)
             if i > 0:
-                inner_radius = int(self.vision * limited_vision_list[i - 1] / 100.)
+                inner_radius = int(
+                    self.vision * limited_vision_list[i - 1] / 100.)
             else:
                 inner_radius = 0
 
@@ -92,7 +97,8 @@ class Walker(Agent):
             neighbors_list = self.model.grid.get_neighbors(
                 self.pos, moore=True, radius=limited_vision, inner_radius=inner_radius)
 
-            neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
+            neighbors_list = [
+                x for x in neighbors_list if x.condition == "On Fire"]
 
             # find closest fire
             min_distance = limited_vision ** 2
@@ -101,7 +107,7 @@ class Walker(Agent):
                 if neighbor.trees_claimed < ratio:
                     current_life_bar = neighbor.life_bar
                     distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + \
-                               abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
+                        abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
                     if current_life_bar >= min_life_bar and distance <= min_distance:
                         min_distance = distance
                         min_life_bar = current_life_bar
@@ -121,7 +127,9 @@ class Walker(Agent):
 
     # Makes the firetruck move towards the fire
     def closestfire_move(self):
-        ratio = self.firefighters_tree_ratio(self.model.num_firetruck, self.model.count_type(self.model, "On Fire"))
+        ratio = self.firefighters_tree_ratio(
+            self.model.num_firetruck, self.model.count_type(
+                self.model, "On Fire"))
         fire_intheneighborhood = False
         limited_vision_list = [i for i in range(2, 100, 2)]
 
@@ -129,7 +137,8 @@ class Walker(Agent):
             limited_vision = int(self.vision * limited_vision_list[i] / 100.)
 
             if i > 0:
-                inner_radius = int(self.vision * limited_vision_list[i - 1] / 100.)
+                inner_radius = int(
+                    self.vision * limited_vision_list[i - 1] / 100.)
             else:
                 inner_radius = 0
 
@@ -137,14 +146,15 @@ class Walker(Agent):
             neighbors_list = self.model.grid.get_neighbors(
                 self.pos, moore=True, radius=limited_vision, inner_radius=inner_radius)
 
-            neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
+            neighbors_list = [
+                x for x in neighbors_list if x.condition == "On Fire"]
 
             # find closest fire
             min_distance = limited_vision ** 2
             for neighbor in neighbors_list:
                 if neighbor.trees_claimed < ratio:
                     distance = abs(neighbor.pos[0] ** 2 - self.pos[0] ** 2) + \
-                               abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
+                        abs(neighbor.pos[1] ** 2 - self.pos[1] ** 2)
                     if distance < min_distance:
                         min_distance = distance
                         closest_neighbor = neighbor
@@ -185,20 +195,24 @@ class Walker(Agent):
         # print(attr)
         # print(self.unique_id)
         # print(np.where(attr == self.unique_id))
-        closest_neighbor = self.model.assigned_list[np.where(attr == self.unique_id)[0][0]]
+        closest_neighbor = self.model.assigned_list[np.where(attr == self.unique_id)[
+            0][0]]
 
         self.take_step(closest_neighbor)
         closest_neighbor.trees_claimed += 1
 
     def parallel_attack(self):
-        ratio = self.firefighters_tree_ratio(self.model.num_firetruck, self.model.count_type(self.model, "On Fire"))
+        ratio = self.firefighters_tree_ratio(
+            self.model.num_firetruck, self.model.count_type(
+                self.model, "On Fire"))
         fire_intheneighborhood = False
         limited_vision_list = [i for i in range(2, 100, 2)]
         for i in range(len(limited_vision_list)):
             limited_vision = int(self.vision * limited_vision_list[i] / 100.)
 
             if i > 0:
-                inner_radius = int(self.vision * limited_vision_list[i - 1] / 100.)
+                inner_radius = int(
+                    self.vision * limited_vision_list[i - 1] / 100.)
             else:
                 inner_radius = 0
 
@@ -206,7 +220,8 @@ class Walker(Agent):
             neighbors_list = self.model.grid.get_neighbors(
                 self.pos, moore=True, radius=limited_vision, inner_radius=inner_radius)
 
-            neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
+            neighbors_list = [
+                x for x in neighbors_list if x.condition == "On Fire"]
 
             # find closest fire
             min_distance = 100000
@@ -269,45 +284,53 @@ class Walker(Agent):
         if fire_is_close:
 
             if self.model.grid.is_cell_empty:
-                list_of_cell_content = self.model.grid.get_cell_list_contents(self.pos)
+                list_of_cell_content = self.model.grid.get_cell_list_contents(
+                    self.pos)
                 for content in list_of_cell_content:
                     if isinstance(content, TreeCell):
                         content.condition = "Burned Out"
 
                     else:
+                        if self.pos[0] >= max(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and \
+                                self.pos[1] >= max(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists):
 
-                        if (self.pos[0] >= max(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
-                                self.pos[1] >= max(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
+                            self.model.grid.move_agent(
+                                self, (self.pos[0], self.pos[1] - 1))
 
-                            self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
+                        elif self.pos[0] <= min(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and \
+                                self.pos[1] <= min(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists):
+                            self.model.grid.move_agent(
+                                self, (self.pos[0], self.pos[1] + 1))
 
-                        elif (self.pos[0] <= min(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
-                              self.pos[1] <= min(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
-                            self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
+                        elif self.pos[0] <= min(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and \
+                                self.pos[1] >= max(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists):
+                            self.model.grid.move_agent(
+                                self, (self.pos[0] + 1, self.pos[1]))
 
-                        elif (self.pos[0] <= min(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
-                              self.pos[1] >= max(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
-                            self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
+                        elif self.pos[0] >= max(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and \
+                                self.pos[1] <= min(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists):
+                            self.model.grid.move_agent(
+                                self, (self.pos[0] - 1, self.pos[1]))
 
-                        elif (self.pos[0] >= max(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
-                              self.pos[1] <= min(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
-                            self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
+                        elif self.pos[0] <= min(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and \
+                                self.pos[1] < max(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists):
+                            self.model.grid.move_agent(
+                                self, (self.pos[0], self.pos[1] + 1))
 
-                        elif (self.pos[0] <= min(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
-                              self.pos[1] < max(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
-                            self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
+                        elif self.pos[0] < max(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and \
+                                self.pos[1] >= max(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists):
+                            self.model.grid.move_agent(
+                                self, (self.pos[0] + 1, self.pos[1]))
 
-                        elif (self.pos[0] < max(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
-                              self.pos[1] >= max(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
-                            self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
+                        elif self.pos[0] >= max(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and \
+                                self.pos[1] < max(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists):
+                            self.model.grid.move_agent(
+                                self, (self.pos[0], self.pos[1] - 1))
 
-                        elif (self.pos[0] >= max(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
-                              self.pos[1] < max(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
-                            self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
-
-                        elif (self.pos[0] < max(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and
-                              self.pos[1] <= min(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists)):
-                            self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
+                        elif self.pos[0] < max(firetrucks.pos[0] for firetrucks in self.model.firefighters_lists) and \
+                                self.pos[1] <= min(firetrucks.pos[1] for firetrucks in self.model.firefighters_lists):
+                            self.model.grid.move_agent(
+                                self, (self.pos[0] - 1, self.pos[1]))
 
                         # in case the agent is not in the square to put it back
 
@@ -316,7 +339,8 @@ class Walker(Agent):
 
 
 class Firetruck(Walker):
-    def __init__(self, model, unique_id, pos, truck_strategy, vision, truck_max_speed):
+    def __init__(self, model, unique_id, pos,
+                 truck_strategy, vision, truck_max_speed):
         super().__init__(unique_id, model, pos)
         self.unique_id = unique_id
         self.condition = "Full"
