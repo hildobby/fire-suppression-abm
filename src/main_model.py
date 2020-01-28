@@ -368,7 +368,7 @@ class ForestFire(Model):
         while np.isin(0, assigned_trucks):
             curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
             if assigned_trucks[curr_smallest_pos[1]] == 0 and tree_list[curr_smallest_pos[0]].trees_claimed < ratio \
-                and tree_list[curr_smallest_pos[0]].life_bar >= 60:
+                    and tree_list[curr_smallest_pos[0]].life_bar >= 60:
                 # Not working yet, life_bar is not correct
                 assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
                 tree_list[curr_smallest_pos[0]].trees_claimed += 1
