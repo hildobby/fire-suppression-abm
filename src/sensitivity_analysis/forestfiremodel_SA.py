@@ -5,19 +5,18 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+import math
+from mesa import Model
+from mesa.time import RandomActivation
+from space_v2 import MultiGrid
+from datacollector_v2 import DataCollector
+from environment.river import RiverCell
+from environment.vegetation import TreeCell
+from agents.firetruck import Firetruck
+from environment.rain import Rain
+import random
 import sys
 sys.path.append('../')
-
-import random
-from environment.rain import Rain
-from agents.firetruck import Firetruck
-from environment.vegetation import TreeCell
-from environment.river import RiverCell
-from datacollector_v2 import DataCollector
-from space_v2 import MultiGrid
-from mesa.time import RandomActivation
-from mesa import Model
-import math
 
 
 # defines the model
@@ -27,22 +26,6 @@ class ForestFire(Model):
     '''
     Simple Forest Fire model.
     '''
-
-   # height = 100
-   # width = 100
-   # density = 0.6
-   # temperature = 0
-   # truck_strategy = 1
-   # river_number = 0
-   # river_width = 0
-   # random_fires = 0
-   # num_firetruck = 30
-   # truck_max_speed = 2
-   # vision = 100
-   # wind_strength = 10
-   # wind_dir = "\u2B06 North"
-   # break_width = 0
-   # sparse_ratio = 0.4
 
     def __init__(
             self,
@@ -111,13 +94,13 @@ class ForestFire(Model):
 
         self.grid = MultiGrid(height, width, torus=False)
 
-        #random.seed(1)
+        # random.seed(1)
         self.init_river()
         self.init_break(self.break_size)
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
-        #random.seed(1)
+        # random.seed(1)
         self.init_vegetation(TreeCell, self.initial_tree)
 
         for i in range(len(self.agents)):
@@ -137,9 +120,14 @@ class ForestFire(Model):
         self.num_firetruck = num_firetruck
         self.truck_strategy = truck_strategy
 
-        #random.seed(1)
-        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed)
-        #self.init_rain()
+        # random.seed(1)
+        self.init_firefighters(
+            Firetruck,
+            num_firetruck,
+            truck_strategy,
+            vision,
+            truck_max_speed)
+        # self.init_rain()
 
         # Initialise fire in the middle if possible otherwise random
         self.agents[0].condition = "On Fire"
@@ -241,7 +229,8 @@ class ForestFire(Model):
         y = random.randrange(self.height)
 
         if self.river_width == 0 and self.break_width == 0:
-            self.new_agent(agent_type, (int(self.width / 2), int(self.height / 2)))
+            self.new_agent(
+                agent_type, (int(self.width / 2), int(self.height / 2)))
         else:
             self.new_agent(agent_type, (x, y))
 
