@@ -299,7 +299,10 @@ class ForestFire(Model):
         self.trees_on_fire = 0
         self.schedule_TreeCell.step()
 
-        self.compute_distances((self.list_tree_by_type(self, "On Fire")), self.firefighters_lists)
+        self.tree_list = self.list_tree_by_type(self, "On Fire")
+
+        print(self.compute_distances(self.tree_list, self.firefighters_lists))
+        self.assign_closest(self.compute_distances(self.tree_list, self.firefighters_lists), self.tree_list)
 
         self.schedule_FireTruck.step()
 
@@ -339,6 +342,17 @@ class ForestFire(Model):
             for j in range(len(truck_list)):
                 distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2 
         return distances
+
+
+    def assign_closest(self, matrix, tree_list):
+        assigned_trucks = np.zeros(15, dtype=TreeCell)
+        while np.isin(0,assigned_trucks):
+            curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
+            if assigned_trucks[curr_smallest_pos[1]] == 0:
+                assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
+            matrix[curr_smallest_pos] = 10000000000
+        return assigned_trucks
+
 
     @staticmethod
     def list_tree_by_type(model, tree_condition):
