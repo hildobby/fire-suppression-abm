@@ -21,8 +21,6 @@ from datacollector_v2 import DataCollector
 from space_v2 import MultiGrid
 from mesa.time import RandomActivation
 from mesa import Model, Agent
-import timeit
-
 
 # defines the model
 
@@ -352,7 +350,8 @@ class ForestFire(Model):
         if (self.truck_strategy == "Optimized Parallel attack"):
             for i in range(len(tree_list)):
                 for j in range(len(truck_list)):
-                    distances[i][j] = ((tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2) / tree_list[i].life_bar
+                    distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
+                        (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2
             return distances
         else:
             for i in range(len(tree_list)):
@@ -364,7 +363,7 @@ class ForestFire(Model):
     def assign_closest(self, matrix, tree_list):
         assigned_trucks = [0 for x in range(self.num_firetruck)]
         ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
-        matrix = np.array(matrix)
+        matrix = np.asarray(matrix, dtype=int)
         while 0 in assigned_trucks:
             curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
             if assigned_trucks[curr_smallest_pos[1]] == 0 and tree_list[curr_smallest_pos[0]].trees_claimed < ratio:
@@ -376,7 +375,7 @@ class ForestFire(Model):
     def assign_parallel(self, matrix, tree_list):
         assigned_trucks = [0 for x in range(self.num_firetruck)]
         ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
-        matrix = np.array(matrix)
+        matrix = np.asarray(matrix, dtype=int)
         while 0 in assigned_trucks:
             curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
             if assigned_trucks[curr_smallest_pos[1]] == 0 and tree_list[curr_smallest_pos[0]].trees_claimed < ratio:
