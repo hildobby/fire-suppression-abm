@@ -21,6 +21,7 @@ from datacollector_v2 import DataCollector
 from space_v2 import MultiGrid
 from mesa.time import RandomActivation
 from mesa import Model, Agent
+import timeit
 
 
 # defines the model
@@ -343,7 +344,8 @@ class ForestFire(Model):
         return count
 
     def compute_distances(self, tree_list, truck_list):
-        distances = np.zeros((len(tree_list), len(truck_list)))
+        distances = [[0 for x in range(len(truck_list))] for y in range(len(tree_list))]
+        #distances = np.zeros((len(tree_list), len(truck_list)))
         if (self.truck_strategy == "Optimized Parallel attack"):
             for i in range(len(tree_list)):
                 for j in range(len(truck_list)):
@@ -358,9 +360,10 @@ class ForestFire(Model):
             return distances
 
     def assign_closest(self, matrix, tree_list):
-        assigned_trucks = np.zeros(self.num_firetruck, dtype=TreeCell)
+        assigned_trucks = [0 for x in range(self.num_firetruck)]
         ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
-        while np.isin(0, assigned_trucks):
+        matrix = np.array(matrix)
+        while 0 in assigned_trucks:
             curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
             if assigned_trucks[curr_smallest_pos[1]] == 0 and tree_list[curr_smallest_pos[0]].trees_claimed < ratio:
                 assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
@@ -369,9 +372,10 @@ class ForestFire(Model):
         return assigned_trucks
 
     def assign_parallel(self, matrix, tree_list):
-        assigned_trucks = np.zeros(self.num_firetruck, dtype=TreeCell)
+        assigned_trucks = [0 for x in range(self.num_firetruck)]
         ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
-        while np.isin(0, assigned_trucks):
+        matrix = np.array(matrix)
+        while 0 in assigned_trucks:
             curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
             if assigned_trucks[curr_smallest_pos[1]] == 0 and tree_list[curr_smallest_pos[0]].trees_claimed < ratio \
                     and tree_list[curr_smallest_pos[0]].life_bar >= 60:
