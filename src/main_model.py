@@ -47,7 +47,6 @@ class ForestFire(Model):
             wind_strength,
             wind_dir,
             sparse_ratio,
-            tree_seek_type,
             steps_to_extinguishment):
         super().__init__()
         '''
