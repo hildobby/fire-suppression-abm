@@ -347,8 +347,8 @@ class ForestFire(Model):
         if (self.truck_strategy == "Optimized Parallel attack"):
             for i in range(len(tree_list)):
                 for j in range(len(truck_list)):
-                    distances[i][j] = ((tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
-                        (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2) / tree_list[i].life_bar
+                    distances[i][j] = ((tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 +
+                                       (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2) / tree_list[i].life_bar
             return distances
         else:
             for i in range(len(tree_list)):
