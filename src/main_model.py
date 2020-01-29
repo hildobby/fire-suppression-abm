@@ -300,20 +300,24 @@ class ForestFire(Model):
         self.schedule_TreeCell.step()
 
         self.tree_list = self.list_tree_by_type(self, "On Fire")
+        if len(self.tree_list) > 0:
 
-        if (self.truck_strategy == "Optimized closest"):
-            self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list, self.firefighters_lists),
-                                                     self.tree_list)
+            if (self.truck_strategy == "Optimized closest"):
+                self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list,
+                                                                                self.firefighters_lists),
+                                                         self.tree_list)
 
-        elif (self.truck_strategy == "Optimized Parallel attack"):
-            self.assigned_list = self.assign_parallel(self.compute_distances(self.tree_list, self.firefighters_lists),
-                                                      self.tree_list)
+            elif (self.truck_strategy == "Optimized Parallel attack"):
+                self.assigned_list = self.assign_closest(
+                    self.compute_distances_parallel(self.tree_list, self.firefighters_lists),
+                    self.tree_list)
 
-        elif (self.truck_strategy == "Indirect attack"):
-            self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list, self.firefighters_lists),
-                                                     self.tree_list)
+            elif (self.truck_strategy == "Indirect attack"):
+                self.assigned_list = self.assign_closest(
+                    self.compute_distances(self.tree_list, self.firefighters_lists),
+                    self.tree_list)
 
-        self.schedule_FireTruck.step()
+            self.schedule_FireTruck.step()
 
         self.dc.collect(self, [TreeCell, Firetruck])
         self.current_step += 1
@@ -347,32 +351,21 @@ class ForestFire(Model):
 
     def compute_distances(self, tree_list, truck_list):
         distances = [[0 for x in range(len(truck_list))] for y in range(len(tree_list))]
-        if (self.truck_strategy == "Optimized Parallel attack"):
-            for i in range(len(tree_list)):
-                for j in range(len(truck_list)):
-                    distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
-                        (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2
-            return distances
-        else:
-            for i in range(len(tree_list)):
-                for j in range(len(truck_list)):
-                    distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
-                        (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2
-            return distances
+        for i in range(len(tree_list)):
+            for j in range(len(truck_list)):
+                distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
+                    (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2
+        return distances
+
+    def compute_distances_parallel(self, tree_list, truck_list):
+        distances = [[0 for x in range(len(truck_list))] for y in range(len(tree_list))]
+        for i in range(len(tree_list)):
+            for j in range(len(truck_list)):
+                distances[i][j] = ((tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 +
+                                   (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2) / tree_list[i].life_bar
+        return distances
 
     def assign_closest(self, matrix, tree_list):
-        assigned_trucks = [0 for x in range(self.num_firetruck)]
-        ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
-        matrix = np.asarray(matrix, dtype=int)
-        while 0 in assigned_trucks:
-            curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
-            if assigned_trucks[curr_smallest_pos[1]] == 0 and tree_list[curr_smallest_pos[0]].trees_claimed < ratio:
-                assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
-                tree_list[curr_smallest_pos[0]].trees_claimed += 1
-            matrix[curr_smallest_pos] = 100000
-        return assigned_trucks
-
-    def assign_parallel(self, matrix, tree_list):
         assigned_trucks = [0 for x in range(self.num_firetruck)]
         ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
         matrix = np.asarray(matrix, dtype=int)
