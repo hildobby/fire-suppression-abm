@@ -86,7 +86,7 @@ model_parameters = {
     'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 23, 1, 30, 1),
     'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Optimized closest',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
-                                                     'Random movements', 'Parallel attack',
+                                                     'Random movements', 'Parallel attack', 'Optimized Parallel attack',
                                                      'Optimized closest', 'Indirect attack']),
     'text_other_settings': UserSettableParameter('static_text', value='Other Settings'),
     'wind_strength': UserSettableParameter('slider', 'Wind strength', 10, 0, 80, 1),

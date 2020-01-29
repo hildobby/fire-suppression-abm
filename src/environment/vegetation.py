@@ -82,6 +82,8 @@ class TreeCell(Agent):
                 # if on fire reduce life_bar
                 if self.life_bar != 0:
                     self.life_bar -= self.burning_rate
+                    if self.life_bar == 0:
+                        self.condition = "Burned Out"
                 else:
                     self.condition = "Burned Out"
 

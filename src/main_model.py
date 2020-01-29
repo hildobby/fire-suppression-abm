@@ -306,7 +306,7 @@ class ForestFire(Model):
             self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list, self.firefighters_lists),
                                                      self.tree_list)
 
-        elif (self.truck_strategy == "Parallel attack"):
+        elif (self.truck_strategy == "Optimized Parallel attack"):
             self.assigned_list = self.assign_parallel(self.compute_distances(self.tree_list, self.firefighters_lists),
                                                       self.tree_list)
 
@@ -344,12 +344,18 @@ class ForestFire(Model):
 
     def compute_distances(self, tree_list, truck_list):
         distances = np.zeros((len(tree_list), len(truck_list)))
-
-        for i in range(len(tree_list)):
-            for j in range(len(truck_list)):
-                distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
-                    (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2
-        return distances
+        if (self.truck_strategy == "Optimized Parallel attack"):
+            for i in range(len(tree_list)):
+                for j in range(len(truck_list)):
+                    distances[i][j] = ((tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
+                        (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2) / tree_list[i].life_bar
+            return distances
+        else:
+            for i in range(len(tree_list)):
+                for j in range(len(truck_list)):
+                    distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
+                        (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2
+            return distances
 
     def assign_closest(self, matrix, tree_list):
         assigned_trucks = np.zeros(self.num_firetruck, dtype=TreeCell)
@@ -381,7 +387,6 @@ class ForestFire(Model):
         Helper method to count trees in a given condition in a given model.
         '''
         tree_list = [tree for tree in model.schedule_TreeCell.agents if tree.condition == tree_condition]
-
         return tree_list
 
     @staticmethod

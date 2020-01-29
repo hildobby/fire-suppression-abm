@@ -280,7 +280,8 @@ class Walker(Agent):
                 new_distance = position_x + position_y
 
                 if neighbor.condition != "On Fire" and position_x <= self.truck_max_speed and \
-                        position_y <= self.truck_max_speed and new_distance > max_distance:
+                        position_y <= self.truck_max_speed and new_distance > max_distance and \
+                        isinstance(neighbor, TreeCell):
                     max_distance = new_distance
                     closest_neighbor = neighbor
 
@@ -380,6 +381,8 @@ class Firetruck(Walker):
         elif (self.truck_strategy == 'Goes to the biggest fire'):
             self.biggestfire_move()
         elif (self.truck_strategy == "Parallel attack"):
+            self.parallel_attack()
+        elif (self.truck_strategy == "Optimized Parallel attack"):
             self.optimized_parallel_fire()
         elif (self.truck_strategy == "Optimized closest"):
             self.optimized_closest_fire()
