@@ -207,7 +207,7 @@ class Walker(Agent):
         closest_neighbor = self.model.assigned_list[np.where(attr == self.unique_id)[0][0]]
 
         neighbors_list_fire = self.model.grid.get_neighbors(closest_neighbor.pos, moore=False,
-                                                            radius=1)
+                                                                radius=1)
         max_distance = 0
         for neighbor in neighbors_list_fire:
             position_x = abs(neighbor.pos[0] - self.pos[0])
@@ -219,7 +219,6 @@ class Walker(Agent):
                     isinstance(neighbor, TreeCell):
                 max_distance = new_distance
                 closest_neighbor = neighbor
-
         self.take_step(closest_neighbor)
         closest_neighbor.trees_claimed += 1
 

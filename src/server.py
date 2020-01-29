@@ -84,7 +84,7 @@ model_parameters = {
     'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
     'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 15, 0, 50, 1),
     'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 23, 1, 30, 1),
-    'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Optimized closest',
+    'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Optimized Parallel attack',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
                                                      'Random movements', 'Parallel attack',
                                                      'Optimized Parallel attack', 'Optimized closest',

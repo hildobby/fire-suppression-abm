@@ -307,8 +307,8 @@ class ForestFire(Model):
                                            self.firefighters_lists), self.tree_list)
 
             elif (self.truck_strategy == "Optimized Parallel attack"):
-                self.assigned_list = self.assign_closest(
-                    self.compute_distances_parallel(self.tree_list, self.firefighters_lists),
+                self.assigned_list = self.assign_parallel(
+                    self.compute_distances(self.tree_list, self.firefighters_lists),
                     self.tree_list)
 
             elif (self.truck_strategy == "Indirect attack"):
@@ -375,6 +375,20 @@ class ForestFire(Model):
                 assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
                 tree_list[curr_smallest_pos[0]].trees_claimed += 1
             matrix[curr_smallest_pos] = 100000
+        return assigned_trucks
+
+    def assign_parallel(self, matrix, tree_list):
+        assigned_trucks = [0 for x in range(self.num_firetruck)]
+        ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
+        matrix = np.asarray(matrix, dtype=int)
+        for i in range(len(matrix[0])):
+            curr_best = [matrix[0][i], tree_list[0].life_bar, 0]
+            indices = [j for j, x in enumerate(matrix[:,i]) if x <= curr_best[0]]
+            if len(indices) > 1:
+                for k in indices:
+                    if (matrix[k][i] <= curr_best[0]) and (tree_list[k].life_bar >= curr_best[1]):
+                        curr_best = [matrix[k][i], tree_list[k].life_bar, k]
+            assigned_trucks[i] = tree_list[curr_best[2]]
         return assigned_trucks
 
     @staticmethod
