@@ -5,23 +5,22 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+import timeit
+from mesa import Model, Agent
+from mesa.time import RandomActivation
+from space_v2 import MultiGrid
+from datacollector_v2 import DataCollector
+from environment.river import RiverCell
+from environment.vegetation import TreeCell
+from agents.firetruck import Walker
+from agents.firetruck import Firetruck
+from environment.rain import Rain
+from environment.firebreak import BreakCell
+import numpy as np
+import math
+import random
 import sys
 sys.path.append('../')
-
-import random
-import math
-import numpy as np
-from environment.firebreak import BreakCell
-from environment.rain import Rain
-from agents.firetruck import Firetruck
-from agents.firetruck import Walker
-from environment.vegetation import TreeCell
-from environment.river import RiverCell
-from datacollector_v2 import DataCollector
-from space_v2 import MultiGrid
-from mesa.time import RandomActivation
-from mesa import Model, Agent
-import timeit
 
 
 # defines the model
@@ -306,15 +305,18 @@ class ForestFire(Model):
 
             if (self.truck_strategy == "Optimized closest"):
                 self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list,
-                                                         self.firefighters_lists), self.tree_list)
+                                                                                self.firefighters_lists),
+                                                         self.tree_list)
 
             elif (self.truck_strategy == "Optimized Parallel attack"):
-                self.assigned_list = self.assign_closest(self.compute_distances_parallel(self.tree_list,
-                                                         self.firefighters_lists), self.tree_list)
+                self.assigned_list = self.assign_closest(
+                    self.compute_distances_parallel(self.tree_list, self.firefighters_lists),
+                    self.tree_list)
 
             elif (self.truck_strategy == "Indirect attack"):
-                self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list,
-                                                         self.firefighters_lists), self.tree_list)
+                self.assigned_list = self.assign_closest(
+                    self.compute_distances(self.tree_list, self.firefighters_lists),
+                    self.tree_list)
 
             self.schedule_FireTruck.step()
 
@@ -364,7 +366,6 @@ class ForestFire(Model):
                                    (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2) / tree_list[i].life_bar
         return distances
 
-
     def assign_closest(self, matrix, tree_list):
         assigned_trucks = [0 for x in range(self.num_firetruck)]
         ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
@@ -376,7 +377,6 @@ class ForestFire(Model):
                 tree_list[curr_smallest_pos[0]].trees_claimed += 1
             matrix[curr_smallest_pos] = 100000
         return assigned_trucks
-
 
     @staticmethod
     def list_tree_by_type(model, tree_condition):
