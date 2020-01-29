@@ -356,15 +356,6 @@ class ForestFire(Model):
                     (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2
         return distances
 
-    def compute_distances_parallel(self, tree_list, truck_list):
-        distances = [[0 for x in range(len(truck_list))] for y in range(len(tree_list))]
-        for i in range(len(tree_list)):
-            for j in range(len(truck_list)):
-                distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
-                    (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2
-                distances[i][j] = distances[i][j] / tree_list[i].life_bar
-        return distances
-
     def assign_closest(self, matrix, tree_list):
         assigned_trucks = [0 for x in range(self.num_firetruck)]
         ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
@@ -386,8 +377,9 @@ class ForestFire(Model):
             indices = [j for j, x in enumerate(matrix[:,i]) if x <= curr_best[0]]
             if len(indices) > 1:
                 for k in indices:
-                    if (matrix[k][i] <= curr_best[0]) and (tree_list[k].life_bar >= curr_best[1]):
+                    if matrix[k][i] <= curr_best[0] and tree_list[k].life_bar >= curr_best[1] and tree_list[k].trees_claimed < ratio:
                         curr_best = [matrix[k][i], tree_list[k].life_bar, k]
+                tree_list[curr_best[2]].trees_claimed += 1
             assigned_trucks[i] = tree_list[curr_best[2]]
         return assigned_trucks
 

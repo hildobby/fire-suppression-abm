@@ -220,7 +220,6 @@ class Walker(Agent):
                 max_distance = new_distance
                 closest_neighbor = neighbor
         self.take_step(closest_neighbor)
-        closest_neighbor.trees_claimed += 1
 
     def parallel_attack(self):
         ratio = self.firefighters_tree_ratio(
