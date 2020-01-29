@@ -304,7 +304,7 @@ class ForestFire(Model):
             if (self.truck_strategy == "Optimized closest"):
                 self.assigned_list = self.assign_closest(
                     self.compute_distances(self.tree_list,
-                     self.firefighters_lists), self.tree_list)
+                                           self.firefighters_lists), self.tree_list)
 
             elif (self.truck_strategy == "Optimized Parallel attack"):
                 self.assigned_list = self.assign_closest(
