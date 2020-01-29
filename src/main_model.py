@@ -263,7 +263,6 @@ class ForestFire(Model):
 
         '''
         METHOD TO PLACE FIREFIGHTERS RANDOMLY OVER GRID
-
         for i in range(num_firetruck):
             x = random.randrange(self.width)
             y = random.randrange(self.height)
