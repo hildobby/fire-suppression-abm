@@ -375,9 +375,12 @@ class ForestFire(Model):
         for i in range(len(matrix[0])):
             curr_best = [matrix[0][i], tree_list[0].life_bar, 0]
             indices = [j for j, x in enumerate(matrix[:, i]) if x <= curr_best[0]]
+            for m in indices:
+                if tree_list[m].trees_claimed >= ratio:
+                    indices.remove(m)
             if len(indices) > 1:
                 for k in indices:
-                    if matrix[k][i] <= curr_best[0] and tree_list[k].life_bar >= curr_best[1] and tree_list[k].trees_claimed < ratio:
+                    if matrix[k][i] <= curr_best[0] and tree_list[k].life_bar >= curr_best[1]:
                         curr_best = [matrix[k][i], tree_list[k].life_bar, k]
                 tree_list[curr_best[2]].trees_claimed += 1
             assigned_trucks[i] = tree_list[curr_best[2]]
