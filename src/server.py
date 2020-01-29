@@ -5,7 +5,6 @@ from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
 
 from main_model import ForestFire
-
 from environment.river import RiverCell
 from environment.vegetation import TreeCell
 from agents.firetruck import Firetruck
@@ -30,13 +29,11 @@ def forest_fire_portrayal(agent):
     colors = {-0.4: "#77bd98",   # Sparse
               0: "#00bf00",    # Normal
               0.3: "#008000",  # Dense
-
               "On Fire": "#880000",
               "Burned Out": "#000000",
               "Is Extinguished": "#c994c7",
               "Full": "#ffa500",
               "Plenty": "#0000ff",
-
               "Rain": "#636363",
               "Firebreak": "#bdbdbd"}
 
@@ -66,7 +63,7 @@ def forest_fire_portrayal(agent):
     return portrayal
 
 
-canvas_element = CanvasGrid(forest_fire_portrayal, 200, 200, 1000, 1000)
+canvas_element = CanvasGrid(forest_fire_portrayal, 100, 100, 500, 500)
 # create line graph
 tree_chart = ChartModule([{"Label": "Fine", "Color": "green"},
                           {"Label": "On Fire", "Color": "red"},
@@ -76,110 +73,30 @@ extinguished_chart = ChartModule([{"Label": "Extinguished", "Color": "blue"}],
                                  data_collector_name='dc')
 
 model_parameters = {
-    'height': 200,
-    'width': 200,
-    'vision': 200,
-    'text_environment': UserSettableParameter(
-        'static_text',
-        value='Environment Generation Settings'),
-    'density': UserSettableParameter(
-        'slider',
-        'Tree density',
-        0.99,
-        0.01,
-        1.0,
-        0.01),
-    'sparse_ratio': UserSettableParameter(
-        'slider',
-        'Ratio of sparse vegetations',
-        0.5,
-        0,
-        1.0,
-        0.1),
-    'river_width': UserSettableParameter(
-        'slider',
-        'River width',
-        0,
-        0,
-        10,
-        1),
-    'break_width': UserSettableParameter(
-        'slider',
-        'Firebreak width',
-        0,
-        0,
-        6,
-        1),
-    'text_agents': UserSettableParameter(
-        'static_text',
-        value='Agents Settings'),
-    'num_firetruck': UserSettableParameter(
-        'slider',
-        'Number of Firetrucks',
-        15,
-        0,
-        50,
-        1),
-    'truck_max_speed': UserSettableParameter(
-        'slider',
-        'Speed of Firetrucks',
-        23,
-        1,
-        30,
-        1),
-    'truck_strategy': UserSettableParameter(
-        'choice',
-        'Firetrucks strategy',
-        value='Optimized',
-        choices=[
-            'Goes to the closest fire',
-            'Goes to the biggest fire',
-            'Random movements',
-            'Parallel attack',
-            'Optimized',
-            'Indirect attack']),
-    'text_other_settings': UserSettableParameter(
-        'static_text',
-        value='Other Settings'),
-    'wind_strength': UserSettableParameter(
-        'slider',
-        'Wind strength',
-        10,
-        0,
-        80,
-        1),
-    'wind_dir': UserSettableParameter(
-        'choice',
-        'Wind Direction',
-        value=('\u2B07 South'),
-        choices=[
-            "\u2B06  North",
-            "\u2197 North/East",
-            "\u27A1 East",
-            "\u2198 South/East",
-            "\u2B07 North",
-            "\u2199 South/West",
-            "\u2B05 West",
-            "\u2196 North/West"]),
-    'random_fires': UserSettableParameter(
-        'checkbox',
-        'Spontaneous Fires (Temperature based)',
-        value=False),
-    'tree_seek_type': UserSettableParameter(
-        'checkbox',
-        'Vision = OFF, Array = ON',
-        value=False),
-    'temperature': UserSettableParameter(
-        'slider',
-        'Temperature (°C)',
-        20,
-        0,
-        60,
-        1,
-    ),
+    'height': 100,
+    'width': 100,
+    'vision': 100,
+    'text_environment': UserSettableParameter('static_text', value='Environment Generation Settings'),
+    'density': UserSettableParameter('slider', 'Tree density', 0.99, 0.01, 1.0, 0.01),
+    'sparse_ratio': UserSettableParameter('slider', 'Ratio of sparse vegetations', 0.5, 0, 1.0, 0.1),
+    'river_width': UserSettableParameter('slider', 'River width', 0, 0, 10, 1),
+    'break_width': UserSettableParameter('slider', 'Firebreak width', 0, 0, 6, 1),
+    'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
+    'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 15, 0, 50, 1),
+    'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 23, 1, 30, 1),
+    'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Optimized closest',
+                                            choices=['Goes to the closest fire', 'Goes to the biggest fire',
+                                                     'Random movements', 'Parallel attack', 'Optimized closest', 'Indirect attack']),
+    'text_other_settings': UserSettableParameter('static_text', value='Other Settings'),
+    'wind_strength': UserSettableParameter('slider', 'Wind strength', 10, 0, 80, 1),
+    'wind_dir': UserSettableParameter('choice', 'Wind Direction', value=('\u2B07 South'),
+                                      choices=["\u2B06  North", "\u2197 North/East", "\u27A1 East", "\u2198 South/East",
+                                               "\u2B07 North", "\u2199 South/West", "\u2B05 West", "\u2196 North/West"]),
+    'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=False),
+    'tree_seek_type': UserSettableParameter('checkbox', 'Vision = OFF, Array = ON', value=False),
+    'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1,),
     'steps_to_extinguishment': 6}
 
 server = ModularServer(ForestFire, [canvas_element, tree_chart, extinguished_chart], "Forest Fire", model_parameters)
-
 server.port = 8521
 server.launch()

@@ -303,12 +303,13 @@ class ForestFire(Model):
 
         self.tree_list = self.list_tree_by_type(self, "On Fire")
 
-        if (self.truck_strategy == "Parallel attack"):
-            self.assigned_list = self.assign_parallel(self.compute_distances(self.tree_list, self.firefighters_lists),
-                                                      self.tree_list)
-        else:
+        if (self.truck_strategy == "Optimized closest"):
             self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list, self.firefighters_lists),
                                                      self.tree_list)
+
+        elif (self.truck_strategy == "Parallel attack"):
+            self.assigned_list = self.assign_parallel(self.compute_distances(self.tree_list, self.firefighters_lists),
+                                                      self.tree_list)
 
         self.schedule_FireTruck.step()
 
@@ -359,7 +360,7 @@ class ForestFire(Model):
             if assigned_trucks[curr_smallest_pos[1]] == 0 and tree_list[curr_smallest_pos[0]].trees_claimed < ratio:
                 assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
                 tree_list[curr_smallest_pos[0]].trees_claimed += 1
-            matrix[curr_smallest_pos] = 10000000000
+            matrix[curr_smallest_pos] = 100000
         return assigned_trucks
 
     def assign_parallel(self, matrix, tree_list):
@@ -372,7 +373,7 @@ class ForestFire(Model):
                 # Not working yet, life_bar is not correct
                 assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
                 tree_list[curr_smallest_pos[0]].trees_claimed += 1
-            matrix[curr_smallest_pos] = 10000000000
+            matrix[curr_smallest_pos] = 100000
         return assigned_trucks
 
     @staticmethod

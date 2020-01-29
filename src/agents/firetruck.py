@@ -194,8 +194,7 @@ class Walker(Agent):
         # print(attr)
         # print(self.unique_id)
         # print(np.where(attr == self.unique_id))
-        closest_neighbor = self.model.assigned_list[np.where(attr == self.unique_id)[
-            0][0]]
+        closest_neighbor = self.model.assigned_list[np.where(attr == self.unique_id)[0][0]]
 
         self.take_step(closest_neighbor)
         closest_neighbor.trees_claimed += 1
@@ -382,7 +381,7 @@ class Firetruck(Walker):
             self.biggestfire_move()
         elif (self.truck_strategy == "Parallel attack"):
             self.optimized_parallel_fire()
-        elif (self.truck_strategy == "Optimized"):
+        elif (self.truck_strategy == "Optimized closest"):
             self.optimized_closest_fire()
         elif (self.truck_strategy == 'Indirect attack'):
             self.indirect_attack()
