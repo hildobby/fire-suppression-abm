@@ -383,7 +383,7 @@ class ForestFire(Model):
         matrix = np.asarray(matrix, dtype=int)
         for i in range(len(matrix[0])):
             curr_best = [matrix[0][i], tree_list[0].life_bar, 0]
-            indices = [j for j, x in enumerate(matrix[:,i]) if x <= curr_best[0]]
+            indices = [j for j, x in enumerate(matrix[:, i]) if x <= curr_best[0]]
             if len(indices) > 1:
                 for k in indices:
                     if (matrix[k][i] <= curr_best[0]) and (tree_list[k].life_bar >= curr_best[1]):
