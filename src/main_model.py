@@ -311,6 +311,10 @@ class ForestFire(Model):
             self.assigned_list = self.assign_parallel(self.compute_distances(self.tree_list, self.firefighters_lists),
                                                       self.tree_list)
 
+        elif (self.truck_strategy == "Indirect attack"):
+            self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list, self.firefighters_lists),
+                                                      self.tree_list)
+
         self.schedule_FireTruck.step()
 
         self.dc.collect(self, [TreeCell, Firetruck])
@@ -350,7 +354,7 @@ class ForestFire(Model):
             for i in range(len(tree_list)):
                 for j in range(len(truck_list)):
                     distances[i][j] = ((tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 +
-                                       (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2) / tree_list[i].life_bar
+                        (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2) / tree_list[i].life_bar
             return distances
         else:
             for i in range(len(tree_list)):
@@ -377,9 +381,7 @@ class ForestFire(Model):
         matrix = np.array(matrix)
         while 0 in assigned_trucks:
             curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
-            if assigned_trucks[curr_smallest_pos[1]] == 0 and tree_list[curr_smallest_pos[0]].trees_claimed < ratio \
-                    and tree_list[curr_smallest_pos[0]].life_bar >= 60:
-                # Not working yet, life_bar is not correct
+            if assigned_trucks[curr_smallest_pos[1]] == 0 and tree_list[curr_smallest_pos[0]].trees_claimed < ratio:
                 assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
                 tree_list[curr_smallest_pos[0]].trees_claimed += 1
             matrix[curr_smallest_pos] = 100000
