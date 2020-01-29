@@ -304,8 +304,7 @@ class ForestFire(Model):
 
             if (self.truck_strategy == "Optimized closest"):
                 self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list,
-                                                                                self.firefighters_lists),
-                                                         self.tree_list)
+                     self.firefighters_lists), self.tree_list)
 
             elif (self.truck_strategy == "Optimized Parallel attack"):
                 self.assigned_list = self.assign_closest(
@@ -361,8 +360,9 @@ class ForestFire(Model):
         distances = [[0 for x in range(len(truck_list))] for y in range(len(tree_list))]
         for i in range(len(tree_list)):
             for j in range(len(truck_list)):
-                distances[i][j] = ((tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 +
-                                   (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2) / tree_list[i].life_bar
+                distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
+                    (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2
+                distances[i][j] = distances[i][j] / tree_list[i].life_bar
         return distances
 
     def assign_closest(self, matrix, tree_list):
