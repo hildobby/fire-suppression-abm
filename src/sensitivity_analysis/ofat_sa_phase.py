@@ -129,7 +129,7 @@ plt.savefig("truckstrategy_3_ofat_{}___repli_{}__dist_samp_{}.png".format(var, r
 # hist.set_xlabel("Burned (%)", fontweight='bold', fontsize=20)
 # hist.set_ylabel("Occurrence (#)", fontweight='bold', fontsize=20)
 #
-#plt.savefig("hist_truckstrategy_1_ofat_{}___repli_{}__dist_samp_{}.png"\
+# plt.savefig("hist_truckstrategy_1_ofat_{}___repli_{}__dist_samp_{}.png"\
 # .format(var, replicates, distinct_samples), dpi=300)
 #
 #
