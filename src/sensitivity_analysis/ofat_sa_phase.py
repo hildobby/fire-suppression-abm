@@ -82,7 +82,6 @@ for i, var in enumerate(problem['names']):
     if var == 'truck_strategy':
         samples = np.linspace(1, 1, 1)
 
-
     batch = BatchRunnerMP(
         ForestFire,
         max_steps=100,
@@ -113,7 +112,6 @@ for i, var in enumerate(problem['names']):
     axs.set_xlim(0, 1)
 
 
-
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
     name = "truckstrategy_3_ofat_{}___repli_{}__dist_samp_{}.csv".format(var, replicates, distinct_samples)
@@ -139,4 +137,4 @@ plt.savefig("truckstrategy_3_ofat_{}___repli_{}__dist_samp_{}.png".format(var, r
 
 end = time.time()
 
-print("This took: ", (end-begin))
+print("This took: ", (end - begin))

@@ -70,7 +70,6 @@ class ForestFire(Model):
         self.steps_to_extinguishment = steps_to_extinguishment
         self.n_agents = 0
 
-
         self.agents = []
         self.firefighters_lists = []
         self.initial_tree = height * width * density - \
@@ -97,7 +96,7 @@ class ForestFire(Model):
 
         self.grid = MultiGrid(height, width, torus=False)
 
-        #random.seed(1)
+        # random.seed(1)
         self.init_river()
         self.init_break(self.break_size)
 
@@ -123,7 +122,6 @@ class ForestFire(Model):
         self.num_firetruck = num_firetruck
         self.truck_strategy = truck_strategy
         self.wind_strength = wind_strength
-
 
         # random.seed(1)
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed)
@@ -152,7 +150,6 @@ class ForestFire(Model):
         self.running = True
 
         self.dc.collect(self, [TreeCell, Firetruck])
-
 
     def init_river(self):
         '''
