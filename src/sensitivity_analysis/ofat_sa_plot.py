@@ -7,6 +7,8 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+import sys
+sys.path.append('../')
 import matplotlib.pyplot as plt
 import os
 import pandas as pd
@@ -20,23 +22,71 @@ data_1 = {}
 data_2 = {}
 data_3 = {}
 
-list_var = ['density']
-rep = 100
-dist = 70
+var = 'num_firetruck'
+x_label='Number of firetrucks #'
+param = 'On Fire'
+replicates = 50
+distinct_samples = 50
+file_name='truckstrategy_3_ofat_num_firetruck___repli_50__dist_samp_30.csv'
+plot_name='truckstrategy_3_ofat_num_firetruck___repli_50__dist_samp_30'
+
+df=pd.read_csv(file_name)
+
+x = df.groupby(var).mean().reset_index()[var]
+y = df.groupby(var).mean()[param]
+
+replicates = df.groupby(var)[param].count()
+err = (1.96 * df.groupby(var)[param].std()) / np.sqrt(replicates)
+
+
+
+f, ax = plt.subplots(1, figsize=(10, 7))
+
+ax.plot(x, y, c='k')
+ax.fill_between(x, y - err, y + err,color='gray')
+
+ax.set_xlabel(x_label,fontweight='bold',fontsize=20)
+ax.set_ylabel('Forest burnt',fontweight='bold',fontsize=20)
+
+ax.xaxis.set_tick_params(labelsize=20)
+ax.yaxis.set_tick_params(labelsize=20)
+
+ax.set_xticks(range(1,30,6))
+
+
+plt.xlim([1, 30])
+plt.ylim([0, .5])
+plt.show()
+plt.savefig(plot_name, dpi=300)
+
+
+
+
+
+
+
+'''
 
 # Load the files into dict
 for filename in os.listdir('.'):
-    if filename.startswith("ofat"):
+    if filename.startswith("ofat_sparse_ratio___repli_50__dist_samp_50"):
         data_1[filename.split('.csv')[0]] = pd.read_csv(filename)
 
 for filename in os.listdir('.'):
-    if filename.startswith("ofat_2"):
+    if filename.startswith("truckstrategy_2"):
         data_2[filename.split('.csv')[0]] = pd.read_csv(filename)
 
 
 for filename in os.listdir('.'):
-    if filename.startswith("ofat_3"):
+    if filename.startswith("truckstrategy_3"):
         data_3[filename.split('.csv')[0]] = pd.read_csv(filename)
+
+
+
+
+
+
+
 
 
 for var in list_var:
@@ -106,3 +156,6 @@ for var in list_var:
         ax[2].set_xlabel(var)
         ax[2].set_ylabel("Extinguished")
         ax[2].legend()
+
+
+'''

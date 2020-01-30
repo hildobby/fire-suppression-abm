@@ -41,7 +41,7 @@ class TreeCell(Agent):
         self.unique_id = unique_id
         self.condition = "Fine"
         self.life_bar = 100       # give the tree a life bar
-        self.burning_rate = 20   # need to change that as well
+        self.burning_rate = 20  # need to change that as well
         self.trees_claimed = 0
         self.fire_bar = 0
 
