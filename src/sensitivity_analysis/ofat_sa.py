@@ -39,8 +39,8 @@ distinct_samples = 2
 truck_strategy = 1
 problem = {
     'num_vars': 3,
-    'names': ['wind_strength', 'num_firetruck', 'truck_strategy'],
-    'bounds': [[0, 30], [0, 60], [truck_strategy]]
+    'names': ['truck_strategy'],
+    'bounds': [[truck_strategy]]
 }
 
 # Set the outputs
@@ -76,8 +76,8 @@ for i, var in enumerate(problem['names']):
         display_progress=True, nr_processes=n_cores)
 
     batch.run_all()
-
     data[var] = batch.get_model_vars_dataframe()
+    print("test")
 
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
@@ -94,8 +94,8 @@ directory = os.chdir("../")
 truck_strategy = 2
 problem = {
     'num_vars': 3,
-    'names': ['wind_strength', 'num_firetruck', 'truck_strategy'],
-    'bounds': [[0, 30], [0, 60], [truck_strategy]]
+    'names': ['truck_strategy'],
+    'bounds': [[truck_strategy]]
 }
 
 # Set the repetitions, the amount of steps, and the amount of distinct
@@ -152,8 +152,8 @@ directory = os.chdir("../")
 truck_strategy = 3
 problem = {
     'num_vars': 3,
-    'names': ['wind_strength', 'num_firetruck', 'truck_strategy'],
-    'bounds': [[0, 30], [0, 60], [truck_strategy]]
+    'names': ['truck_strategy'],
+    'bounds': [[truck_strategy]]
 }
 
 # Set the repetitions, the amount of steps, and the amount of distinct

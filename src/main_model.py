@@ -343,7 +343,6 @@ class ForestFire(Model):
         '''
         count = 0
         for tree in model.schedule_TreeCell.agents:
-
             if tree.condition == tree_condition:
                 count += 1
         return count

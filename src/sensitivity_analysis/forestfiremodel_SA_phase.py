@@ -9,6 +9,7 @@ import sys
 sys.path.append('../')
 
 import math
+import numpy as np
 from mesa import Model
 from mesa.time import RandomActivation
 from space_v2 import MultiGrid
@@ -33,7 +34,7 @@ class ForestFire(Model):
             width=100,
             density=0.63,
             temperature=0,
-            truck_strategy=1,
+            truck_strategy=3,
             river_number=0,
             river_width=0,
             random_fires=0,
@@ -43,7 +44,8 @@ class ForestFire(Model):
             wind_strength=10,
             wind_dir="\u2B06  North",
             break_width=0,
-            sparse_ratio=0.5):
+            sparse_ratio=0.5,
+            steps_to_extinguishment=1):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -65,8 +67,9 @@ class ForestFire(Model):
         self.break_size = width
 
         self.temperature = temperature
-
+        self.steps_to_extinguishment = steps_to_extinguishment
         self.n_agents = 0
+
 
         self.agents = []
         self.firefighters_lists = []
@@ -94,6 +97,7 @@ class ForestFire(Model):
 
         self.grid = MultiGrid(height, width, torus=False)
 
+        #random.seed(1)
         self.init_river()
         self.init_break(self.break_size)
 
@@ -118,6 +122,8 @@ class ForestFire(Model):
         self.temperature = temperature
         self.num_firetruck = num_firetruck
         self.truck_strategy = truck_strategy
+        self.wind_strength = wind_strength
+
 
         # random.seed(1)
         self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed)
@@ -144,8 +150,9 @@ class ForestFire(Model):
                                                  Firetruck: {"Condition": "condition"}})
 
         self.running = True
+
         self.dc.collect(self, [TreeCell, Firetruck])
-        self.wind_strength = wind_strength
+
 
     def init_river(self):
         '''
@@ -302,7 +309,13 @@ class ForestFire(Model):
         '''
         self.trees_on_fire = 0
         self.schedule_TreeCell.step()
-        self.schedule_FireTruck.step()
+
+        if self.num_firetruck != 0 and self.truck_strategy == "Optimized":
+            self.tree_list = self.list_tree_by_type(self, "On Fire")
+            self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list, self.firefighters_lists),
+                                                     self.tree_list)
+        if self.num_firetruck != 0:
+            self.schedule_FireTruck.step()
 
         self.dc.collect(self, [TreeCell, Firetruck])
         self.current_step += 1
@@ -332,6 +345,33 @@ class ForestFire(Model):
             if tree.condition == tree_condition:
                 count += 1
         return count
+
+    def compute_distances(self, tree_list, truck_list):
+        distances = np.zeros((len(tree_list), len(truck_list)))
+
+        for i in range(len(tree_list)):
+            for j in range(len(truck_list)):
+                distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
+                    (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2
+        return distances
+
+    def assign_closest(self, matrix, tree_list):
+        assigned_trucks = np.zeros(self.num_firetruck, dtype=TreeCell)
+        while np.isin(0, assigned_trucks):
+            curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
+            if assigned_trucks[curr_smallest_pos[1]] == 0:
+                assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
+            matrix[curr_smallest_pos] = 10000000000
+        return assigned_trucks
+
+    @staticmethod
+    def list_tree_by_type(model, tree_condition):
+        '''
+        Helper method to count trees in a given condition in a given model.
+        '''
+        tree_list = [tree for tree in model.schedule_TreeCell.agents if tree.condition == tree_condition]
+
+        return tree_list
 
     @staticmethod
     def count_extinguished_fires(model):
@@ -379,7 +419,7 @@ class ForestFire(Model):
             truck_max_speed)
 
         # Place the agent on the grid
-        self.grid.place_agent(new_agent, pos)
+        self.grid.place_agent(new_agent, (int(pos[0]), int(pos[1])))
 
         # And add the agent to the model so we can track it
         self.agents.append(new_agent)

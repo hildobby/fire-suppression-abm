@@ -20,13 +20,13 @@ data_1 = {}
 data_2 = {}
 data_3 = {}
 
-list_var = ['wind_strength', 'num_firetruck']
-rep = 50
-dist = 50
+list_var = ['density']
+rep = 100
+dist = 70
 
 # Load the files into dict
 for filename in os.listdir('.'):
-    if filename.startswith("ofat_1"):
+    if filename.startswith("ofat"):
         data_1[filename.split('.csv')[0]] = pd.read_csv(filename)
 
 for filename in os.listdir('.'):

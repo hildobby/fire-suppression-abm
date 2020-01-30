@@ -8,16 +8,18 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 import sys
 sys.path.append('../')
 
-import math
-from mesa import Model
-from mesa.time import RandomActivation
-from space_v2 import MultiGrid
-from datacollector_v2 import DataCollector
-from environment.river import RiverCell
-from environment.vegetation import TreeCell
-from agents.firetruck import Firetruck
-from environment.rain import Rain
 import random
+import math
+import numpy as np
+from environment.firebreak import BreakCell
+from environment.rain import Rain
+from agents.firetruck import Firetruck
+from environment.vegetation import TreeCell
+from environment.river import RiverCell
+from datacollector_v2 import DataCollector
+from space_v2 import MultiGrid
+from mesa.time import RandomActivation
+from mesa import Model
 
 
 # defines the model
@@ -27,6 +29,22 @@ class ForestFire(Model):
     '''
     Simple Forest Fire model.
     '''
+
+    height = 100
+    width = 100
+    density = 0.6
+    temperature = 0
+    truck_strategy = 1
+    river_number = 0
+    river_width = 0
+    random_fires = 0
+    num_firetruck = 1
+    truck_max_speed = 2
+    vision = 100
+    wind_strength = 10
+    wind_dir = "\u2B06 North"
+    break_width = 0
+    sparse_ratio = 0.4
 
     def __init__(
             self,
@@ -38,13 +56,14 @@ class ForestFire(Model):
             river_number=0,
             river_width=0,
             random_fires=0,
-            num_firetruck=30,
+            num_firetruck=3,
             vision=100,
             truck_max_speed=2,
             wind_strength=10,
             wind_dir="\u2B06  North",
             break_width=0,
-            sparse_ratio=0.4):
+            sparse_ratio=0.4,
+            steps_to_extinguishment=6):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -66,7 +85,7 @@ class ForestFire(Model):
         self.break_size = width
 
         self.temperature = temperature
-
+        self.steps_to_extinguishment = steps_to_extinguishment
         self.n_agents = 0
 
         self.agents = []
@@ -310,6 +329,13 @@ class ForestFire(Model):
         '''
         self.trees_on_fire = 0
         self.schedule_TreeCell.step()
+        print("do step")
+
+        if self.num_firetruck != 0:
+            self.tree_list = self.list_tree_by_type(self, "On Fire")
+            self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list, self.firefighters_lists),
+                                                     self.tree_list)
+
         self.schedule_FireTruck.step()
 
         self.dc.collect(self, [TreeCell, Firetruck])
@@ -340,6 +366,33 @@ class ForestFire(Model):
             if tree.condition == tree_condition:
                 count += 1
         return count
+
+    def compute_distances(self, tree_list, truck_list):
+        distances = np.zeros((len(tree_list), len(truck_list)))
+
+        for i in range(len(tree_list)):
+            for j in range(len(truck_list)):
+                distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
+                    (tree_list[i].pos[1] - truck_list[j].pos[1]) ** 2
+        return distances
+
+    def assign_closest(self, matrix, tree_list):
+        assigned_trucks = np.zeros(self.num_firetruck, dtype=TreeCell)
+        while np.isin(0, assigned_trucks):
+            curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
+            if assigned_trucks[curr_smallest_pos[1]] == 0:
+                assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
+            matrix[curr_smallest_pos] = 10000000000
+        return assigned_trucks
+
+    @staticmethod
+    def list_tree_by_type(model, tree_condition):
+        '''
+        Helper method to count trees in a given condition in a given model.
+        '''
+        tree_list = [tree for tree in model.schedule_TreeCell.agents if tree.condition == tree_condition]
+
+        return tree_list
 
     @staticmethod
     def count_extinguished_fires(model):
