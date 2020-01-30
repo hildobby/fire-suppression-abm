@@ -82,8 +82,9 @@ model_parameters = {
     'river_width': UserSettableParameter('slider', 'River width', 0, 0, 10, 1),
     'break_width': UserSettableParameter('slider', 'Firebreak width', 0, 0, 6, 1),
     'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
-    'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 15, 0, 50, 1),
+    'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 6, 0, 50, 1),
     'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 23, 1, 30, 1),
+    'steps_to_extinguishment': UserSettableParameter('slider', 'Number of steps needed to extinguish a fire', 2, 1, 6, 1),
     'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Optimized Parallel attack',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
                                                      'Random movements', 'Parallel attack',
@@ -97,8 +98,7 @@ model_parameters = {
                                                "\u2199 South/West", "\u2B05 West",
                                                "\u2196 North/West"]),
     'random_fires': UserSettableParameter('checkbox', 'Spontaneous Fires (Temperature based)', value=False),
-    'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1,),
-    'steps_to_extinguishment': 6}
+    'temperature': UserSettableParameter('slider', 'Temperature (°C)', 20, 0, 60, 1,)}
 
 server = ModularServer(ForestFire, [canvas_element, tree_chart, extinguished_chart], "Forest Fire", model_parameters)
 server.port = 8521
