@@ -111,7 +111,6 @@ for i, var in enumerate(problem['names']):
     axs.set_xlim(0, 1)
 
 
-
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
     name = "truckstrategy_0_ofat_{}___repli_{}__dist_samp_{}.csv".format(var, replicates, distinct_samples)
