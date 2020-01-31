@@ -25,11 +25,32 @@ data_3 = {}
 var = 'num_firetruck'
 x_label = 'Number of firetrucks #'
 param = 'On Fire'
-replicates = 50
-distinct_samples = 50
-file_name = 'truckstrategy_3_ofat_num_firetruck___repli_50__dist_samp_30.csv'
-plot_name = 'truckstrategy_3_ofat_num_firetruck___repli_50__dist_samp_30'
+replicates = 100
+distinct_samples = 1
+file_name = 'truckstrategy_0_ofat_truck_strategy___repli_100__dist_samp_1.csv'
+plot_name = 'hist_truckstrategy_0_ofat_truck_strategy___repli_100__dist_samp_1'
 
+
+# To plot Histo
+data = pd.read_csv(file_name)
+f, axs = plt.subplots(1, figsize=(10, 7))
+hist = data["On Fire"].hist(range=(0.9,1))
+hist.set_xlabel("Burnt ", fontweight='bold', fontsize=20)
+hist.set_ylabel("Occurrence (#)", fontweight='bold', fontsize=20)
+axs.xaxis.set_tick_params(labelsize=20)
+axs.yaxis.set_tick_params(labelsize=20)
+plt.xlim([0, 1.01])
+
+
+plt.savefig("hist_truckstrategy_1_ofat_{}___repli_{}__dist_samp_{}.png".\
+           format(var, replicates, distinct_samples), dpi=300)
+
+
+
+
+''''
+
+# to plot the lines
 df = pd.read_csv(file_name)
 
 x = df.groupby(var).mean().reset_index()[var]
@@ -58,8 +79,6 @@ plt.ylim([0, .5])
 plt.show()
 plt.savefig(plot_name, dpi=300)
 
-
-'''
 
 # Load the files into dict
 for filename in os.listdir('.'):
