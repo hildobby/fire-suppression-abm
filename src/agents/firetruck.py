@@ -442,7 +442,7 @@ class Firetruck(Walker):
             self.optimized_closest_fire()
         elif (self.truck_strategy == 'Indirect attack'):
             self.indirect_attack()
-        else:
+        elif (self.truck_strategy == 'Random'):
             self.random_move()
 
         if (self.truck_strategy != 'Indirect attack'):

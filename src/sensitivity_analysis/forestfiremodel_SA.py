@@ -128,6 +128,8 @@ class ForestFire(Model):
             self.schedule.add(self.agents[i])
 
         # Put int back to string
+        if truck_strategy == 0:
+            truck_strategy = 'Goes to the closest fire'
         if truck_strategy == 1:
             truck_strategy = 'Goes to the closest fire'
         elif truck_strategy == 2:

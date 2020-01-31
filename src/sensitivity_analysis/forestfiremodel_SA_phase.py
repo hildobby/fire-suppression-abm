@@ -32,13 +32,13 @@ class ForestFire(Model):
             self,
             height=100,
             width=100,
-            density=0.63,
+            density=0.99,
             temperature=0,
             truck_strategy=3,
             river_number=0,
             river_width=0,
             random_fires=0,
-            num_firetruck=0,
+            num_firetruck=10,
             vision=100,
             truck_max_speed=2,
             wind_strength=10,
@@ -112,6 +112,8 @@ class ForestFire(Model):
         # Put int back to string
         if truck_strategy == 1:
             truck_strategy = 'Goes to the closest fire'
+        elif truck_strategy == 0:
+            truck_strategy = 'Random'
         elif truck_strategy == 2:
             truck_strategy = 'Goes to the biggest fire'
         elif truck_strategy == 3:

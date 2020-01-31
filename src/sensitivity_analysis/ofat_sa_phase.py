@@ -31,8 +31,8 @@ n_cores = 22
 
 # Set the repetitions, the amount of steps, and the amount of distinct
 # values per variable
-replicates = 50
-distinct_samples = 30
+replicates = 100
+distinct_samples = 1
 
 
 ##########################################################################
@@ -48,8 +48,8 @@ distinct_samples = 30
 
 problem = {
     'num_vars': 1,
-    'names': ['sparse_ratio'],
-    'bounds': [[0, 1]]
+    'names': ['truck_strategy'],
+    'bounds': [[1]]
 }
 
 # problem = {
@@ -80,11 +80,10 @@ for i, var in enumerate(problem['names']):
             dtype=int)
 
     if var == 'truck_strategy':
-        samples = np.linspace(1, 1, 1)
+        samples = np.linspace(0, 0, 1)
 
     batch = BatchRunnerMP(
         ForestFire,
-        max_steps=100,
         iterations=replicates,
         variable_parameters={var: samples},
         model_reporters=model_reporters,
@@ -112,12 +111,16 @@ for i, var in enumerate(problem['names']):
     axs.set_xlim(0, 1)
 
 
+
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
-    name = "truckstrategy_3_ofat_{}___repli_{}__dist_samp_{}.csv".format(var, replicates, distinct_samples)
+    name = "truckstrategy_0_ofat_{}___repli_{}__dist_samp_{}.csv".format(var, replicates, distinct_samples)
     data[var].to_csv(name)
 
-plt.savefig("truckstrategy_3_ofat_{}___repli_{}__dist_samp_{}.png".format(var, replicates, distinct_samples), dpi=300)
+plt.savefig("truckstrategy_0_ofat_{}___repli_{}__dist_samp_{}.png".format(var, replicates, distinct_samples), dpi=300)
+
+print("Mean of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].mean())
+print("Variance of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].var())
 
 # print("Mean of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].mean())
 # print("Variance of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].var())
@@ -129,8 +132,7 @@ plt.savefig("truckstrategy_3_ofat_{}___repli_{}__dist_samp_{}.png".format(var, r
 # hist.set_xlabel("Burned (%)", fontweight='bold', fontsize=20)
 # hist.set_ylabel("Occurrence (#)", fontweight='bold', fontsize=20)
 #
-# plt.savefig("hist_truckstrategy_1_ofat_{}___repli_{}__dist_samp_{}.png"\
-# .format(var, replicates, distinct_samples), dpi=300)
+# plt.savefig("hist_truckstrategy_1_ofat_{}___repli_{}__dist_samp_{}.png".format(var, replicates, distinct_samples), dpi=300)
 #
 #
 # print("Mean of the number of steps to end: ", data["truck_strategy"]["Step"].mean())
