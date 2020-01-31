@@ -34,7 +34,7 @@ plot_name = 'hist_truckstrategy_0_ofat_truck_strategy___repli_100__dist_samp_1'
 # To plot Histo
 data = pd.read_csv(file_name)
 f, axs = plt.subplots(1, figsize=(10, 7))
-hist = data["On Fire"].hist(range=(0.9,1))
+hist = data["On Fire"].hist(range=(0.9, 1))
 hist.set_xlabel("Burnt ", fontweight='bold', fontsize=20)
 hist.set_ylabel("Occurrence (#)", fontweight='bold', fontsize=20)
 axs.xaxis.set_tick_params(labelsize=20)
@@ -42,10 +42,8 @@ axs.yaxis.set_tick_params(labelsize=20)
 plt.xlim([0, 1.01])
 
 
-plt.savefig("hist_truckstrategy_1_ofat_{}___repli_{}__dist_samp_{}.png".\
-           format(var, replicates, distinct_samples), dpi=300)
-
-
+plt.savefig("hist_truckstrategy_1_ofat_{}___repli_{}__dist_samp_{}.png".
+            format(var, replicates, distinct_samples), dpi=300)
 
 
 ''''
