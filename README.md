@@ -4,11 +4,11 @@ Asian-paced Yodeling: Wildfire prevention simulation using agent-based modeling 
 
 This project uses [Mesa](https://github.com/projectmesa/mesa), an Apache2 licensed agent-based modeling (or ABM) framework in Python.
 
-It allows users to simulate a wildfire in a randomly generated forest environment. The random generation is based on user settable settings from the visualisation tool provided by mesa. This simulation is created in a 2D grid. The firefighting agents will attempt to extinguish said fire using a strategy chosen by the user, the firefighter's success depends on the settings used in the simulation. The program also allows for sensitivity analysis with a built-in script.
+This repository allows users to simulate a wildfire in a randomly generated forest environment. The random generation is based on user settable settings from the visualisation tool provided by mesa. This simulation is created in a 2D grid of size 100x100. The firefighting agents will attempt to extinguish said fire using a strategy chosen by the user, the firefighter's success depends on the settings used in the simulation. The program also allows for sensitivity analysis with a built-in script.
 
 ![A screenshot of the simulation's visualisation](https://github.com/hildobby/Asian-paced_Yodeling/blob/master/src/visualisation.png)
 
-*Above: A screenshot of the visualisation tool using Mesa.*
+*Above: A screenshot of the visualisation tool provided by Mesa.*
 
 Features
 ------------
@@ -41,4 +41,8 @@ python src/server.py
 ```
 
 Running the Sensitivity Analysis
+------------
+
+
+Litterature used for the project's formulas and settings
 ------------
