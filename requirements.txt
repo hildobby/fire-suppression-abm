@@ -1,3 +1,12 @@
 mesa
+ipynb
+axelrod>=3.11.0
+ipython>=6.2.1
+statsmodels
+SALib
+pandas
 numpy
+matplotlib
 pathos
+pycodestyle
+autopep8

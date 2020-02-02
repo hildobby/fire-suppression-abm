@@ -1,67 +1,21 @@
-# Useful Git commands
+# Running the server
 
-## General commands
+## Cloning the repository
 
-To check if there are any differences between your local branch and master
+To clone the repository using `git`, run the following command in your command line tool:
 ```bash
-git status
+git clone https://github.com/hildobby/Asian-paced_Yodeling.git
 ```
 
-## In order to get latest changes from github
+## In order to download all the required packages
 
-If you want to pull latest changes from Github and you wan to abort the work you did locally
+To download all the packages using `pip`, navigate to the repository's local directory and run the following:
 ```bash
-git stash
+pip install -r "requirements.txt"
 ```
+## In order to run the server with visualisation
 
-To check if there are any differences between your local branch and master
+To run the simulation with the gui in python, run the following fromt your cloned repository's local directory:
 ```bash
-git pull
-```
-
-## In order to publish local changes from github
-
-If you want to add a file for a commit 
-```bash
-git add [filename]
-```
-
-If you want to create a commit
-```bash
-git commit -m 'description of what you are commiting and why'
-```
-
-To push it to github
-```bash
-git push
-```
-
-*if `git push` doesn't tells you to merge before pushing, do `git pull`, fix merge conflicts if there are any and then `git push` again
-
-
-## Updating the github repo with your local changes
-
-For each of the files you changed:
-```bash
-git add [filename]
-```
-
-Then,
-```bash
-git commit -m '[your_message]'
-git pull
-git push
-```
-
-
-# Auto Linting
-
-To install
-```bash
-pip install --upgrade autopep8
-```
-
-To run auto lining locally
-```bash
-autopep8 --max-line-length=120 --in-place --aggressive [filename]
+python src/server.py
 ```
