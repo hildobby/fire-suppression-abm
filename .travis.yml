@@ -29,9 +29,10 @@ notifications:
       on_success: always
       on_failure: never
       template:
-        - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) by %{author} the great fucking worked in %{duration}"
+        - "Build <%{build_url}|#%{build_number}> (<%{compare_url}|%{commit}>) by %{author} the great worked in %{duration}"
         - "Success, you successfully succeeded! :clap::clap::clap:"
         - ":letter_g::letter_o::letter_o::letter_d:  :letter_j::letter_o::letter_b::grey_exclamation:"
+        - ":letter_y::letter_o::letter_u: :letter_a::letter_r::letter_e: :letter_a::letter_w::letter_e::letter_s::letter_o::letter_m::letter_e::grey_exclamation:"
 
 script:
     - git remote rm origin
