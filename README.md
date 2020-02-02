@@ -1,19 +1,14 @@
 Asian-paced Yodeling: Wildfire prevention simulation using agent-based modeling written in Python 3+
 =========================================
-
-### Status
 [![Build Status](https://travis-ci.com/hildobby/Asian-paced_Yodeling.png)](https://travis-ci.com/hildobby/Asian-paced_Yodeling)
 
 This project uses [Mesa](https://github.com/projectmesa/mesa). `Mesa` is an Apache2 licensed agent-based modeling (or ABM) framework in Python.
 
-It allows users to quickly create agent-based models using built-in core components (such as spatial grids and agent schedulers) or customized implementations; visualize them using a browser-based interface; and analyze their results using Python's data analysis tools. Its goal is to be the Python 3-based alternative to NetLogo, Repast, or MASON.
+It allows users to simulate a wildfire in a randomly generated forest environment. The random generation is based on user settable settings from the visualisation tool provided by mesa. This simulation is created in a 2D grid. The firefighting agents will attempt to extinguish said fire using a strategy chosen by the user, the firefighter's success depends on the settings used in the simulation. The program also allows for sensitivity analysis with a built-in script.
 
 ![A screenshot of the simulation's visualisation](https://github.com/hildobby/Asian-paced_Yodeling/blob/master/src/visualisation.png)
 
 *Above: A screenshot of the visualisation tool using Mesa.*
-
-.. _`Mesa` : https://github.com/projectmesa/mesa/
-
 
 Features
 ------------
@@ -44,3 +39,6 @@ To run the simulation with the gui in python, run the following fromt your clone
 ```bash
 python src/server.py
 ```
+
+Running the Sensitivity Analysis
+------------
