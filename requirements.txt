@@ -1,0 +1,3 @@
+mesa
+numpy
+pathos
