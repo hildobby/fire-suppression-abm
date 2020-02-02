@@ -4,8 +4,7 @@ Asian-paced Yodeling: Wildfire prevention simulation using agent-based modeling 
 ### Status
 [![Build Status](https://travis-ci.com/hildobby/Asian-paced_Yodeling.png)](https://travis-ci.com/hildobby/Asian-paced_Yodeling)
 
-This project uses Mesa
-  `Mesa`_ is an Apache2 licensed agent-based modeling (or ABM) framework in Python.
+This project uses [Mesa](https://github.com/projectmesa/mesa). `Mesa` is an Apache2 licensed agent-based modeling (or ABM) framework in Python.
 
 It allows users to quickly create agent-based models using built-in core components (such as spatial grids and agent schedulers) or customized implementations; visualize them using a browser-based interface; and analyze their results using Python's data analysis tools. Its goal is to be the Python 3-based alternative to NetLogo, Repast, or MASON.
 
