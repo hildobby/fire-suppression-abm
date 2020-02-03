@@ -27,12 +27,12 @@ except BaseException:
     raise
 
 # set the number of cores
-n_cores = 2
+n_cores = 22
 
 # Set the repetitions, the amount of steps, and the amount of distinct
 # values per variable
-replicates = 100
-distinct_samples = 1
+replicates = 50
+distinct_samples = 30
 
 
 ##########################################################################
@@ -48,9 +48,13 @@ distinct_samples = 1
 
 problem = {
     'num_vars': 1,
-    'names': ['truck_strategy'],
-    'bounds': [[4]]
+    'names': ['truck_max_speed'],
+    'bounds': [[1, 30]]
 }
+
+truck_strategy = 3
+
+print("this is a run with {} and {}".format(truck_strategy, problem['names'][0]))
 
 # problem = {
 #     'num_vars': 1,
@@ -79,6 +83,14 @@ for i, var in enumerate(problem['names']):
             num=distinct_samples,
             dtype=int)
 
+    # steps need to be integers.
+    if var == 'truck_max_speed':
+        samples = np.linspace(
+            *problem['bounds'][i],
+            num=distinct_samples,
+            dtype=int)
+
+
     if var == 'truck_strategy':
         samples = np.linspace(0, 0, 1)
 
@@ -106,20 +118,20 @@ for i, var in enumerate(problem['names']):
     axs.plot(x, y, c='k')
     axs.fill_between(x, y - err, y + err, color='grey')
 
-    axs.set_xlabel("Sparse ratio (%)", fontweight='bold', fontsize=20)
-    axs.set_ylabel("Burned out (%)", fontweight='bold', fontsize=20)
-    axs.set_xlim(0, 1)
+    axs.set_xlabel("Wind speed (m/s)", fontweight='bold', fontsize=20)
+    axs.set_ylabel("Burnt fraction", fontweight='bold', fontsize=20)
+    axs.set_xlim(1, 7)
 
 
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
-    name = "truckstrategy_0_ofat_{}___repli_{}__dist_samp_{}.csv".format(var, replicates, distinct_samples)
+    name = "truckstrategy_{}_ofat_{}___repli_{}__dist_samp_{}.csv".format(truck_strategy, var, replicates, distinct_samples)
     data[var].to_csv(name)
 
-plt.savefig("truckstrategy_0_ofat_{}___repli_{}__dist_samp_{}.png".format(var, replicates, distinct_samples), dpi=300)
+plt.savefig("truckstrategy_{}_ofat_{}___repli_{}__dist_samp_{}.png".format(truck_strategy, var, replicates, distinct_samples), dpi=300)
 
-print("Mean of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].mean())
-print("Variance of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].var())
+# print("Mean of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].mean())
+# print("Variance of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].var())
 
 # print("Mean of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].mean())
 # print("Variance of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].var())
