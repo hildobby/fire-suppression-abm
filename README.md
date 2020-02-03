@@ -52,7 +52,7 @@ python src/sensitivity_analysis/ofat_sa.py
 where the built-in BatchRunner of mesa is used. More precisely, the child class BatchRunnerMP is used
 which allows for parallel computing.
 One needs to determine manually which parameters to feed to the 
-mesa build in BatchRunner such as the wind strength, the bounds and the number of cores to use
+mesa build in BatchRunner such as the wind strength, the bounds and the number of cores to use. This can be modified within the file itself. At the top of the file, the changing variable, the number of used cores, the replicates, the number of different values of the changing variable, the strategy and the bound of the changing variables can be specified. The output will be a csv file containing the data and a graph showing the result of the sensitivity analysis, looking at the fraction of burnt trees at the end of the simulation.
 
 
 
