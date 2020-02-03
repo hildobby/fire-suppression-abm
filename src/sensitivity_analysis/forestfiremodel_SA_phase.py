@@ -427,20 +427,18 @@ class ForestFire(Model):
         coordinates = [self.buffer_x_min,self.buffer_x_max,self.buffer_y_min,self.buffer_y_max]
         '''
 
-
         tree_list_b = [tree for tree in model.schedule_TreeCell.agents
-           if((tree.pos[1] == coordinates[2]) and (coordinates[0] <= tree.pos[0]) and (tree.pos[0] <= coordinates[1]))]
+                       if((tree.pos[1] == coordinates[2]) and (coordinates[0] <= tree.pos[0]) and (tree.pos[0] <= coordinates[1]))]
         tree_list_u = [tree for tree in model.schedule_TreeCell.agents
-           if((tree.pos[1] == coordinates[3]) and (coordinates[0] <= tree.pos[0]) and (tree.pos[0] <= coordinates[1]))]
+                       if((tree.pos[1] == coordinates[3]) and (coordinates[0] <= tree.pos[0]) and (tree.pos[0] <= coordinates[1]))]
         tree_list_l = [tree for tree in model.schedule_TreeCell.agents
-           if ((tree.pos[0] == coordinates[0]) & (coordinates[2] < tree.pos[1]) and (tree.pos[1] < coordinates[3]))]
+                       if ((tree.pos[0] == coordinates[0]) & (coordinates[2] < tree.pos[1]) and (tree.pos[1] < coordinates[3]))]
         tree_list_r = [tree for tree in model.schedule_TreeCell.agents
-           if ((tree.pos[0] == coordinates[1]) & (coordinates[2] < tree.pos[1]) and (tree.pos[1] < coordinates[3]))]
+                       if ((tree.pos[0] == coordinates[1]) & (coordinates[2] < tree.pos[1]) and (tree.pos[1] < coordinates[3]))]
 
-        tree_list = tree_list_r+tree_list_l+tree_list_b+tree_list_u
+        tree_list = tree_list_r + tree_list_l + tree_list_b + tree_list_u
 
         return tree_list
-
 
     @staticmethod
     def count_extinguished_fires(model):
@@ -448,7 +446,7 @@ class ForestFire(Model):
         Helper method to count extinguished fires in a given condition in a given model.
         '''
 
-        count= 0
+        count = 0
         for firetruck in model.schedule_FireTruck.agents:
             count += firetruck.extinguished
 
@@ -461,7 +459,7 @@ class ForestFire(Model):
         self.n_agents += 1
 
         # Create a new agent of the given type
-        new_agent= agent_type(self, self.n_agents, pos)
+        new_agent = agent_type(self, self.n_agents, pos)
 
         # Place the agent on the grid
         self.grid.place_agent(new_agent, pos)
@@ -479,7 +477,7 @@ class ForestFire(Model):
         self.n_agents += 1
 
         # Create a new agent of the given type
-        new_agent=agent_type(
+        new_agent = agent_type(
             self,
             self.n_agents,
             pos,
