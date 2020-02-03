@@ -33,10 +33,10 @@ n_cores = 22
 # values per variable
 replicates = 2
 distinct_samples = 1
-#set the variable to do the OFAT on
-ofat_var='wind_strength'
-lower_bound=1
-higher_bound=30
+# set the variable to do the OFAT on
+ofat_var = 'wind_strength'
+lower_bound = 1
+higher_bound = 30
 truck_strategy = 3
 
 ##########################################################################
@@ -44,13 +44,11 @@ truck_strategy = 3
 ##########################################################################
 
 
-
 problem = {
     'num_vars': 1,
     'names': [ofat_var],
     'bounds': [[lower_bound, higher_bound]]
 }
-
 
 
 print("this is a run with {} and {}".format(truck_strategy, problem['names'][0]))
