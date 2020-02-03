@@ -13,7 +13,7 @@ sys.path.append('../')
 import os
 from mesa.batchrunner import BatchRunnerMP
 import numpy as np
-from forestfiremodel_SA_phase import ForestFire
+from forestfiremodel_sa import ForestFire
 import matplotlib.pyplot as plt
 import time
 
