@@ -2,7 +2,7 @@
 Created on Wed Jan  8 15:30:03 2020
 
 This code was implemented by
-Louis Weyland & Robin van den Berg, Philippe Nicolau, 
+Louis Weyland & Robin van den Berg, Philippe Nicolau,
 Hildebert Mouilé, Wiebe Jelsma & Beau Furnée
 
 """
@@ -178,12 +178,12 @@ class ForestFire(Model):
                 # increasing the width of the river
                 for j in range(self.river_width - 1):
                     new_width = random.choice([-1, 1])
-                    
+
                     # making sure the river stays within the grid
                     if y + new_width < 0 or y + new_width == self.height:
                         new_width = -new_width
                     y += new_width
-                    
+
                     # making sure the river is created in empty cells
                     while not self.grid.is_cell_empty((x, y)):
                         if y + new_width < 0 or y + new_width == self.height:
@@ -547,7 +547,7 @@ class ForestFire(Model):
                     y += spacing - edge_len
                 else:
                     x, y = y, x
-                    
+
             # all other cases
             else:
                 # Increasing x

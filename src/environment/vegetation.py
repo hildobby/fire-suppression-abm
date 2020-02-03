@@ -52,7 +52,7 @@ class TreeCell(Agent):
             self.veg_density = -0.4
         else:
             self.veg_density = 0
-            
+
         self.fireinitstep = None
 
         #
