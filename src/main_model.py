@@ -418,21 +418,6 @@ class ForestFire(Model):
         '''
 
         tree_list_b = [tree for tree in model.schedule_TreeCell.agents
-<<<<<<< Updated upstream
-                       if ((tree.pos[1] == coordinates[2]) and (coordinates[0] <= tree.pos[0])
-                           and (tree.pos[0] <= coordinates[1]))]
-        tree_list_u = [tree for tree in model.schedule_TreeCell.agents
-                       if ((tree.pos[1] == coordinates[3]) and (coordinates[0] <= tree.pos[0])
-                           and (tree.pos[0] <= coordinates[1]))]
-        tree_list_l = [tree for tree in model.schedule_TreeCell.agents
-                       if ((tree.pos[0] == coordinates[0]) & (coordinates[2] < tree.pos[1])
-                           and(tree.pos[1] < coordinates[3]))]
-        tree_list_r = [tree for tree in model.schedule_TreeCell.agents
-                       if ((tree.pos[0] == coordinates[1]) & (coordinates[2] < tree.pos[1])
-                           and (tree.pos[1] < coordinates[3]))]
-
-        tree_list = tree_list_r + tree_list_l + tree_list_b + tree_list_u
-=======
            if((tree.pos[1] == coordinates[2]) and (coordinates[0] <= tree.pos[0]) and (tree.pos[0] <= coordinates[1]))]
         tree_list_u = [tree for tree in model.schedule_TreeCell.agents
            if((tree.pos[1] == coordinates[3]) and (coordinates[0] <= tree.pos[0]) and (tree.pos[0] <= coordinates[1]))]
@@ -442,7 +427,6 @@ class ForestFire(Model):
            if ((tree.pos[0] == coordinates[1]) & (coordinates[2] < tree.pos[1]) and (tree.pos[1] < coordinates[3]))]
 
         tree_list = tree_list_r+tree_list_l+tree_list_b+tree_list_u
->>>>>>> Stashed changes
 
         return tree_list
 
