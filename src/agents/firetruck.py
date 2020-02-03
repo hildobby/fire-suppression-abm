@@ -291,7 +291,6 @@ class Walker(Agent):
 
     def indirect_attack(self):
 
-
         if self.model.buffer_x_min <= self.pos[0] <= self.model.buffer_x_max and  \
                 self.model.buffer_y_min <= self.pos[1] <= self.model.buffer_y_max:
 
