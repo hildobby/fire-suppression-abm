@@ -157,9 +157,6 @@ class ForestFire(Model):
         # get initial fire position and define the square
         self.init_fire_pos = self.agents[0].pos
 
-
-
-
         # count number of fire took fire
         self.count_total_fire = 0
 
@@ -181,14 +178,12 @@ class ForestFire(Model):
         self.dc.collect(self, [TreeCell, Firetruck])
         self.wind_strength = wind_strength
 
-
-        self.buffer_x_min = int((self.init_fire_pos[0])-30)
-        self.buffer_x_max = int((self.init_fire_pos[0])+30)
-        self.buffer_y_min = int((self.init_fire_pos[1])-30)
-        self.buffer_y_max = int((self.init_fire_pos[1])+30)
-        self.buffer_coordinates = [self.buffer_x_min,self.buffer_x_max,self.buffer_y_min,self.buffer_y_max]
-        self.tree_list_on_buffer = self.list_tree_in_buffer(self,self.buffer_coordinates)
-
+        self.buffer_x_min = int((self.init_fire_pos[0]) - 30)
+        self.buffer_x_max = int((self.init_fire_pos[0]) + 30)
+        self.buffer_y_min = int((self.init_fire_pos[1]) - 30)
+        self.buffer_y_max = int((self.init_fire_pos[1]) + 30)
+        self.buffer_coordinates = [self.buffer_x_min, self.buffer_x_max, self.buffer_y_min, self.buffer_y_max]
+        self.tree_list_on_buffer = self.list_tree_in_buffer(self, self.buffer_coordinates)
 
     def init_river(self):
         '''
@@ -449,23 +444,22 @@ class ForestFire(Model):
         coordinates = [self.buffer_x_min,self.buffer_x_max,self.buffer_y_min,self.buffer_y_max]
         '''
 
-        tree_list_b = [tree for tree in  model.schedule_TreeCell.agents \
-                if ((tree.pos[1]== coordinates[2]) and (coordinates[0]<=tree.pos[0]) \
-                    and (tree.pos[0] <=coordinates[1]))]
-        tree_list_u = [tree for tree in  model.schedule_TreeCell.agents \
-                if ((tree.pos[1]== coordinates[3]) and (coordinates[0]<=tree.pos[0]) \
-                    and (tree.pos[0] <=coordinates[1]))]
-        tree_list_l = [tree for tree in  model.schedule_TreeCell.agents \
-                     if ((tree.pos[0]== coordinates[0]) & (coordinates[2] < tree.pos[1]) \
-                         and(tree.pos[1] < coordinates[3]))]
-        tree_list_r = [tree for tree in  model.schedule_TreeCell.agents \
-                     if ((tree.pos[0]== coordinates[1]) & (coordinates[2] < tree.pos[1]) \
-                         and (tree.pos[1] < coordinates[3]))]
+        tree_list_b = [tree for tree in model.schedule_TreeCell.agents
+                       if ((tree.pos[1] == coordinates[2]) and (coordinates[0] <= tree.pos[0])
+                           and (tree.pos[0] <= coordinates[1]))]
+        tree_list_u = [tree for tree in model.schedule_TreeCell.agents
+                       if ((tree.pos[1] == coordinates[3]) and (coordinates[0] <= tree.pos[0])
+                           and (tree.pos[0] <= coordinates[1]))]
+        tree_list_l = [tree for tree in model.schedule_TreeCell.agents
+                       if ((tree.pos[0] == coordinates[0]) & (coordinates[2] < tree.pos[1])
+                           and(tree.pos[1] < coordinates[3]))]
+        tree_list_r = [tree for tree in model.schedule_TreeCell.agents
+                       if ((tree.pos[0] == coordinates[1]) & (coordinates[2] < tree.pos[1])
+                           and (tree.pos[1] < coordinates[3]))]
 
-        tree_list= tree_list_r+tree_list_l+tree_list_b+tree_list_u
+        tree_list = tree_list_r + tree_list_l + tree_list_b + tree_list_u
 
         return tree_list
-
 
     @staticmethod
     def count_extinguished_fires(model):
