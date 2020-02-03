@@ -27,7 +27,7 @@ except BaseException:
     raise
 
 # set the number of cores
-n_cores = 22
+n_cores = 2
 
 # Set the repetitions, the amount of steps, and the amount of distinct
 # values per variable
@@ -49,7 +49,7 @@ distinct_samples = 1
 problem = {
     'num_vars': 1,
     'names': ['truck_strategy'],
-    'bounds': [[1]]
+    'bounds': [[4]]
 }
 
 # problem = {

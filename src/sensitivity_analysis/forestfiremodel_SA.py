@@ -154,6 +154,12 @@ class ForestFire(Model):
         # Initialise fire in the middle if possible otherwise random
         self.agents[0].condition = "On Fire"
 
+        # get initial fire position and define the square
+        self.init_fire_pos = self.agents[0].pos
+
+
+
+
         # count number of fire took fire
         self.count_total_fire = 0
 
@@ -174,6 +180,15 @@ class ForestFire(Model):
         self.running = True
         self.dc.collect(self, [TreeCell, Firetruck])
         self.wind_strength = wind_strength
+
+
+        self.buffer_x_min = int((self.init_fire_pos[0])-30)
+        self.buffer_x_max = int((self.init_fire_pos[0])+30)
+        self.buffer_y_min = int((self.init_fire_pos[1])-30)
+        self.buffer_y_max = int((self.init_fire_pos[1])+30)
+        self.buffer_coordinates = [self.buffer_x_min,self.buffer_x_max,self.buffer_y_min,self.buffer_y_max]
+        self.tree_list_on_buffer = self.list_tree_in_buffer(self,self.buffer_coordinates)
+
 
     def init_river(self):
         '''
@@ -333,12 +348,25 @@ class ForestFire(Model):
         self.schedule_TreeCell.step()
         print("do step")
 
-        if self.num_firetruck != 0:
-            self.tree_list = self.list_tree_by_type(self, "On Fire")
-            self.assigned_list = self.assign_closest(self.compute_distances(self.tree_list, self.firefighters_lists),
-                                                     self.tree_list)
+        self.tree_list = self.list_tree_by_type(self, "On Fire")
+        if len(self.tree_list) > 0:
 
-        self.schedule_FireTruck.step()
+            if (self.truck_strategy == "Optimized closest"):
+                self.assigned_list = self.assign_closest(
+                    self.compute_distances(self.tree_list,
+                                           self.firefighters_lists), self.tree_list)
+
+            elif (self.truck_strategy == "Optimized Parallel attack"):
+                self.assigned_list = self.assign_parallel(
+                    self.compute_distances(self.tree_list, self.firefighters_lists),
+                    self.tree_list)
+
+            elif (self.truck_strategy == "Indirect attack"):
+                self.assigned_list = self.assign_parallel(
+                    self.compute_distances(self.tree_list, self.firefighters_lists),
+                    self.tree_list)
+
+            self.schedule_FireTruck.step()
 
         self.dc.collect(self, [TreeCell, Firetruck])
         self.current_step += 1
@@ -364,14 +392,12 @@ class ForestFire(Model):
         '''
         count = 0
         for tree in model.schedule_TreeCell.agents:
-
             if tree.condition == tree_condition:
                 count += 1
         return count
 
     def compute_distances(self, tree_list, truck_list):
-        distances = np.zeros((len(tree_list), len(truck_list)))
-
+        distances = [[0 for x in range(len(truck_list))] for y in range(len(tree_list))]
         for i in range(len(tree_list)):
             for j in range(len(truck_list)):
                 distances[i][j] = (tree_list[i].pos[0] - truck_list[j].pos[0]) ** 2 + \
@@ -379,12 +405,33 @@ class ForestFire(Model):
         return distances
 
     def assign_closest(self, matrix, tree_list):
-        assigned_trucks = np.zeros(self.num_firetruck, dtype=TreeCell)
-        while np.isin(0, assigned_trucks):
+        assigned_trucks = [0 for x in range(self.num_firetruck)]
+        ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
+        matrix = np.asarray(matrix, dtype=int)
+        while 0 in assigned_trucks:
             curr_smallest_pos = np.unravel_index(np.argmin(matrix, axis=None), matrix.shape)
-            if assigned_trucks[curr_smallest_pos[1]] == 0:
+            if assigned_trucks[curr_smallest_pos[1]] == 0 and tree_list[curr_smallest_pos[0]].trees_claimed < ratio:
                 assigned_trucks[curr_smallest_pos[1]] = tree_list[curr_smallest_pos[0]]
-            matrix[curr_smallest_pos] = 10000000000
+                tree_list[curr_smallest_pos[0]].trees_claimed += 1
+            matrix[curr_smallest_pos] = 100000
+        return assigned_trucks
+
+    def assign_parallel(self, matrix, tree_list):
+        assigned_trucks = [0 for x in range(self.num_firetruck)]
+        ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
+        matrix = np.asarray(matrix, dtype=int)
+        for i in range(len(matrix[0])):
+            curr_best = [matrix[0][i], tree_list[0].life_bar, 0]
+            indices = [j for j, x in enumerate(matrix[:, i]) if x <= curr_best[0]]
+            for m in indices:
+                if tree_list[m].trees_claimed >= ratio:
+                    indices.remove(m)
+            if len(indices) > 1:
+                for k in indices:
+                    if matrix[k][i] <= curr_best[0] and tree_list[k].life_bar >= curr_best[1]:
+                        curr_best = [matrix[k][i], tree_list[k].life_bar, k]
+                tree_list[curr_best[2]].trees_claimed += 1
+            assigned_trucks[i] = tree_list[curr_best[2]]
         return assigned_trucks
 
     @staticmethod
@@ -393,8 +440,32 @@ class ForestFire(Model):
         Helper method to count trees in a given condition in a given model.
         '''
         tree_list = [tree for tree in model.schedule_TreeCell.agents if tree.condition == tree_condition]
+        return tree_list
+
+    @staticmethod
+    def list_tree_in_buffer(model, coordinates):
+        '''
+        Helper method to count trees lying on the buffer
+        coordinates = [self.buffer_x_min,self.buffer_x_max,self.buffer_y_min,self.buffer_y_max]
+        '''
+
+        tree_list_b = [tree for tree in  model.schedule_TreeCell.agents \
+                if ((tree.pos[1]== coordinates[2]) and (coordinates[0]<=tree.pos[0]) \
+                    and (tree.pos[0] <=coordinates[1]))]
+        tree_list_u = [tree for tree in  model.schedule_TreeCell.agents \
+                if ((tree.pos[1]== coordinates[3]) and (coordinates[0]<=tree.pos[0]) \
+                    and (tree.pos[0] <=coordinates[1]))]
+        tree_list_l = [tree for tree in  model.schedule_TreeCell.agents \
+                     if ((tree.pos[0]== coordinates[0]) & (coordinates[2] < tree.pos[1]) \
+                         and(tree.pos[1] < coordinates[3]))]
+        tree_list_r = [tree for tree in  model.schedule_TreeCell.agents \
+                     if ((tree.pos[0]== coordinates[1]) & (coordinates[2] < tree.pos[1]) \
+                         and (tree.pos[1] < coordinates[3]))]
+
+        tree_list= tree_list_r+tree_list_l+tree_list_b+tree_list_u
 
         return tree_list
+
 
     @staticmethod
     def count_extinguished_fires(model):

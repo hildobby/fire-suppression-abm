@@ -60,6 +60,7 @@ def forest_fire_portrayal(agent):
     if agent.condition == "On Fire" and agent.life_bar > 0:
         portrayal["Color"] = "rgba(%d,14,14)" % (agent.life_bar + 166)
 
+
     return portrayal
 
 
@@ -77,17 +78,17 @@ model_parameters = {
     'width': 100,
     'vision': 100,
     'text_environment': UserSettableParameter('static_text', value='Environment Generation Settings'),
-    'density': UserSettableParameter('slider', 'Tree density', 0.99, 0.01, 1.0, 0.01),
+    'density': UserSettableParameter('slider', 'Tree density', 0.6, 0.01, 1.0, 0.01),
     'sparse_ratio': UserSettableParameter('slider', 'Ratio of sparse vegetations', 0.5, 0, 1.0, 0.1),
     'river_width': UserSettableParameter('slider', 'River width', 0, 0, 10, 1),
     'break_width': UserSettableParameter('slider', 'Firebreak width', 0, 0, 6, 1),
     'text_agents': UserSettableParameter('static_text', value='Agents Settings'),
-    'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 6, 0, 50, 1),
-    'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 23, 1, 30, 1),
+    'num_firetruck': UserSettableParameter('slider', 'Number of Firetrucks', 30, 0, 50, 1),
+    'truck_max_speed': UserSettableParameter('slider', 'Speed of Firetrucks', 20, 1, 30, 1),
     'steps_to_extinguishment': UserSettableParameter('slider',
                                                      'Number of steps needed to extinguish a fire',
                                                      2, 1, 6, 1),
-    'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Optimized Parallel attack',
+    'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Indirect attack',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',
                                                      'Random movements', 'Parallel attack',
                                                      'Optimized Parallel attack', 'Optimized closest',
