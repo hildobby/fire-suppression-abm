@@ -8,7 +8,7 @@ framework in Python.
 This repository allows users to simulate a wildfire in a randomly generated forest environment. The random generation 
 is based on user settable settings from the visualisation tool provided by mesa. This simulation is created in a 2D grid of size 100x100. The firefighting agents will attempt to extinguish said fire using a strategy chosen by the user, the firefighter's success depends on the settings used in the simulation. The program also allows for sensitivity analysis with a built-in script.
 
-![A screenshot of the simulation's visualisation](https://github.com/hildobby/fire-suppression-abmg/blob/master/src/visualisation.png)
+![A screenshot of the simulation's visualisation](https://github.com/hildobby/fire-suppression-abm/blob/master/src/visualisation.png)
 
 *Above: A screenshot of the visualisation tool provided by Mesa.*
 
