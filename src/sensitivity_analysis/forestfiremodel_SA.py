@@ -5,22 +5,21 @@ This code was implemented by
 Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
+from mesa import Model
+from mesa.time import RandomActivation
+from space_v2 import MultiGrid
+from datacollector_v2 import DataCollector
+from environment.river import RiverCell
+from agents.firetruck import Walker
+from environment.vegetation import TreeCell
+from agents.firetruck import Firetruck
+from environment.rain import Rain
+from environment.firebreak import BreakCell
+import numpy as np
+import math
+import random
 import sys
 sys.path.append('../')
-
-import random
-import math
-import numpy as np
-from environment.firebreak import BreakCell
-from environment.rain import Rain
-from agents.firetruck import Firetruck
-from environment.vegetation import TreeCell
-from agents.firetruck import Walker
-from environment.river import RiverCell
-from datacollector_v2 import DataCollector
-from space_v2 import MultiGrid
-from mesa.time import RandomActivation
-from mesa import Model
 
 
 # defines the model
@@ -446,21 +445,21 @@ class ForestFire(Model):
         '''
 
         tree_list_b = [tree for tree in model.schedule_TreeCell.agents
-                       if((tree.pos[1] == coordinates[2]) and
-                          (coordinates[0] <= tree.pos[0]) and
-                           (tree.pos[0] <= coordinates[1]))]
+                       if((tree.pos[1] == coordinates[2])
+                          and (coordinates[0] <= tree.pos[0])
+                           and (tree.pos[0] <= coordinates[1]))]
         tree_list_u = [tree for tree in model.schedule_TreeCell.agents
-                       if((tree.pos[1] == coordinates[3]) and
-                          (coordinates[0] <= tree.pos[0]) and
-                           (tree.pos[0] <= coordinates[1]))]
+                       if((tree.pos[1] == coordinates[3])
+                          and (coordinates[0] <= tree.pos[0])
+                           and (tree.pos[0] <= coordinates[1]))]
         tree_list_l = [tree for tree in model.schedule_TreeCell.agents
-                       if ((tree.pos[0] == coordinates[0]) and
-                           (coordinates[2] < tree.pos[1]) and
-                           (tree.pos[1] < coordinates[3]))]
+                       if ((tree.pos[0] == coordinates[0])
+                           and (coordinates[2] < tree.pos[1])
+                           and (tree.pos[1] < coordinates[3]))]
         tree_list_r = [tree for tree in model.schedule_TreeCell.agents
-                       if ((tree.pos[0] == coordinates[1]) and
-                           (coordinates[2] < tree.pos[1]) and
-                           (tree.pos[1] < coordinates[3]))]
+                       if ((tree.pos[0] == coordinates[1])
+                           and (coordinates[2] < tree.pos[1])
+                           and (tree.pos[1] < coordinates[3]))]
 
         tree_list = tree_list_r + tree_list_l + tree_list_b + tree_list_u
 
