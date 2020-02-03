@@ -45,11 +45,16 @@ python src/server.py
 
 Running the Sensitivity Analysis
 ------------
-To run the Sensitivity analysis
-
+To run the Sensitivity analysis run the following command
 ```bash
-python3 src/sensitivity_analysis/ofat_sa.py
+python src/sensitivity_analysis/ofat_sa.py
 ```
+where the built-in BatchRunner of mesa is used. More precisely, the child class BatchRunnerMP is used
+which allows for parallel computing.
+One needs to determine manually which parameters to feed to the 
+mesa build in BatchRunner such as the wind strength, the bounds and the number of cores to use
+
+
 
 
 What remains to be worked on
@@ -86,9 +91,7 @@ DeBano,  L.  F.,  Neary,  D.  G.,  &  Ffolliott,  P.  F.
 (1998).Fire effects on ecosystems. John Wiley &
 Sons. Grimm,    V.,    Berger,    U.,    DeAngelis,    D.   L.,
 Polhill, J.    G., Giske, J.,    &    Railsback,S.   F.
-(2010).
-
-The   odd   protocol:A   review   and   first   update.
+(2010).The   odd   protocol:A   review   and   first   update.
 Ecological   Modelling,221 (23),   2760  -  2768.
 Retrieved  from http://www.sciencedirect.com/science/article/pii/S030438001000414X
 doi: https://doi.org/10.1016/j.ecolmodel.2010.08.019

@@ -31,36 +31,29 @@ n_cores = 22
 
 # Set the repetitions, the amount of steps, and the amount of distinct
 # values per variable
-replicates = 50
-distinct_samples = 30
-
+replicates = 2
+distinct_samples = 1
+#set the variable to do the OFAT on
+ofat_var='wind_strength'
+lower_bound=1
+higher_bound=30
+truck_strategy = 3
 
 ##########################################################################
 ##########################################################################
 ##########################################################################
 
 
-# problem = {
-#     'num_vars': 1,
-#     'names': ['density'],
-#     'bounds': [[0, 1]]
-# }
 
 problem = {
     'num_vars': 1,
-    'names': ['truck_max_speed'],
-    'bounds': [[1, 30]]
+    'names': [ofat_var],
+    'bounds': [[lower_bound, higher_bound]]
 }
 
-truck_strategy = 3
+
 
 print("this is a run with {} and {}".format(truck_strategy, problem['names'][0]))
-
-# problem = {
-#     'num_vars': 1,
-#     'names': ['wind_strength'],
-#     'bounds': [[0, 30]]
-# }
 
 # Set the outputs
 model_reporters = {"On Fire": lambda m: m.count_total_fire,
@@ -91,7 +84,7 @@ for i, var in enumerate(problem['names']):
             dtype=int)
 
     if var == 'truck_strategy':
-        samples = np.linspace(0, 0, 1)
+        samples = np.linspace(truck_strategy, truck_strategy, 1)
 
     batch = BatchRunnerMP(
         ForestFire,
@@ -117,7 +110,7 @@ for i, var in enumerate(problem['names']):
     axs.plot(x, y, c='k')
     axs.fill_between(x, y - err, y + err, color='grey')
 
-    axs.set_xlabel("Wind speed (m/s)", fontweight='bold', fontsize=20)
+    axs.set_xlabel(var, fontweight='bold', fontsize=20)
     axs.set_ylabel("Burnt fraction", fontweight='bold', fontsize=20)
     axs.set_xlim(1, 7)
 
@@ -125,11 +118,11 @@ for i, var in enumerate(problem['names']):
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
     name = "truckstrategy_{}_ofat_{}___repli_{}__dist_samp_{}.csv".format(
-        truck_strategy, var, replicates, distinct_samples)
+        truck_strategy, ofat_var, replicates, distinct_samples)
     data[var].to_csv(name)
 
 plt.savefig("truckstrategy_{}_ofat_{}___repli_{}__dist_samp_{}.png".format(
-    truck_strategy, var, replicates, distinct_samples), dpi=300)
+    truck_strategy, ofat_var, replicates, distinct_samples), dpi=300)
 
 # print("Mean of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].mean())
 # print("Variance of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].var())
@@ -140,6 +133,8 @@ plt.savefig("truckstrategy_{}_ofat_{}___repli_{}__dist_samp_{}.png".format(
 # print("Mean of the number of burned trees: ", data["truck_strategy"]["On Fire"].mean())
 # print("Variance of the number of burned trees: ", data["truck_strategy"]["On Fire"].var())
 #
+# To plot histogramm
+
 # hist = data["truck_strategy"]["On Fire"].hist()
 # hist.set_xlabel("Burned (%)", fontweight='bold', fontsize=20)
 # hist.set_ylabel("Occurrence (#)", fontweight='bold', fontsize=20)
