@@ -90,7 +90,6 @@ for i, var in enumerate(problem['names']):
             num=distinct_samples,
             dtype=int)
 
-
     if var == 'truck_strategy':
         samples = np.linspace(0, 0, 1)
 
@@ -125,10 +124,12 @@ for i, var in enumerate(problem['names']):
 
 directory = os.chdir("data/")
 for i, var in enumerate(problem['names']):
-    name = "truckstrategy_{}_ofat_{}___repli_{}__dist_samp_{}.csv".format(truck_strategy, var, replicates, distinct_samples)
+    name = "truckstrategy_{}_ofat_{}___repli_{}__dist_samp_{}.csv".format(
+        truck_strategy, var, replicates, distinct_samples)
     data[var].to_csv(name)
 
-plt.savefig("truckstrategy_{}_ofat_{}___repli_{}__dist_samp_{}.png".format(truck_strategy, var, replicates, distinct_samples), dpi=300)
+plt.savefig("truckstrategy_{}_ofat_{}___repli_{}__dist_samp_{}.png".format(
+    truck_strategy, var, replicates, distinct_samples), dpi=300)
 
 # print("Mean of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].mean())
 # print("Variance of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].var())

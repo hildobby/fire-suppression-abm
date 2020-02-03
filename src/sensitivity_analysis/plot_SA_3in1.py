@@ -82,6 +82,3 @@ for filename in os.listdir('.'):
     if filename.startswith("truckstrategy_3"):
         data_3[filename.split('.csv')[0]] = pd.read_csv(filename)
 '''
-
-
-
