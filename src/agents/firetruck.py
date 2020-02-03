@@ -291,15 +291,13 @@ class Walker(Agent):
 
     def indirect_attack(self):
 
-        global neighbor_down, neighbor_up, neighbor_right, neighbor_left
 
         if self.model.buffer_x_min <= self.pos[0] <= self.model.buffer_x_max and  \
                 self.model.buffer_y_min <= self.pos[1] <= self.model.buffer_y_max:
 
             if len(self.model.tree_list_on_buffer) != 0:
 
-               # reposition the firetruck if the went to far in
-
+                # reposition the firetruck if the went to far in
                 dl, dr, dt, db = abs(self.pos[0] - self.model.buffer_x_min), \
                     abs(self.pos[0] - self.model.buffer_x_max), \
                     abs(self.pos[1] - self.model.buffer_y_max), \
@@ -324,7 +322,7 @@ class Walker(Agent):
                         tree_present = True
                         tree_object = content
 
-                if tree_present == True and tree_object.condition == "Fine":
+                if tree_present and tree_object.condition == "Fine":
                     tree_object.condition = "Is Extinguished"
                     self.extinguished += 1
                     self.model.tree_list_on_buffer.pop(-1)
