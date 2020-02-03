@@ -17,8 +17,8 @@ Features
 
 * User settable settings for environment generation such as wind direction, wind strength, rivers, rain, # of firefighting agents and other parameters.
 * Multiple firefighting strategies ('Go to the closest fire', 'Go to the biggest fire', 'Random movements', 
-'Parallel attack' and 'Indirect attack')
-* Sensitivity analysis (One-factor-a-time OFAT) of the environmental settings
+'Parallel attack' and 'Indirect attack').
+* Sensitivity analysis (One-factor-a-time OFAT) on the environmental settings.
 
 Running the server
 ------------
@@ -52,14 +52,13 @@ python src/sensitivity_analysis/ofat_sa.py
 where the built-in BatchRunner of mesa is used. More precisely, the child class BatchRunnerMP is used
 which allows for parallel computing.
 One needs to determine manually which parameters to feed to the 
-mesa build in BatchRunner such as the wind strength, the bounds and the number of cores to use
+mesa build in BatchRunner such as the wind strength, the bounds and the number of cores to use.
 
 
 
 
 What remains to be worked on
 ------------
-
 * Add tests and use codecov
 * Adding new types of agents
 * Implementing new fire fighting methods
