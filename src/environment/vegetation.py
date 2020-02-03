@@ -47,10 +47,12 @@ class TreeCell(Agent):
 
         self.veg_state = 0.4
 
+        # assigning density with the given probability
         if random.uniform(0, 1) < self.model.sparse_ratio:
             self.veg_density = -0.4
         else:
             self.veg_density = 0
+            
         self.fireinitstep = None
 
         #

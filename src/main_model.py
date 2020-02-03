@@ -2,7 +2,8 @@
 Created on Wed Jan  8 15:30:03 2020
 
 This code was implemented by
-Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
+Louis Weyland & Robin van den Berg, Philippe Nicolau, 
+Hildebert Mouilé, Wiebe Jelsma & Beau Furnée
 
 """
 import sys
@@ -177,9 +178,13 @@ class ForestFire(Model):
                 # increasing the width of the river
                 for j in range(self.river_width - 1):
                     new_width = random.choice([-1, 1])
+                    
+                    # making sure the river stays within the grid
                     if y + new_width < 0 or y + new_width == self.height:
                         new_width = -new_width
                     y += new_width
+                    
+                    # making sure the river is created in empty cells
                     while not self.grid.is_cell_empty((x, y)):
                         if y + new_width < 0 or y + new_width == self.height:
                             new_width = -new_width
@@ -227,12 +232,13 @@ class ForestFire(Model):
         x = random.randrange(self.width)
         y = random.randrange(self.height)
 
+        # initiating vegetation in the centre if possible, otherwise random position
         if self.river_width == 0 and self.break_width == 0:
             self.new_agent(agent_type, (int(self.width / 2), int(self.height / 2)))
-
         else:
             self.new_agent(agent_type, (x, y))
 
+        # Placing all other vegetation
         for i in range(int(n - 1)):
             while not self.grid.is_cell_empty((x, y)):
                 x = random.randrange(self.width)
@@ -261,6 +267,7 @@ class ForestFire(Model):
         if num_firetruck == 0:
             pass
         else:
+            # auxilary function to equally space the firetruck along the edge of the grid
             init_positions = self.equal_spread()
 
             for i in range(num_firetruck):
@@ -488,8 +495,6 @@ class ForestFire(Model):
         # Place the agent on the grid
         self.grid.place_agent(new_agent, pos)
 
-        # And add the agent to the model so we can track it
-
         return new_agent
 
     def new_break(self, agent_type, pos):
@@ -517,7 +522,9 @@ class ForestFire(Model):
         self.agents.remove(agent)
 
     def equal_spread(self):
-
+        '''
+        Function to equally space the firetruck along the edge of the grid
+        '''
         edge_len = self.height - 1
         total_edge = 4 * edge_len
 
@@ -530,20 +537,19 @@ class ForestFire(Model):
         step = 0
 
         while total_edge > 0:
-
             fill_x = edge_len - x
             fill_y = edge_len - y
 
+            # special cases (<4)
             if spacing > edge_len:
                 if x == 0:
                     x += edge_len
                     y += spacing - edge_len
-
                 else:
                     x, y = y, x
-
+                    
+            # all other cases
             else:
-
                 # Increasing x
                 if y == 0 and x + spacing <= edge_len and step < 2:
                     x += spacing
