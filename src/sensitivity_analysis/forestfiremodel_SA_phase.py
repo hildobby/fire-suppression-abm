@@ -12,8 +12,10 @@ import math
 import numpy as np
 from mesa import Model
 from mesa.time import RandomActivation
+from environment.firebreak import BreakCell
 from space_v2 import MultiGrid
 from datacollector_v2 import DataCollector
+from agents.firetruck import Walker
 from environment.river import RiverCell
 from environment.vegetation import TreeCell
 from agents.firetruck import Firetruck
@@ -425,36 +427,20 @@ class ForestFire(Model):
         coordinates = [self.buffer_x_min,self.buffer_x_max,self.buffer_y_min,self.buffer_y_max]
         '''
 
+
         tree_list_b = [tree for tree in model.schedule_TreeCell.agents
-<< << << < Updated upstream
-                       if ((tree.pos[1] == coordinates[2]) and (coordinates[0] <= tree.pos[0])
-                           and (tree.pos[0] <= coordinates[1]))]
-        tree_list_u = [tree for tree in model.schedule_TreeCell.agents
-                       if ((tree.pos[1] == coordinates[3]) and (coordinates[0] <= tree.pos[0])
-                           and (tree.pos[0] <= coordinates[1]))]
-        tree_list_l = [tree for tree in model.schedule_TreeCell.agents
-                       if ((tree.pos[0] == coordinates[0]) & (coordinates[2] < tree.pos[1])
-                           and(tree.pos[1] < coordinates[3]))]
-        tree_list_r = [tree for tree in model.schedule_TreeCell.agents
-                       if ((tree.pos[0] == coordinates[1]) & (coordinates[2] < tree.pos[1])
-                           and (tree.pos[1] < coordinates[3]))]
-
-        tree_list = tree_list_r + tree_list_l + tree_list_b + tree_list_u
-
-
-== == == =
            if((tree.pos[1] == coordinates[2]) and (coordinates[0] <= tree.pos[0]) and (tree.pos[0] <= coordinates[1]))]
-        tree_list_u= [tree for tree in model.schedule_TreeCell.agents
+        tree_list_u = [tree for tree in model.schedule_TreeCell.agents
            if((tree.pos[1] == coordinates[3]) and (coordinates[0] <= tree.pos[0]) and (tree.pos[0] <= coordinates[1]))]
-        tree_list_l= [tree for tree in model.schedule_TreeCell.agents
+        tree_list_l = [tree for tree in model.schedule_TreeCell.agents
            if ((tree.pos[0] == coordinates[0]) & (coordinates[2] < tree.pos[1]) and (tree.pos[1] < coordinates[3]))]
-        tree_list_r= [tree for tree in model.schedule_TreeCell.agents
+        tree_list_r = [tree for tree in model.schedule_TreeCell.agents
            if ((tree.pos[0] == coordinates[1]) & (coordinates[2] < tree.pos[1]) and (tree.pos[1] < coordinates[3]))]
 
-        tree_list= tree_list_r + tree_list_l + tree_list_b + tree_list_u
->> >>>> > Stashed changes
+        tree_list = tree_list_r+tree_list_l+tree_list_b+tree_list_u
 
         return tree_list
+
 
     @staticmethod
     def count_extinguished_fires(model):
