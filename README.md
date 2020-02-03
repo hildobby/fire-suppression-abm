@@ -44,5 +44,13 @@ Running the Sensitivity Analysis
 ------------
 
 
+What remains to be worked on
+------------
+
+* Adding new types of agents
+* Implementing new fire fighting methods
+* Make agents able to change their method depending on the circumstances
+
+
 Litterature used for the project's formulas and settings
 ------------

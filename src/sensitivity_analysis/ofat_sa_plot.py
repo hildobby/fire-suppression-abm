@@ -43,7 +43,7 @@ plt.grid(b=None)
 plt.xlim([0, 1])
 
 
-#plt.savefig("hist_truckstrategy_1_ofat_{}___repli_{}__dist_samp_{}.png".
+# plt.savefig("hist_truckstrategy_1_ofat_{}___repli_{}__dist_samp_{}.png".
 #            format(var, replicates, distinct_samples), dpi=300)
 
 

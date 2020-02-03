@@ -7,7 +7,6 @@ This code was implemented by
 Louis Weyland, Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe Jelsma
 
 """
-import random
 from mesa import Agent
 
 

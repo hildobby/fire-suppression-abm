@@ -293,159 +293,140 @@ class Walker(Agent):
 
         global neighbor_down, neighbor_up, neighbor_right, neighbor_left
 
+        if self.model.buffer_x_min <= self.pos[0] <= self.model.buffer_x_max and  \
+                self.model.buffer_y_min <= self.pos[1] <= self.model.buffer_y_max:
 
-        if self.model.buffer_x_min <=self.pos[0]<=self.model.buffer_x_max and  \
-            self.model.buffer_y_min <= self.pos[1] <= self.model.buffer_y_max:
+            if len(self.model.tree_list_on_buffer) != 0:
 
-            if len(self.model.tree_list_on_buffer)!=0:
-
-
-
-
-
-               #reposition the firetruck if the went to far in
+               # reposition the firetruck if the went to far in
 
                 dl, dr, dt, db = abs(self.pos[0] - self.model.buffer_x_min), \
-                                 abs(self.pos[0] - self.model.buffer_x_max), \
-                                 abs(self.pos[1] - self.model.buffer_y_max), \
-                                 abs(self.pos[1] - self.model.buffer_y_min)
+                    abs(self.pos[0] - self.model.buffer_x_max), \
+                    abs(self.pos[1] - self.model.buffer_y_max), \
+                    abs(self.pos[1] - self.model.buffer_y_min)
 
                 m = min(dl, dr, dt, db)
 
-                if m == dt :
-                   self.model.grid.move_agent(self, (self.pos[0], self.model.buffer_y_max))
-                elif m == db :
-                   self.model.grid.move_agent(self, (self.pos[0], self.model.buffer_y_min))
-                elif m == dl :
+                if m == dt:
+                    self.model.grid.move_agent(self, (self.pos[0], self.model.buffer_y_max))
+                elif m == db:
+                    self.model.grid.move_agent(self, (self.pos[0], self.model.buffer_y_min))
+                elif m == dl:
                     self.model.grid.move_agent(self, (self.model.buffer_x_min, self.pos[1]))
                 else:
-                   self.model.grid.move_agent(self, (self.model.buffer_x_max, self.pos[1]))
-
-
+                    self.model.grid.move_agent(self, (self.model.buffer_x_max, self.pos[1]))
 
                 tree_present = False
                 list_of_cell_content = self.model.grid.get_cell_list_contents(self.pos)
                 for content in list_of_cell_content:
 
-                     if isinstance(content, TreeCell) :
-                         tree_present = True
-                         tree_object = content
+                    if isinstance(content, TreeCell):
+                        tree_present = True
+                        tree_object = content
 
-
-                if tree_present==True and tree_object.condition == "Fine":
-                        tree_object.condition = "Is Extinguished"
-                        self.extinguished += 1
-                        self.model.tree_list_on_buffer.pop(-1)
+                if tree_present == True and tree_object.condition == "Fine":
+                    tree_object.condition = "Is Extinguished"
+                    self.extinguished += 1
+                    self.model.tree_list_on_buffer.pop(-1)
 
                 else:
-                        neighbor_left,neighbor_right,neighbor_down,neighbor_up =False,False,False,False
-                        neighbor_list = self.model.grid.get_neighbors(
-                            self.pos, moore=False, radius=1, include_center=False)
+                    neighbor_left, neighbor_right, neighbor_down, neighbor_up = False, False, False, False
+                    neighbor_list = self.model.grid.get_neighbors(
+                        self.pos, moore=False, radius=1, include_center=False)
 
-                        for i in neighbor_list:
+                    for i in neighbor_list:
 
-                            if i.pos[0] < self.pos[0]:
-                                neighbor_left = i
+                        if i.pos[0] < self.pos[0]:
+                            neighbor_left = i
 
+                        elif i.pos[0] > self.pos[0]:
+                            neighbor_right = i
 
-                            elif i.pos[0] > self.pos[0]:
-                                neighbor_right = i
+                        elif i.pos[1] < self.pos[1]:
+                            neighbor_down = i
 
+                        elif i.pos[1] > self.pos[1]:
+                            neighbor_up = i
 
-                            elif i.pos[1] < self.pos[1]:
-                                neighbor_down = i
-
-
-                            elif i.pos[1] > self.pos[1]:
-                                neighbor_up = i
-
-
-
-
-
-                        if self.pos[0] == self.model.buffer_x_max and self.pos[1] == self.model.buffer_y_max:
-                            if neighbor_down:
-                                if neighbor_down.condition != "Is Extinguished":
-                                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
-                                else:
-                                    self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
-
-                            else:
-                                self.model.grid.move_agent(self, (self.pos[0]-1, self.pos[1]))
-
-                        elif self.pos[0] == self.model.buffer_x_min and self.pos[1] == self.model.buffer_y_min:
-                            if neighbor_up:
-                                if neighbor_up.condition != "Is Extinguished":
-                                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
-                                else:
-                                    self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
-                            else:
-                                self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
-
-                        elif self.pos[0] == self.model.buffer_x_min and self.pos[1] == self.model.buffer_y_max:
-                            if neighbor_right:
-                                if neighbor_right.condition != "Is Extinguished":
-                                    self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
-                                else:
-                                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
-                            else:
-                                self.model.grid.move_agent(self, (self.pos[0] , self.pos[1] - 1))
-
-                        elif self.pos[0] == self.model.buffer_x_max and self.pos[1] == self.model.buffer_y_min:
-                            if neighbor_left:
-                                if neighbor_left.condition != "Is Extinguished":
-                                    self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
-                                else:
-                                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
-                            else:
-                                self.model.grid.move_agent(self, (self.pos[0], self.pos[1] +1))
-
-                        elif self.pos[0] == self.model.buffer_x_min and self.pos[1] < self.model.buffer_y_max:
-                            if neighbor_up:
-                                if neighbor_up.condition != "Is Extinguished":
-                                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
-                                else:
-                                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
-                            else:
+                    if self.pos[0] == self.model.buffer_x_max and self.pos[1] == self.model.buffer_y_max:
+                        if neighbor_down:
+                            if neighbor_down.condition != "Is Extinguished":
                                 self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
-
-                        elif self.pos[0] < self.model.buffer_x_max and self.pos[1] >= self.model.buffer_y_max:
-                            if neighbor_right:
-                                if neighbor_right.condition != "Is Extinguished":
-                                    self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
-                                else:
-                                    self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
                             else:
                                 self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
 
-                        elif self.pos[0] >= self.model.buffer_x_max and self.pos[1] < self.model.buffer_y_max:
-                            if neighbor_down:
-                                if neighbor_down.condition != "Is Extinguished":
-                                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
-                                else:
-                                    self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
-                            else:
-                                self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
+                        else:
+                            self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
 
-                        elif self.pos[0] < self.model.buffer_x_max and self.pos[1] <= self.model.buffer_y_min:
-                            if neighbor_left:
-                                if neighbor_left.condition != "Is Extinguished":
-                                    self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
-                                else:
-                                    self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
+                    elif self.pos[0] == self.model.buffer_x_min and self.pos[1] == self.model.buffer_y_min:
+                        if neighbor_up:
+                            if neighbor_up.condition != "Is Extinguished":
+                                self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
                             else:
                                 self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
+                        else:
+                            self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
 
+                    elif self.pos[0] == self.model.buffer_x_min and self.pos[1] == self.model.buffer_y_max:
+                        if neighbor_right:
+                            if neighbor_right.condition != "Is Extinguished":
+                                self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
+                            else:
+                                self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
+                        else:
+                            self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
+
+                    elif self.pos[0] == self.model.buffer_x_max and self.pos[1] == self.model.buffer_y_min:
+                        if neighbor_left:
+                            if neighbor_left.condition != "Is Extinguished":
+                                self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
+                            else:
+                                self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
+                        else:
+                            self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
+
+                    elif self.pos[0] == self.model.buffer_x_min and self.pos[1] < self.model.buffer_y_max:
+                        if neighbor_up:
+                            if neighbor_up.condition != "Is Extinguished":
+                                self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
+                            else:
+                                self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
+                        else:
+                            self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
+
+                    elif self.pos[0] < self.model.buffer_x_max and self.pos[1] >= self.model.buffer_y_max:
+                        if neighbor_right:
+                            if neighbor_right.condition != "Is Extinguished":
+                                self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
+                            else:
+                                self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
+                        else:
+                            self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
+
+                    elif self.pos[0] >= self.model.buffer_x_max and self.pos[1] < self.model.buffer_y_max:
+                        if neighbor_down:
+                            if neighbor_down.condition != "Is Extinguished":
+                                self.model.grid.move_agent(self, (self.pos[0], self.pos[1] - 1))
+                            else:
+                                self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
+                        else:
+                            self.model.grid.move_agent(self, (self.pos[0], self.pos[1] + 1))
+
+                    elif self.pos[0] < self.model.buffer_x_max and self.pos[1] <= self.model.buffer_y_min:
+                        if neighbor_left:
+                            if neighbor_left.condition != "Is Extinguished":
+                                self.model.grid.move_agent(self, (self.pos[0] - 1, self.pos[1]))
+                            else:
+                                self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
+                        else:
+                            self.model.grid.move_agent(self, (self.pos[0] + 1, self.pos[1]))
 
             else:
 
                 self.optimized_parallel_fire()
                 self.extinguish()
 
-
-
         else:
-
 
             self.optimized_parallel_fire()
             self.extinguish()
@@ -573,6 +554,7 @@ class Walker(Agent):
             self.optimized_closest_fire()
 
 '''
+
 
 class Firetruck(Walker):
     def __init__(self, model, unique_id, pos,

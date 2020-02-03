@@ -60,7 +60,6 @@ def forest_fire_portrayal(agent):
     if agent.condition == "On Fire" and agent.life_bar > 0:
         portrayal["Color"] = "rgba(%d,14,14)" % (agent.life_bar + 166)
 
-
     return portrayal
 
 
