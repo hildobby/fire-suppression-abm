@@ -2,7 +2,7 @@
 Created on Wed Jan  8 15:30:03 2020
 
 This code was implemented by
-Robin van den Berg, Beau Furnée, Wiebe Jelsma, 
+Robin van den Berg, Beau Furnée, Wiebe Jelsma,
 Hildebert Moulié, Philippe Nicolau & Louis Weyland
 """
 
