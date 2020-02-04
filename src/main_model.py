@@ -264,7 +264,7 @@ class ForestFire(Model):
     def init_firefighters(self, agent_type, num_firetruck,
                           truck_strategy, vision, truck_max_speed, randomly_placed):
         if num_firetruck > 0:
-            if randomly_placed == True:
+            if randomly_placed:
                 # Places the firetrucks on the edge of the grib with equal spacing
                 init_positions = self.equal_spread()
                 for i in range(num_firetruck):
@@ -273,8 +273,7 @@ class ForestFire(Model):
                         Firetruck, my_pos, truck_strategy, vision, truck_max_speed)
                     self.schedule_FireTruck.add(firetruck)
                     self.schedule.add(firetruck)
-                    self.firefighters_lists.append(firetruck)
-                
+                    self.firefighters_lists.append(firetruck)            
             else:
                 # Places the firetrucks randomly on the grid
                 for i in range(num_firetruck):
