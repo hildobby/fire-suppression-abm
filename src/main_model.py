@@ -274,7 +274,7 @@ class ForestFire(Model):
                     self.schedule_FireTruck.add(firetruck)
                     self.schedule.add(firetruck)
                     self.firefighters_lists.append(firetruck)
-                
+
             else:
                 # Places the firetrucks randomly on the grid
                 for i in range(num_firetruck):
