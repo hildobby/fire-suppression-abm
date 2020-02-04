@@ -31,13 +31,16 @@ n_cores = 22
 
 # Set the repetitions, the amount of steps, and the amount of distinct
 # values per variable
-replicates = 2
-distinct_samples = 1
+replicates = 50
+distinct_samples = 50
+
 # set the variable to do the OFAT on
-ofat_var = 'wind_strength'
-lower_bound = 1
-higher_bound = 30
-truck_strategy = 3
+ofat_var='num_firetruck'
+lower_bound=1
+upper_bound=50
+
+# set the strategy for which to do the sensitivity analysis
+truck_strategy = 2
 
 ##########################################################################
 ##########################################################################
@@ -47,7 +50,7 @@ truck_strategy = 3
 problem = {
     'num_vars': 1,
     'names': [ofat_var],
-    'bounds': [[lower_bound, higher_bound]]
+    'bounds': [[lower_bound, upper_bound]]
 }
 
 
@@ -97,7 +100,6 @@ for i, var in enumerate(problem['names']):
 
 param = ['On Fire']
 
-
 for i, var in enumerate(problem['names']):
     f, axs = plt.subplots(1, figsize=(10, 7))
     x = data[var].groupby(var).mean().reset_index()[var]
@@ -110,7 +112,7 @@ for i, var in enumerate(problem['names']):
 
     axs.set_xlabel(var, fontweight='bold', fontsize=20)
     axs.set_ylabel("Burnt fraction", fontweight='bold', fontsize=20)
-    axs.set_xlim(1, 7)
+    axs.set_xlim(lower_bound, upper_bound)
 
 
 directory = os.chdir("data/")
