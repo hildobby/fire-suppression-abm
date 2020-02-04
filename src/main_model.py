@@ -2,10 +2,10 @@
 Created on Wed Jan  8 15:30:03 2020
 
 This code was implemented by
-Louis Weyland & Robin van den Berg, Philippe Nicolau,
-Hildebert Mouilé, Wiebe Jelsma & Beau Furnée
-
+Robin van den Berg, Beau Furnée, Wiebe Jelsma, 
+Hildebert Moulié, Philippe Nicolau & Louis Weyland
 """
+
 from mesa import Model, Agent
 from mesa.time import RandomActivation
 from space_v2 import MultiGrid
@@ -23,9 +23,7 @@ import sys
 sys.path.append('../')
 
 
-# defines the model
-
-
+# Creating and defining the model with all of its parameters
 class ForestFire(Model):
     '''
     Simple Forest Fire model.
@@ -56,7 +54,7 @@ class ForestFire(Model):
             height, width: The size of the grid to model
             density: What fraction of grid cells have a tree in them.
         '''
-        # Initialize model parameters
+        # Initializing model parameters
         self.height = height
         self.width = width
         self.density = density
@@ -80,31 +78,30 @@ class ForestFire(Model):
 
         self.sparse_ratio = sparse_ratio
 
-        # Set up model objects
+        # Setting-up model objects
         self.schedule_TreeCell = RandomActivation(self)
         self.schedule_FireTruck = RandomActivation(self)
         self.schedule = RandomActivation(self)
         self.current_step = 0
 
-        # Set the wind
+        # Seting the wind
         self.wind = wind_strength
         self.wind_dir = wind_dir
 
-        # Translate the wind_dir string into vector
+        # Translating the wind_dir string into a vector
         wind_vector = {"\u2B06  North": (0, 1), "\u2197 North/East": (1, 1), "\u27A1 East": (1, 0),
                        "\u2198 South/East": (1, -1), "\u2B07 South": (0, -1), "\u2199 South/West": (-1, -1),
                        "\u2B05 West": (-1, 0), "\u2196 North/West": (-1, 1)}
         self.wind_dir = wind_vector[self.wind_dir]
 
+        # Creating the 2D grid
         self.grid = MultiGrid(height, width, torus=False)
 
-        random.seed(1)
         self.init_river()
         self.init_break(self.break_size)
 
         # agent_reporters={TreeCell: {"Life bar": "life_bar"}})
 
-        random.seed(1)
         self.init_vegetation(TreeCell, self.initial_tree)
 
         for i in range(len(self.agents)):

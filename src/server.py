@@ -1,3 +1,11 @@
+"""
+Created on Wed Jan  8 15:32:27 2020
+
+This code was implemented by
+Robin van den Berg, Beau Furnée, Wiebe Jelsma, 
+Hildebert Moulié, Philippe Nicolau & Louis Weyland
+"""
+
 #!/usr/bin/env python3
 
 from mesa.visualization.modules import CanvasGrid, ChartModule
@@ -37,15 +45,6 @@ def forest_fire_portrayal(agent):
               "Rain": "#636363",
               "Firebreak": "#bdbdbd"}
 
-    # if isinstance(agent, Rain):
-    #     portrayal = {"w": 3,
-    #                  "h": 3,
-    #                  "Filled": "False",
-    #                  "Shape": "circle",
-    #                  "r": 2.5,
-    #                  "Scale": 2.5,
-    #                  "Layer": 1}
-    # portrayal = {"Filled": "false", "h": 3, "w": 3, "Layer": 2}
     if isinstance(agent, Firetruck):
         portrayal["Layer"] = "1"
         portrayal["Shape"] = "rect"
