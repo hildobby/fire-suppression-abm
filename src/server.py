@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 Created on Wed Jan  8 15:32:27 2020
 
@@ -5,8 +7,6 @@ This code was implemented by
 Robin van den Berg, Beau Furnée, Wiebe Jelsma, 
 Hildebert Moulié, Philippe Nicolau & Louis Weyland
 """
-
-#!/usr/bin/env python3
 
 from mesa.visualization.modules import CanvasGrid, ChartModule
 from mesa.visualization.ModularVisualization import ModularServer
