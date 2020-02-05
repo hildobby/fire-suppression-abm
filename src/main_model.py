@@ -45,7 +45,8 @@ class ForestFire(Model):
             wind_strength,
             wind_dir,
             sparse_ratio,
-            steps_to_extinguishment):
+            steps_to_extinguishment,
+            randomly_placed):
         super().__init__()
         '''
         Create a new forest fire model.
@@ -68,6 +69,7 @@ class ForestFire(Model):
 
         self.temperature = temperature
         self.steps_to_extinguishment = steps_to_extinguishment
+        self.randomly_placed = randomly_placed
         self.n_agents = 0
 
         self.agents = []
@@ -113,7 +115,7 @@ class ForestFire(Model):
         self.num_firetruck = num_firetruck
         self.truck_strategy = truck_strategy
 
-        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed)
+        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed, randomly_placed)
         # self.init_rain()
 
         # Initialise fire in the middle if possible otherwise random
@@ -260,39 +262,35 @@ class ForestFire(Model):
         '''
 
     def init_firefighters(self, agent_type, num_firetruck,
-                          truck_strategy, vision, truck_max_speed):
-        if num_firetruck == 0:
-            pass
-        else:
-            # auxilary function to equally space the firetruck along the edge of the grid
-            init_positions = self.equal_spread()
-
-            for i in range(num_firetruck):
-                my_pos = init_positions.pop()
-                firetruck = self.new_firetruck(
-                    Firetruck, my_pos, truck_strategy, vision, truck_max_speed)
-                self.schedule_FireTruck.add(firetruck)
-                self.schedule.add(firetruck)
-                self.firefighters_lists.append(firetruck)
-
-        '''
-        METHOD TO PLACE FIREFIGHTERS RANDOMLY OVER GRID
-        for i in range(num_firetruck):
-            x = random.randrange(self.width)
-            y = random.randrange(self.height)
-            while self.grid.get_cell_list_contents((x, y)):
-                if isinstance(self.grid.get_cell_list_contents(
-                        (x, y))[0], RiverCell):
+                          truck_strategy, vision, truck_max_speed, randomly_placed):
+        if num_firetruck > 0:
+            if randomly_placed:
+                # Places the firetrucks on the edge of the grib with equal spacing
+                init_positions = self.equal_spread()
+                for i in range(num_firetruck):
+                    my_pos = init_positions.pop()
+                    firetruck = self.new_firetruck(
+                        Firetruck, my_pos, truck_strategy, vision, truck_max_speed)
+                    self.schedule_FireTruck.add(firetruck)
+                    self.schedule.add(firetruck)
+                    self.firefighters_lists.append(firetruck)            
+            else:
+                # Places the firetrucks randomly on the grid
+                for i in range(num_firetruck):
                     x = random.randrange(self.width)
                     y = random.randrange(self.height)
-                else:
-                    break
-
-            firetruck = self.new_firetruck(
-                Firetruck, (x, y), truck_strategy, vision, truck_max_speed)
-            self.schedule_FireTruck.add(firetruck)
-            self.schedule.add(firetruck)
-        '''
+                    while self.grid.get_cell_list_contents((x, y)):
+                        if isinstance(self.grid.get_cell_list_contents(
+                                (x, y))[0], RiverCell):
+                            x = random.randrange(self.width)
+                            y = random.randrange(self.height)
+                        else:
+                            break
+                    firetruck = self.new_firetruck(
+                        Firetruck, (x, y), truck_strategy, vision, truck_max_speed)
+                    self.schedule_FireTruck.add(firetruck)
+                    self.schedule.add(firetruck)
+                    self.firefighters_lists.append(firetruck)
 
     def init_rain(self):
         '''

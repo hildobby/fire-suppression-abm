@@ -22,15 +22,16 @@ data_1 = {}
 data_2 = {}
 data_3 = {}
 
-plot_name = 'sensitivity_sparse_ratio_V1'
-x_label = 'sparse ratio'
-var = 'sparse_ratio'
+plot_name = 'sensitivity_analysis_wind_strength_V1'
+x_label = 'wind speed (m/s)'
+var = 'wind_strength'
 param = 'On Fire'
 
-file_name = ["truckstrategy_0_ofat_sparse_ratio___repli_50__dist_samp_25.csv",
-             "truckstrategy_1_ofat_sparse_ratio___repli_50__dist_samp_25.csv",
-             "truckstrategy_2_ofat_sparse_ratio___repli_50__dist_samp_25.csv",
-             "truckstrategy_3_ofat_sparse_ratio___repli_50__dist_samp_25.csv"]
+file_name = ["truckstrategy_0_ofat_wind_strength___repli_50__dist_samp_50.csv",
+             "truckstrategy_1_ofat_wind_strength___repli_50__dist_samp_50.csv",
+             "truckstrategy_2_ofat_wind_strength___repli_50__dist_samp_50.csv",
+             "truckstrategy_3_ofat_wind_strength___repli_50__dist_samp_50.csv",
+             "truckstrategy_4_ofat_wind_strength___repli_50__dist_samp_50.csv"]
 
 f, ax = plt.subplots(1, figsize=(10, 7))
 
@@ -49,20 +50,22 @@ for i in range(len(file_name)):
 
 ax.set_xlabel(x_label, fontweight='bold', fontsize=20)
 ax.set_ylabel('burnt/fine vegetation', fontweight='bold', fontsize=20)
-ax.legend(["Random", "Closest", "Newest", "Parallel"])
+ax.legend(["Random", "Closest", "Newest", "Parallel", "Indirect"])
 leg = ax.get_legend()
 leg.legendHandles[0].set_color('blue')
 leg.legendHandles[1].set_color('orange')
 leg.legendHandles[2].set_color('green')
 leg.legendHandles[3].set_color('red')
+leg.legendHandles[4].set_color('purple')
+
 
 ax.xaxis.set_tick_params(labelsize=20)
 ax.yaxis.set_tick_params(labelsize=20)
 
-ax.set_xticks(np.arange(0, 1, 0.2))
+ax.set_xticks(np.arange(0, 30, 5))
 
 
-plt.xlim([0, 1])
+plt.xlim([0, 30])
 plt.ylim([0, 1.05])
 plt.savefig(plot_name, dpi=300)
 plt.show()

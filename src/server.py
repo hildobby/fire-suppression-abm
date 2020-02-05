@@ -90,6 +90,7 @@ model_parameters = {
     'steps_to_extinguishment': UserSettableParameter('slider',
                                                      'Number of steps needed to extinguish a fire',
                                                      2, 1, 6, 1),
+    'randomly_placed': UserSettableParameter('checkbox', 'Place firetrucks on the edges of the grid', value=True),
     # Creating a dropdown from which the user can choose the firetruck fire fighting strategy
     'truck_strategy': UserSettableParameter('choice', 'Firetrucks strategy', value='Indirect attack',
                                             choices=['Goes to the closest fire', 'Goes to the biggest fire',

@@ -36,13 +36,13 @@ class ForestFire(Model):
             width=100,
             density=0.99,
             temperature=0,
-            truck_strategy=3,
+            truck_strategy=2,
             river_number=0,
             river_width=0,
             random_fires=0,
             num_firetruck=10,
             vision=100,
-            truck_max_speed=2,
+            truck_max_speed=20,
             wind_strength=10,
             wind_dir="\u2B06  North",
             break_width=0,
@@ -88,13 +88,12 @@ class ForestFire(Model):
 
         # Set the wind
         self.wind = wind_strength
-        self.wind_dir = wind_dir
 
         # Translate the wind_dir string into vector
         wind_vector = {"\u2B06  North": (0, 1), "\u2197 North/East": (1, 1), "\u27A1 East": (1, 0),
                        "\u2198 South/East": (1, -1), "\u2B07 South": (0, -1), "\u2199 South/West": (-1, -1),
                        "\u2B05 West": (-1, 0), "\u2196 North/West": (-1, 1)}
-        self.wind_dir = wind_vector[self.wind_dir]
+        self.wind_dir = wind_vector[wind_dir]
 
         self.grid = MultiGrid(height, width, torus=False)
 
@@ -113,7 +112,7 @@ class ForestFire(Model):
 
         # Put int back to string
         if truck_strategy == 1:
-            truck_strategy = 'Goes to the closest fire'
+            truck_strategy = "Optimized closest"
         elif truck_strategy == 0:
             truck_strategy = 'Random'
         elif truck_strategy == 2:
