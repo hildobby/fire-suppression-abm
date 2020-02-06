@@ -58,15 +58,6 @@ script:
     - num_errors_after=`find . -name \*.py -exec pycodestyle --max-line-length=120 --ignore=E402,W503  {} + | wc -l`
     - echo $num_errors_after
 
-    - |
-        if (( $num_errors_after < $num_errors_before )); then
-            git commit -a -m "PEP-8 Fix [ci skip]"
-            git config --global push.default simple # Push only to the current branch.  
-            # Make sure to make the output quiet, or else the API token will 
-            # leak!  This works because the API key can replace your password.
-            git push --set-upstream origin master
-            git push --quiet
-        fi
     - cd "$TRAVIS_BUILD_DIR"
 
     # List the remaining errors - these will have to be fixed manually
