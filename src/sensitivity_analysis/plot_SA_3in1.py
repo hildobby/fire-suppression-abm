@@ -22,16 +22,16 @@ data_1 = {}
 data_2 = {}
 data_3 = {}
 
-plot_name = 'sensitivity_analysis_wind_strength_V1'
-x_label = 'wind speed (m/s)'
-var = 'wind_strength'
+plot_name = 'sensitivity_analysis_steps_to_extinguishment_V1'
+x_label = 'Steps to extinguishement (#)'
+var = 'steps_to_extinguishment'
 param = 'On Fire'
 
-file_name = ["truckstrategy_0_ofat_wind_strength___repli_50__dist_samp_50.csv",
-             "truckstrategy_1_ofat_wind_strength___repli_50__dist_samp_50.csv",
-             "truckstrategy_2_ofat_wind_strength___repli_50__dist_samp_50.csv",
-             "truckstrategy_3_ofat_wind_strength___repli_50__dist_samp_50.csv",
-             "truckstrategy_4_ofat_wind_strength___repli_50__dist_samp_50.csv"]
+file_name = ["truckstrategy_0_ofat_steps_to_extinguishment___repli_50__dist_samp_7.csv",
+             "truckstrategy_1_ofat_steps_to_extinguishment___repli_50__dist_samp_7.csv",
+             "truckstrategy_2_ofat_steps_to_extinguishment___repli_50__dist_samp_7.csv",
+             "truckstrategy_3_ofat_steps_to_extinguishment___repli_50__dist_samp_7.csv",
+             "truckstrategy_4_ofat_steps_to_extinguishment___repli_50__dist_samp_7.csv"]
 
 f, ax = plt.subplots(1, figsize=(10, 7))
 
@@ -62,10 +62,10 @@ leg.legendHandles[4].set_color('purple')
 ax.xaxis.set_tick_params(labelsize=20)
 ax.yaxis.set_tick_params(labelsize=20)
 
-ax.set_xticks(np.arange(0, 30, 5))
+ax.set_xticks(np.arange(1, 7, 1))
 
 
-plt.xlim([0, 30])
+plt.xlim([1, 7])
 plt.ylim([0, 1.05])
 plt.savefig(plot_name, dpi=300)
 plt.show()

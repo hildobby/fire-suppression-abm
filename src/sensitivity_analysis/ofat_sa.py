@@ -31,16 +31,16 @@ n_cores = 22
 
 # Set the repetitions, the amount of steps, and the amount of distinct
 # values per variable
-replicates = 50
-distinct_samples = 50
+replicates = 1000
+distinct_samples = 1
 
 # set the variable to do the OFAT on
-ofat_var='num_firetruck'
-lower_bound=1
-upper_bound=50
+ofat_var='truck_strategy'
+lower_bound=0
+upper_bound=1
 
 # set the strategy for which to do the sensitivity analysis
-truck_strategy = 2
+truck_strategy = 0
 
 ##########################################################################
 ##########################################################################
@@ -124,27 +124,27 @@ for i, var in enumerate(problem['names']):
 plt.savefig("truckstrategy_{}_ofat_{}___repli_{}__dist_samp_{}.png".format(
     truck_strategy, ofat_var, replicates, distinct_samples), dpi=300)
 
-# print("Mean of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].mean())
-# print("Variance of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].var())
+print("Mean of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].mean())
+print("Variance of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].var())
 
-# print("Mean of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].mean())
-# print("Variance of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].var())
-#
-# print("Mean of the number of burned trees: ", data["truck_strategy"]["On Fire"].mean())
-# print("Variance of the number of burned trees: ", data["truck_strategy"]["On Fire"].var())
-#
-# To plot histogramm
+print("Mean of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].mean())
+print("Variance of the number of extinguished trees: ", data["truck_strategy"]["Extinguished"].var())
 
-# hist = data["truck_strategy"]["On Fire"].hist()
-# hist.set_xlabel("Burned (%)", fontweight='bold', fontsize=20)
-# hist.set_ylabel("Occurrence (#)", fontweight='bold', fontsize=20)
-#
-# plt.savefig("hist_truckstrategy_1_ofat_{}___repli_{}__dist_samp_{}.png".\
-#               format(var, replicates, distinct_samples), dpi=300)
-#
-#
-# print("Mean of the number of steps to end: ", data["truck_strategy"]["Step"].mean())
-# print("Variance of the number of steps to end: ", data["truck_strategy"]["Step"].var())
+print("Mean of the number of burned trees: ", data["truck_strategy"]["On Fire"].mean())
+print("Variance of the number of burned trees: ", data["truck_strategy"]["On Fire"].var())
+
+# To plot histogram
+print(data["truck_strategy"]["On Fire"])
+hist = data["truck_strategy"]["On Fire"].hist()
+hist.set_xlabel("Burnt ", fontweight='bold', fontsize=20)
+hist.set_ylabel("Occurrence (#)", fontweight='bold', fontsize=20)
+
+plt.savefig("hist_truckstrategy_{}_ofat_{}___repli_{}__dist_samp_{}.png".\
+              format(truck_strategy, var, replicates, distinct_samples), dpi=300)
+
+
+print("Mean of the number of steps to end: ", data["truck_strategy"]["Step"].mean())
+print("Variance of the number of steps to end: ", data["truck_strategy"]["Step"].var())
 
 end = time.time()
 

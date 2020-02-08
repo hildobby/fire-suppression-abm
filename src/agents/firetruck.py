@@ -24,6 +24,7 @@ class Walker(Agent):
         self.unique_id = unique_id
 
     def firefighters_tree_ratio(self, number_of_firefighters, trees_on_fire):
+        '''Calculates the ratio of fighter fighters and vegetation'''
         if trees_on_fire > 0:
             return int(math.ceil(number_of_firefighters / trees_on_fire))
         return 1
@@ -34,27 +35,34 @@ class Walker(Agent):
         select one, and move the agent to this cell.
         '''
 
+        # get all neighbours within reachable distance
         cell_list = self.model.grid.get_neighborhood(self.pos, moore=True, radius=self.truck_max_speed)
 
+        # filter for unreachable places such as a river
         for cell in cell_list:
             if self.model.grid.get_cell_list_contents(cell):
                 if isinstance(self.model.grid.get_cell_list_contents(cell)[0], RiverCell):
                     cell_list.remove(cell)
 
+        # choose the new position
         new_pos = cell_list[random.randint(0, len(cell_list) - 1)]
 
         self.model.grid.move_agent(self, new_pos)
 
     def take_step(self, closest_neighbor):
+        '''This function takes a step in the direction of a given neighbour'''
 
+        # calculates total places to move in x and y direction
         places_to_move_y = closest_neighbor.pos[1] - self.pos[1]
         places_to_move_x = closest_neighbor.pos[0] - self.pos[0]
 
+        # lowers the max speed of the trucks when destination is closer
         speed_x = min(self.truck_max_speed, abs(places_to_move_x))
         speed_y = min(self.truck_max_speed, abs(places_to_move_y))
 
         new_x, new_y = self.pos[0], self.pos[1]
 
+        # determine new position of fire fighting agent
         if places_to_move_x > 0:
             new_x += speed_x
         if places_to_move_x < 0:
@@ -64,6 +72,7 @@ class Walker(Agent):
         if places_to_move_y < 0:
             new_y -= speed_y
 
+        # move the agent to a suitable place
         if self.model.grid.get_cell_list_contents((new_x, new_y)):
             if not isinstance(self.model.grid.get_cell_list_contents(
                     (new_x, new_y))[0], RiverCell):
@@ -78,14 +87,17 @@ class Walker(Agent):
         select the fire with the biggest life bar and move the fire truck to this position.
         It also checks if the position is closeby, otherwise it does not go there
         '''
-        # find hot trees in neighborhood
+
+        # calculate fire fighter to burning vegetation radio
         ratio = self.firefighters_tree_ratio(
             self.model.num_firetruck, self.model.count_type(
                 self.model, "On Fire"))
+
         fire_intheneighborhood = False
+
+        # skip through a percentage of the vision to find the closest fire more efficiently
         limited_vision_list = [i for i in range(2, 100, 2)]
         for i in range(len(limited_vision_list)):
-
             limited_vision = int(self.vision * limited_vision_list[i] / 100.)
             if i > 0:
                 inner_radius = int(
@@ -97,10 +109,10 @@ class Walker(Agent):
             neighbors_list = self.model.grid.get_neighbors(
                 self.pos, moore=True, radius=limited_vision, inner_radius=inner_radius)
 
-            neighbors_list = [
-                x for x in neighbors_list if x.condition == "On Fire"]
+            # filter out trees that are on fire
+            neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
 
-            # find closest fire
+            # find closest fire that has largest life bar
             min_distance = limited_vision ** 2
             min_life_bar = 0
             for neighbor in neighbors_list:
@@ -125,14 +137,18 @@ class Walker(Agent):
         else:
             self.random_move()
 
-    # Makes the firetruck move towards the fire
+
     def closestfire_move(self):
+        '''Makes firetrucks move towards closest fire'''
+
+        # calculate fire fighter to burning vegetation ratio
         ratio = self.firefighters_tree_ratio(
             self.model.num_firetruck, self.model.count_type(
                 self.model, "On Fire"))
         fire_intheneighborhood = False
-        limited_vision_list = [i for i in range(2, 100, 2)]
 
+        # skip through a percentage of the vision to find the closest fire more efficiently
+        limited_vision_list = [i for i in range(2, 100, 2)]
         for i in range(len(limited_vision_list)):
             limited_vision = int(self.vision * limited_vision_list[i] / 100.)
 
@@ -146,6 +162,7 @@ class Walker(Agent):
             neighbors_list = self.model.grid.get_neighbors(
                 self.pos, moore=True, radius=limited_vision, inner_radius=inner_radius)
 
+            # filter for trees that are on fire
             neighbors_list = [
                 x for x in neighbors_list if x.condition == "On Fire"]
 
@@ -191,20 +208,21 @@ class Walker(Agent):
             self.random_move()
 
     def optimized_closest_fire(self):
+        '''Uses the earlier assigned neighbour to carry out the closest fire tactic'''
+
+        # locate vegetation that was assigned to fire fighting agent
         attr = np.array([o.unique_id for o in self.model.firefighters_lists])
-        # print(attr)
-        # print(self.unique_id)
-        # print(np.where(attr == self.unique_id))
         closest_neighbor = self.model.assigned_list[np.where(attr == self.unique_id)[0][0]]
 
+        # take step in right direction
         self.take_step(closest_neighbor)
         closest_neighbor.trees_claimed += 1
 
     def optimized_parallel_fire(self):
+        '''Uses the earlier assigned neighbour to carry out the parallel attack tactic'''
+
+        # locate vegetation that was assigned to fire fighting agent
         attr = np.array([o.unique_id for o in self.model.firefighters_lists])
-        # print(attr)
-        # print(self.unique_id)
-        # print(np.where(attr == self.unique_id))
         closest_neighbor = self.model.assigned_list[np.where(attr == self.unique_id)[0][0]]
 
         neighbors_list_fire = self.model.grid.get_neighbors(closest_neighbor.pos, moore=False,
@@ -223,10 +241,16 @@ class Walker(Agent):
         self.take_step(closest_neighbor)
 
     def parallel_attack(self):
+        '''This function carries out the algorithm for the parallel attack strategy'''
+
+        # calculate fire fighter to burning vegetation ratio
         ratio = self.firefighters_tree_ratio(
             self.model.num_firetruck, self.model.count_type(
                 self.model, "On Fire"))
+
         fire_intheneighborhood = False
+
+        # skip through a percentage of the vision to find the closest fire more efficiently
         limited_vision_list = [i for i in range(2, 100, 2)]
         for i in range(len(limited_vision_list)):
             limited_vision = int(self.vision * limited_vision_list[i] / 100.)
@@ -241,8 +265,8 @@ class Walker(Agent):
             neighbors_list = self.model.grid.get_neighbors(
                 self.pos, moore=True, radius=limited_vision, inner_radius=inner_radius)
 
-            neighbors_list = [
-                x for x in neighbors_list if x.condition == "On Fire"]
+            # filter list of neighbours to find the ones on fire
+            neighbors_list = [x for x in neighbors_list if x.condition == "On Fire"]
 
             # find closest fire
             min_distance = 100000
@@ -260,6 +284,7 @@ class Walker(Agent):
                     # distance = abs(neighbor.pos[0] - self.pos[0]) ** 2 + abs(
                     #     neighbor.pos[1] - self.pos[1]) ** 2
 
+                    # find closest, newest fire
                     life_bar = neighbor.life_bar
                     if distance <= min_distance and life_bar >= max_life_bar:
                         max_life_bar = life_bar
@@ -269,9 +294,14 @@ class Walker(Agent):
             if fire_intheneighborhood:
                 break
 
+        # if the firetruck is next to a fire, make sure it stays just outside the fire line
         if i == 2:
+
+            # look at neighbours of closest fire
             neighbors_list_fire = self.model.grid.get_neighbors(closest_neighbor.pos, moore=False,
                                                                 radius=1)
+
+            # determine location right next to closest fire, but on non burning spot
             max_distance = 0
             for neighbor in neighbors_list_fire:
                 position_x = abs(neighbor.pos[0] - self.pos[0])
@@ -291,6 +321,7 @@ class Walker(Agent):
             self.random_move()
 
     def indirect_attack(self):
+        '''This function carries out the indirect tactic, trying to contain a fire by removing full'''
 
         if self.model.buffer_x_min <= self.pos[0] <= self.model.buffer_x_max and  \
                 self.model.buffer_y_min <= self.pos[1] <= self.model.buffer_y_max:
@@ -555,6 +586,8 @@ class Walker(Agent):
 
 
 class Firetruck(Walker):
+
+    '''A class specific to a firetruck'''
     def __init__(self, model, unique_id, pos,
                  truck_strategy, vision, truck_max_speed):
         super().__init__(unique_id, model, pos)
@@ -567,6 +600,7 @@ class Firetruck(Walker):
         self.life_bar = -5
 
     def get_pos(self):
+        '''Returns the position of the firetruck'''
         return self.pos
 
     def step(self):
@@ -590,8 +624,11 @@ class Firetruck(Walker):
             self.extinguish()
 
     def extinguish(self):
+        '''This function has firetrucks extinguishing the burning trees in their moore neighbourhood'''
         neighbors_list = self.model.grid.get_neighbors(
             self.pos, moore=True, radius=1, include_center=True)
+
+        # if there is a burning tree in the moore neighbourhood, lower its firebar by 1
         for tree in neighbors_list:
             if tree.condition == "On Fire":
                 tree.fire_bar -= 1

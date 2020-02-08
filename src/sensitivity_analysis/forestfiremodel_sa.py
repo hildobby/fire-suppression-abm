@@ -36,13 +36,13 @@ class ForestFire(Model):
             width=100,
             density=0.99,
             temperature=0,
-            truck_strategy=2,
+            truck_strategy=4,
             river_number=0,
             river_width=0,
             random_fires=0,
             num_firetruck=10,
             vision=100,
-            truck_max_speed=20,
+            truck_max_speed=2,
             wind_strength=10,
             wind_dir="\u2B06  North",
             break_width=0,
@@ -158,7 +158,6 @@ class ForestFire(Model):
         self.running = True
 
         self.dc.collect(self, [TreeCell, Firetruck])
-        self.wind_strength = wind_strength
 
         self.buffer_x_min = int((self.init_fire_pos[0]) - 30)
         self.buffer_x_max = int((self.init_fire_pos[0]) + 30)
