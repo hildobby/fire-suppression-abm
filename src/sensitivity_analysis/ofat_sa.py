@@ -10,13 +10,14 @@ Louis Weyland & Robin van den Berg, Philippe Nicolau, Hildebert Mouilé & Wiebe 
 
 import sys
 sys.path.append('../')
+import pandas as pd
 import os
 from mesa.batchrunner import BatchRunnerMP
 import numpy as np
 from forestfiremodel_sa import ForestFire
 import matplotlib.pyplot as plt
 import time
-
+'''
 begin = time.time()
 
 
@@ -132,20 +133,45 @@ print("Variance of the number of extinguished trees: ", data["truck_strategy"]["
 
 print("Mean of the number of burned trees: ", data["truck_strategy"]["On Fire"].mean())
 print("Variance of the number of burned trees: ", data["truck_strategy"]["On Fire"].var())
-
+'''
 # To plot histogram
-print(data["truck_strategy"]["On Fire"])
-hist = data["truck_strategy"]["On Fire"].hist()
-hist.set_xlabel("Burnt ", fontweight='bold', fontsize=20)
-hist.set_ylabel("Occurrence (#)", fontweight='bold', fontsize=20)
+directory = os.chdir("data/")
+file_name = ["truckstrategy_0_ofat_truck_strategy___repli_1000__dist_samp_1.csv",
+             "truckstrategy_1_ofat_truck_strategy___repli_1000__dist_samp_1.csv",
+             "truckstrategy_2_ofat_truck_strategy___repli_1000__dist_samp_1.csv",
+             "truckstrategy_3_ofat_truck_strategy___repli_1000__dist_samp_1.csv",
+             "truckstrategy_4_ofat_truck_strategy___repli_1000__dist_samp_1.csv"]
 
-plt.savefig("hist_truckstrategy_{}_ofat_{}___repli_{}__dist_samp_{}.png".\
-              format(truck_strategy, var, replicates, distinct_samples), dpi=300)
+
+for i in file_name:
+
+    data=pd.read_csv(i)
+
+    f, axs = plt.subplots(1, figsize=(10, 7))
 
 
-print("Mean of the number of steps to end: ", data["truck_strategy"]["Step"].mean())
-print("Variance of the number of steps to end: ", data["truck_strategy"]["Step"].var())
+    if i =='truckstrategy_0_ofat_truck_strategy___repli_1000__dist_samp_1.csv' or \
+            i=='truckstrategy_4_ofat_truck_strategy___repli_1000__dist_samp_1.csv':
 
-end = time.time()
+        hist = data["On Fire"].hist(range=(0.90,1))
 
-print("This took: ", (end - begin))
+    else:
+        hist = data["On Fire"].hist()
+
+    hist.set_xlabel("Burnt ", fontweight='bold', fontsize=20)
+    hist.set_ylabel("Occurrence (#)", fontweight='bold', fontsize=20)
+    axs.xaxis.set_tick_params(labelsize=20)
+    axs.yaxis.set_tick_params(labelsize=20)
+    plt.xlim(0, 1)
+   
+    #plt.savefig("hist_truckstrategy_{}_ofat_{}___repli_{}__dist_samp_{}.png".\
+    #              format(truck_strategy, var, replicates, distinct_samples), dpi=300)
+    name= i.split(".")
+    plt.savefig("hist_"+name[0], dpi=300)
+
+#print("Mean of the number of steps to end: ", data["truck_strategy"]["Step"].mean())
+#print("Variance of the number of steps to end: ", data["truck_strategy"]["Step"].var())
+
+#end = time.time()
+
+#print("This took: ", (end - begin))
