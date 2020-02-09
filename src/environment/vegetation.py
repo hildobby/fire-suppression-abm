@@ -63,7 +63,7 @@ class TreeCell(Agent):
         '''
         self.trees_claimed = 0
         if self.condition == "On Fire":
-            #self.model.trees_on_fire += 1
+
             if self.fireinitstep != self.model.current_step:
                 neighbors = self.model.grid.get_neighbors(self.pos, moore=True, radius=1)
                 for neighbor in neighbors:
