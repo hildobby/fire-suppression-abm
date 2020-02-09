@@ -25,7 +25,7 @@ sys.path.append('../')
 
 # Creating and defining the model with all of its parameters
 class ForestFire(Model):
-
+    
     '''
     Create a forest fire model with fire fighting agents that try to extinguish the fire
 
@@ -43,7 +43,7 @@ class ForestFire(Model):
         wind_dir: string specifying the direction of the fire;
         sparse_ratio: the fraction of the vegetation that is sparse instead of dense;
         steps_to_extinguishment: number of steps it takes for firetrucks to extinguish a burning cell;
-        randomly_placed: indicates whether the firetrucks are placed randomly over the grid, or equispaced on the rim
+        placed_on_edges: indicates whether the firetrucks are placed randomly over the grid, or equispaced on the rim
     '''
 
     def __init__(
@@ -63,7 +63,7 @@ class ForestFire(Model):
             wind_dir,
             sparse_ratio,
             steps_to_extinguishment,
-            randomly_placed):
+            placed_on_edges):
         super().__init__()
 
         # Initializing model parameters
@@ -80,7 +80,7 @@ class ForestFire(Model):
 
         self.temperature = temperature
         self.steps_to_extinguishment = steps_to_extinguishment
-        self.randomly_placed = randomly_placed
+        self.placed_on_edges = placed_on_edges
         self.n_agents = 0
 
         self.agents = []
@@ -126,7 +126,7 @@ class ForestFire(Model):
         self.truck_strategy = truck_strategy
 
         # initialize the population of firefighters
-        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed, randomly_placed)
+        self.init_firefighters(Firetruck, num_firetruck, truck_strategy, vision, truck_max_speed, placed_on_edges)
 
         '''
         rain is currently not implemented realistically, however after future development it could initialised here
@@ -277,17 +277,17 @@ class ForestFire(Model):
         '''
 
     def init_firefighters(self, agent_type, num_firetruck,
-                          truck_strategy, vision, truck_max_speed, randomly_placed):
+                          truck_strategy, vision, truck_max_speed, placed_on_edges):
         '''
         Initialises the fire fighters
-        randomly_placed: if True --> places the firetrucks randomly over the grid.
+        placed_on_edges: if True --> places the firetrucks randomly over the grid.
         If False it places the firetrucks equispaced on the rim of the grid.
         '''
 
         if num_firetruck > 0:
 
             # Places the firetrucks on the edge of the grid with equal spacing
-            if randomly_placed:
+            if placed_on_edges:
                 init_positions = self.equal_spread()
                 for i in range(num_firetruck):
                     my_pos = init_positions.pop()
@@ -395,7 +395,9 @@ class ForestFire(Model):
         return count
 
     def compute_distances(self, tree_list, truck_list):
-        '''Computes the distances between the firetrucks and the burning vegetation'''
+        '''
+        Computes the distances between the firetrucks and the burning vegetation
+        '''
         distances = [[0 for x in range(len(truck_list))] for y in range(len(tree_list))]
         for i in range(len(tree_list)):
             for j in range(len(truck_list)):
@@ -404,7 +406,9 @@ class ForestFire(Model):
         return distances
 
     def assign_closest(self, matrix, tree_list):
-        '''Uses the matrix produces by compute_distances() to assign the firetrucks to the closest burnign vegetation'''
+        '''
+        Uses the matrix produces by compute_distances() to assign the firetrucks to the closest burning vegetation
+        '''
         assigned_trucks = [0 for x in range(self.num_firetruck)]
 
         ratio = Walker.firefighters_tree_ratio(self, self.num_firetruck, len(tree_list))
@@ -423,7 +427,9 @@ class ForestFire(Model):
         return assigned_trucks
 
     def assign_parallel(self, matrix, tree_list):
-        '''Uses compute_distances() to carry out the parallel attack'''
+        '''
+        Uses compute_distances() to carry out the parallel attack
+        '''
         assigned_trucks = [0 for x in range(self.num_firetruck)]
 
         # if there is a surplus of firetrucks, allow them to go to the same fire
