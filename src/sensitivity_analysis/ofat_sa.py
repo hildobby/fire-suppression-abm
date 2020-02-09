@@ -169,9 +169,9 @@ for i in file_name:
     name= i.split(".")
     plt.savefig("hist_"+name[0], dpi=300)
 
-#print("Mean of the number of steps to end: ", data["truck_strategy"]["Step"].mean())
-#print("Variance of the number of steps to end: ", data["truck_strategy"]["Step"].var())
+# print("Mean of the number of steps to end: ", data["truck_strategy"]["Step"].mean())
+# print("Variance of the number of steps to end: ", data["truck_strategy"]["Step"].var())
 
-#end = time.time()
+# end = time.time()
 
-#print("This took: ", (end - begin))
+# print("This took: ", (end - begin))
