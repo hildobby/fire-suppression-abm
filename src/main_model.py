@@ -335,7 +335,6 @@ class ForestFire(Model):
         '''
 
         # progress the fire spread by a step
-        self.trees_on_fire = 0
         self.schedule_TreeCell.step()
 
         # save all burning trees for easy search
