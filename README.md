@@ -1,4 +1,4 @@
-Asian-paced Yodeling: Wildfire prevention simulation using agent-based modeling written in Python 3+
+Agent-based Modeling: Wildfire prevention simulation using agent-based modeling written in Python 3+
 =========================================
 [![Build Status](https://travis-ci.org/hildobby/Asian-paced_Yodeling.svg?branch=master)](https://travis-ci.org/hildobby/Asian-paced_Yodeling)
 
